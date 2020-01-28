@@ -1,5 +1,6 @@
 import cv2
 import face_recognition
+import  ImageComapre
 #pip install opencv-python
 cap = []
 faceCounts = []
@@ -14,8 +15,8 @@ while camLoop is not False:
     faceCounts.insert(i, 0)
     i += 1
     capTest.release()
-
-
+mainFrame = (cap[0].read())[1]
+cv2.imshow('mainframe', mainFrame)
 while(True):
     i = 0
     while i < len(cap):
@@ -23,7 +24,8 @@ while(True):
         cv2.imshow(f'frame{i}', frame)
         faceCounts[i] = len(face_recognition.face_locations(frame))
         i += 1
-        print(f'Face count: {faceCounts}')
+        score = ImageComapre.compare(mainFrame,frame)
+        print(f'Face count: {faceCounts} Diff score: {score}')
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
