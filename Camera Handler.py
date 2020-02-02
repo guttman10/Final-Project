@@ -2,7 +2,6 @@ import cv2
 import face_recognition
 from MotionDetector import GetMotion
 from ImageComapre import compare
-from BlobCounter import blobCount
 import numpy as np
 #pip install opencv-python
 
@@ -12,11 +11,12 @@ while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
     ret, frame2 = cap.read()
-    score = compare(frame, frame2)
+    score, count = compare(mainFrame, frame2, 255*20)
     mov = GetMotion(frame, frame2)
     # Display the resulting frame
     cv2.imshow('Main', frame)
-    print(score, mov)
+    if score < 0.95:
+        print(score, count, mov)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
