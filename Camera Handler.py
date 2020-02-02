@@ -1,35 +1,25 @@
 import cv2
 import face_recognition
-import  ImageComapre
+from MotionDetector import GetMotion
+from ImageComapre import compare
+from BlobCounter import blobCount
+import numpy as np
 #pip install opencv-python
-cap = []
-faceCounts = []
-camLoop = True
-i = 0
-while camLoop is not False:
-    capTest = cv2.VideoCapture(i)
-    camLoop, spoof = capTest.read()
-    if camLoop is False:
-        break
-    cap.insert(i, cv2.VideoCapture(i))
-    faceCounts.insert(i, 0)
-    i += 1
-    capTest.release()
-mainFrame = (cap[0].read())[1]
-cv2.imshow('mainframe', mainFrame)
+
+cap = cv2.VideoCapture(0)
+_, mainFrame = cap.read()
 while(True):
-    i = 0
-    while i < len(cap):
-        ret, frame = cap[i].read()
-        cv2.imshow(f'frame{i}', frame)
-        faceCounts[i] = len(face_recognition.face_locations(frame))
-        i += 1
-        score = ImageComapre.compare(mainFrame,frame)
-        print(f'Face count: {faceCounts} Diff score: {score}')
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+    ret, frame2 = cap.read()
+    score = compare(frame, frame2)
+    mov = GetMotion(frame, frame2)
+    # Display the resulting frame
+    cv2.imshow('Main', frame)
+    print(score, mov)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-
-for cam in cap:
-    cam.release()
+# When everything done, release the capture
+cap.release()
 cv2.destroyAllWindows()
