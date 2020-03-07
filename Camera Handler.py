@@ -1,5 +1,7 @@
 import cv2
 import face_recognition
+import pymongo
+from bson import ObjectId
 
 from MotionDetector import GetMotion
 from ImageComapre import compare
@@ -7,7 +9,13 @@ import threading
 import time
 # pip install opencv-python
 
+myclient = pymongo.MongoClient('mongodb+srv://admin:admin@monitour-t8pfj.mongodb.net/load_data')
+mydb = myclient["load_data"]
+mycol = mydb["data"]
 
+x = mycol.find_one()
+
+print(x)
 def getBusyStatus(diff, maxCount, count):
     val = 0
     if maxCount != 0:
@@ -54,7 +62,13 @@ def Start(dataToSet):
 
 def send_data(name, sendData):
     while True:
-        print("the data that was suppose to be sent is", sendData)
+        mycol.find_one_and_update(
+            {"name": "Fun Town"},
+            {"$set":
+                 {"load": sendData}
+             }, upsert=True
+        )
+        print("the data sent to server is: ", sendData)
         time.sleep(2)
 
 
