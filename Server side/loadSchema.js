@@ -7,10 +7,11 @@ const schema ={
     //age:{type:Number, required:true},
    // weight:{type:Number, required:true},
     //numOfWinnings:{type:Number},
-   // detailes:{
-     //   competitionType:{type:String},
-       // originCountry:{type:String}
-    //}
+    load:{
+        maxCount:{type:Number},
+        currCount:{type:Number},
+        meanCount:{type:Number},
+    }
 }
 const load_schema = new mongoose.Schema(schema)
 mongoose.pluralize(null);

@@ -20,7 +20,6 @@ def getBusyStatus(diff, maxCount, count):
     val = 0
     if maxCount != 0:
         val = (1 - diff) * (count/maxCount)
-    print(val)
     return val
 
 
@@ -49,13 +48,8 @@ def Start(dataToSet):
                 dataToSet["meanCount"] = totalCounts / countInstanced
                 # set the current count
                 dataToSet["currCount"] = count
-            busyTemp = getBusyStatus(score, dataToSet["maxCount"], dataToSet["currCount"])
-            if busyTemp < 1/6:
-                dataToSet["busy"] = "Almost empty"
-            elif busyTemp < 3/6:
-                dataToSet["busy"] = "Somewhat vacant"
-            else:
-                dataToSet["busy"] = "Almost Full"
+            dataToSet["busy"] = getBusyStatus(score, dataToSet["maxCount"], dataToSet["currCount"])
+
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
