@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 const schema ={
-   // _id: mongoose.Types.ObjectId,
-    name:{type:String, index:1},
+    id: {type:Number, index: 1},
+    name:{type:String},
     load:{
         maxCount:{type:Number},
         currCount:{type:Number},

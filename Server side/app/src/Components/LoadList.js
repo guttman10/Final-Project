@@ -1,39 +1,21 @@
 import React, {Component} from 'react';
 import Load from './Load'
-import data from'../data/data.json'
 import {MdAdd} from 'react-icons/md'
 class LoadList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loads: [
-
-               // {name: 'FunTown',
-               //     load: {
-               //         maxCount:10,
-                //        currCount:5,
-                //        meanCount:3,
-                //        busy:0.8,
-                //    }
-               //      },
-               // {name: 'EasyTown',
-                 //   load: {
-                 //       maxCount:10,
-                 //       currCount:5,
-                 //       meanCount:3,
-                 //       busy:0.8,
-               //     }
-           //     }
-            ]
+            loads: []
         }
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
     }
-    add(txt,ld){
+    add({event = null, id = null, txt = 'default title', ld = 'default load'}){
+        console.log(event,id,txt,ld)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
-                {id: this.nextID(),
+                {id: id !== null ? id : this.nextID(prevState.loads),
                     name:txt,
                     load:ld
                 }
@@ -46,15 +28,20 @@ class LoadList extends Component {
             : 0
         return ++this.uniqueId
     }
-componentWillMount() {
-        var self=this
-    data.map(function(name) {
-        console.log('load')
-        self.add(name.name,name.load)
-    })
+    componentDidMount() {
+
+
+    const url = 'http://localhost:3000/load_data';
+    fetch(url)
+        .then(res => res.json())
+        .then(data => data.map(item =>
+            this.add({id: item.id, txt: item.name, ld: item.load})))
+        .catch(err => console.error(err));
+
 }
 
     eachLoad(name, i) {
+
         return (
             <div
                 key={`container ${i}`}
