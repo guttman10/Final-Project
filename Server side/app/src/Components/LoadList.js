@@ -2,6 +2,13 @@ import React, {Component} from 'react';
 import Load from './Load'
 import {MdAdd} from 'react-icons/md'
 class LoadList extends Component {
+    listStyle  = {
+        position:"relative",
+        marginTop:30,width: 28 + 'rem',
+        marginBottom: 7 + 'px',
+        left: "50%",
+        transform: "translateX(-50%)"
+    }
     constructor(props) {
         super(props);
         this.state = {
@@ -47,12 +54,12 @@ class LoadList extends Component {
             <div
                 key={`container ${i}`}
                 className="card"
-                style={{width: 18 + 'rem', marginBottom: 7 + 'px'}}>
+                style={this.listStyle}>
                 <div class="card-body">
                     <Load key={`load${i}`} index={i}>
                         <h4 class="card-title">{name.name}</h4>
-                        <img class="card-img-top" src={name.image} style={{position:"relative"}} />
-                        <div style={{position:"relative", marginTop:10, marginBottom:10}}>
+                        <img class="card-img-top" src={name.image}/>
+                        <div style={{marginTop:10, marginBottom:10}}>
                         <p  className="card-text">Curr count: {JSON.stringify(name.load.currCount)}</p>
                         <p className="card-text">Max count: {JSON.stringify(name.load.maxCount)}</p>
                         <p className="card-text">Mean count: {JSON.stringify(name.load.meanCount)}</p>
