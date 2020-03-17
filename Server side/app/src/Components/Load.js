@@ -39,7 +39,7 @@ class Load extends Component {
             <div className='load'>
                 <div>{this.props.children}</div>
                 <span>
-                   
+
                      <button onClick={this.delete} className="btn btn-primary"><MdDelete/></button>
                 </span>
             </div>

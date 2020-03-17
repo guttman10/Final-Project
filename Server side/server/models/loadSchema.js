@@ -8,7 +8,8 @@ const schema ={
         currCount:{type:Number},
         meanCount:{type:Number},
        busy:{type:Number},
-    }
+    },
+    image:{type:String}
 }
 const load_schema = new mongoose.Schema(schema)
 mongoose.pluralize(null);

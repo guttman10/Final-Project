@@ -10,14 +10,15 @@ class LoadList extends Component {
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
     }
-    add({event = null, id = null, txt = 'default title', ld = 'default load'}){
-        console.log(event,id,txt,ld)
+    add({event = null, id = null, txt = 'default title', ld = 'default load', img = null}){
+        console.log(event,id,txt,ld,img)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
                 {id: id !== null ? id : this.nextID(prevState.loads),
                     name:txt,
-                    load:ld
+                    load:ld,
+                    image:img
                 }
             ]
         }))
@@ -35,7 +36,7 @@ class LoadList extends Component {
     fetch(url)
         .then(res => res.json())
         .then(data => data.map(item =>
-            this.add({id: item.id, txt: item.name, ld: item.load})))
+            this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})))
         .catch(err => console.error(err));
 
 }
@@ -49,15 +50,19 @@ class LoadList extends Component {
                 style={{width: 18 + 'rem', marginBottom: 7 + 'px'}}>
                 <div class="card-body">
                     <Load key={`load${i}`} index={i}>
-                        <h5 class="card-title">{name.name}</h5>
-
-                        <p className="card-text">Curr count: {JSON.stringify(name.load.currCount)}</p>
+                        <h4 class="card-title">{name.name}</h4>
+                        <img class="card-img-top" src={name.image} style={{position:"relative"}} />
+                        <div style={{position:"relative", marginTop:10, marginBottom:10}}>
+                        <p  className="card-text">Curr count: {JSON.stringify(name.load.currCount)}</p>
                         <p className="card-text">Max count: {JSON.stringify(name.load.maxCount)}</p>
                         <p className="card-text">Mean count: {JSON.stringify(name.load.meanCount)}</p>
                         <p className="card-text">Busy: {JSON.stringify(name.load.busy)}</p>
+                        </div>
                     </Load>
                 </div>
             </div>
+
+
         )
     }
     render(){
