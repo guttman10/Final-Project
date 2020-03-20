@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import Load from './Load'
 import {MdAdd} from 'react-icons/md'
+import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 class LoadList extends Component {
     listStyle  = {
         position:"relative",
@@ -8,14 +10,23 @@ class LoadList extends Component {
         marginBottom: 7 + 'px',
         left: "50%",
         transform: "translateX(-50%)"
+    };
+    loadBar = {
+        marginTop:10,
+        marginBottom:10,
+        width:"30%"
     }
     constructor(props) {
         super(props);
         this.state = {
             loads: []
         }
+        this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
+    }
+    reset = () => {
+        this.setState(this.baseState)
     }
     add({event = null, id = null, txt = 'default title', ld = 'default load', img = null}){
         console.log(event,id,txt,ld,img)
@@ -38,18 +49,33 @@ class LoadList extends Component {
     }
     componentDidMount() {
 
+        try {
+            const url = 'http://localhost:3000/load_data';
+            fetch(url)
+                .then(res => res.json())
+                .then(data => data.map(item =>
+                    this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})))
+                .catch(err => console.error(err));
+            setInterval(async () => {
 
-    const url = 'http://localhost:3000/load_data';
-    fetch(url)
-        .then(res => res.json())
-        .then(data => data.map(item =>
-            this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})))
-        .catch(err => console.error(err));
+                const url = 'http://localhost:3000/load_data';
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => data.map(item =>
+                        this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})))
+                    .catch(err => console.error(err));
+                this.reset()
+            }, 10000);
+        } catch(e) {
+            console.log(e);
+        }
 
 }
 
     eachLoad(name, i) {
-
+/*    <p className="card-text">Max count: {JSON.stringify(name.load.maxCount)}</p>
+                        <p className="card-text">Mean count: {JSON.stringify(name.load.meanCount)}</p>
+                        <p className="card-text">Busy: {JSON.stringify(name.load.busy)}</p>*/
         return (
             <div
                 key={`container ${i}`}
@@ -59,11 +85,31 @@ class LoadList extends Component {
                     <Load key={`load${i}`} index={i}>
                         <h4 class="card-title">{name.name}</h4>
                         <img class="card-img-top" src={name.image}/>
-                        <div style={{marginTop:10, marginBottom:10}}>
-                        <p  className="card-text">Curr count: {JSON.stringify(name.load.currCount)}</p>
-                        <p className="card-text">Max count: {JSON.stringify(name.load.maxCount)}</p>
-                        <p className="card-text">Mean count: {JSON.stringify(name.load.meanCount)}</p>
-                        <p className="card-text">Busy: {JSON.stringify(name.load.busy)}</p>
+                        <div style={this.loadBar}>
+
+                            <CircularProgressbar style={this.pogHeight}
+                                                 value={JSON.stringify(name.load.currCount)}
+                                                 maxValue={10}
+                                                 text={`${JSON.stringify(name.load.currCount)*10}%`}
+                                                 styles={{
+                                                     path: {
+                                                         transform: "rotate(180deg)",
+                                                         transformOrigin: "center center",
+                                                         strokeLinecap: "butt",
+                                                         stroke: (JSON.stringify(name.load.currCount)*10) >= 70 ? "#bd2327" : "blue"
+                                                     },
+                                                     trail: {
+                                                         strokeWidth: 0
+                                                     },
+                                                     text: {
+                                                         fontSize: 22,
+                                                         fontWeight: 800,
+                                                         animation: "fadein 2s",
+                                                         fill: (JSON.stringify(name.load.currCount)*10) >= 70 ? "#bd2327" : "blue"
+                                                     }
+                                                 }}
+
+                            />
                         </div>
                     </Load>
                 </div>
