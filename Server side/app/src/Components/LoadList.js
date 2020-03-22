@@ -3,6 +3,7 @@ import Load from './Load'
 import {MdAdd} from 'react-icons/md'
 import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+
 class LoadList extends Component {
     listStyle  = {
         position:"relative",
@@ -56,16 +57,21 @@ class LoadList extends Component {
                 .then(data => data.map(item =>
                     this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})))
                 .catch(err => console.error(err));
-            setInterval(async () => {
 
-                const url = 'http://localhost:3000/load_data';
-                fetch(url)
-                    .then(res => res.json())
-                    .then(data => data.map(item =>
-                        this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})))
-                    .catch(err => console.error(err));
-                this.reset()
-            }, 10000);
+                setInterval(async () => {
+                    const url = 'http://localhost:3000/load_data';
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => data.map(item =>
+                        {
+                            this.setState({
+                                loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
+                            });
+                        }
+
+                           ))
+                        .catch(err => console.error(err));
+                }, 10000);
         } catch(e) {
             console.log(e);
         }
@@ -73,9 +79,7 @@ class LoadList extends Component {
 }
 
     eachLoad(name, i) {
-/*    <p className="card-text">Max count: {JSON.stringify(name.load.maxCount)}</p>
-                        <p className="card-text">Mean count: {JSON.stringify(name.load.meanCount)}</p>
-                        <p className="card-text">Busy: {JSON.stringify(name.load.busy)}</p>*/
+        console.log(this.state.loads)
         return (
             <div
                 key={`container ${i}`}
@@ -86,7 +90,6 @@ class LoadList extends Component {
                         <h4 class="card-title">{name.name}</h4>
                         <img class="card-img-top" src={name.image}/>
                         <div style={this.loadBar}>
-
                             <CircularProgressbar style={this.pogHeight}
                                                  value={JSON.stringify(name.load.currCount)}
                                                  maxValue={10}
