@@ -57,7 +57,7 @@ def Start(dataToSet):
 def send_data(name, sendData):
     while True:
         mycol.find_one_and_update(
-            {"name": "Fun Town"},
+            {"name": "Louvre"},
             {"$set":
                  {"load": sendData}
              }, upsert=True
@@ -67,7 +67,7 @@ def send_data(name, sendData):
 
 
 if __name__ == "__main__":
-    data = {"maxCount": 0, "currCount": 0, "meanCount": 0}
+    data = {"maxCount": 0, "currCount": 0, "meanCount": 0, "maxCapacity": 20}
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()
