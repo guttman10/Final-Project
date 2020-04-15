@@ -1,5 +1,7 @@
-/App Side/.idea
+/App/__pycache__
 /Client Side/.idea
 /Client Side/__pycache__
 /Client Side/venv
 /Server Side/.idea
+venv
+.idea
