@@ -1,9 +1,6 @@
 from skimage.metrics import structural_similarity
 import cv2
 import numpy as np
-from MotionDetector import GetMotion
-
-
 
 
 def compare(a, b):

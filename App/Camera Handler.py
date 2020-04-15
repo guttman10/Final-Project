@@ -1,14 +1,13 @@
 import cv2
-import face_recognition
 import pymongo
-from bson import ObjectId
-from MotionDetector import GetMotion
-from ImageComapre import compare
+from App.MotionDetector import GetMotion
+from App.ImageComapre import compare
 import threading
 import time
+
 # pip install opencv-python
-#pip install pymongo[srv]
-#pip install pymongo
+# pip install pymongo[srv]
+# pip install scikit-image
 
 myclient = pymongo.MongoClient('mongodb+srv://admin:admin@monitour-t8pfj.mongodb.net/load_data')
 mydb = myclient["load_data"]
@@ -16,11 +15,11 @@ mycol = mydb["data"]
 
 x = mycol.find_one()
 
-print(x)
+
 def getBusyStatus(diff, maxCount, count):
     val = 0
     if maxCount != 0:
-        val = (1 - diff) * (count/maxCount)
+        val = (1 - diff) * (count / maxCount)
     return val
 
 
