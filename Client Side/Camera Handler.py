@@ -68,7 +68,7 @@ def send_data(name, sendData):
 
 
 if __name__ == "__main__":
-    data = {"maxCount": 0, "currCount": 0, "meanCount": 0, "maxCapacity": 20}
+    data = {"maxCount": 0, "currCount": 0, "meanCount": 0}
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()
