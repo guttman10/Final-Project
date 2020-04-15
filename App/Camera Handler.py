@@ -2,12 +2,11 @@ import cv2
 import pymongo
 from App.MotionDetector import getMotion
 from App.ImageComapre import compare
-from App.Predictor import predict, writeToCsv, getDataFromCsv
+from App.Predictor import predict, writeToCsv, getDataFromCsv, getWeekday
 import threading
 import time
 import atexit
 import datetime
-
 
 # pip install opencv-python
 # pip install pymongo[srv]
@@ -19,6 +18,7 @@ mycol = mydb["data"]
 
 x = mycol.find_one()
 name = "idk"  # need to get it from server
+dataset = getDataFromCsv(name)
 
 
 def getBusyStatus(diff, maxCount, count):
@@ -29,20 +29,16 @@ def getBusyStatus(diff, maxCount, count):
 
 
 def Start(dataToSet):
-    dataset = getDataFromCsv(name)
     data["suggestion"] = predict(dataset)[0]
     now = datetime.datetime.now()
-    time = now.hour
+    time_ = now.hour
     cameraPort = 0
     cap = cv2.VideoCapture(cameraPort)
     _, mainFrame = cap.read()
     totalCounts = 0
     countInstanced = 0
     while True:
-        now = datetime.datetime.now()
-        if now.hour != time:
-            time = now.hour
-            data["suggestion"] = predict(dataset)[0]
+        i = 0
         # Capture frame-by-frame
         ret, frame = cap.read()
         if ret:
@@ -62,6 +58,14 @@ def Start(dataToSet):
                 # set the current count
                 dataToSet["currCount"] = count
             dataToSet["busy"] = getBusyStatus(score, dataToSet["maxCount"], dataToSet["currCount"])
+
+        now = datetime.datetime.now()
+        if now.hour != time_:
+            while dataset[getWeekday(now.day)][i] != time:
+                i += 1
+            dataset[getWeekday(now.day)][i + 1] = dataToSet["maxCount"]
+            time_ = now.hour
+            data["suggestion"] = predict(dataset)[0]
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -86,4 +90,4 @@ if __name__ == "__main__":
     tServer.start()
     Start(data)
 
-atexit.register(writeToCsv(name, data))
+atexit.register(writeToCsv(name, dataset))

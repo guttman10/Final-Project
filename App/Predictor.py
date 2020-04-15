@@ -5,6 +5,10 @@ import datetime
 weekDays = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
 
+def getWeekday(i):
+    return weekDays[i]
+
+
 def generateFakeData(name):
     otp = "T"
     with open(name + '.csv', 'w', newline='') as csvfile:
@@ -65,7 +69,7 @@ def writeToCsv(name, data):
         for key in data:
             i = 0
             while i < len(data[key]):
-                spamwriter.writerow([key] + [data[key][i]] + [data[key][i+1]] + [data[key][i+2]])
+                spamwriter.writerow([key] + [data[key][i]] + [data[key][i + 1]] + [data[key][i + 2]])
 
                 i += 3
 
