@@ -2,7 +2,9 @@ import cv2
 import face_recognition
 import pymongo
 from bson import ObjectId
-
+# pip install opencv-python
+#pip install pymongo[srv]
+#pip install pymongo
 from MotionDetector import GetMotion
 from ImageComapre import compare
 import threading
