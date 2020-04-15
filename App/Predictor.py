@@ -72,6 +72,7 @@ def writeToCsv(name, data):
                 spamwriter.writerow([key] + [data[key][i]] + [data[key][i + 1]] + [data[key][i + 2]])
 
                 i += 3
+        print("Done")
 
 
 generateFakeData("idk")

@@ -88,6 +88,5 @@ if __name__ == "__main__":
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()
+    atexit.register(writeToCsv, name, dataset)
     Start(data)
-
-atexit.register(writeToCsv(name, dataset))
