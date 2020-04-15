@@ -86,7 +86,7 @@ class LoadList extends Component {
 
     eachLoad(name, i) {
         console.log(this.state.loads)
-        let currLoadCap = JSON.stringify(name.load.currCount)/JSON.stringify(name.load.maxCapacity)
+        let currLoadCap = JSON.stringify(name.load.currCount)/JSON.stringify(name.load.maxCount)
         currLoadCap = currLoadCap.toFixed(2)
         return (
             <div key={`container ${i}`} className="card" style={this.listStyle}>
@@ -97,7 +97,7 @@ class LoadList extends Component {
                         <div style={this.loadBar}>
                             <CircularProgressbar style={this.loadBar}
                                                  value={JSON.stringify(name.load.currCount)}
-                                                 maxValue={JSON.stringify(name.load.maxCapacity)}
+                                                 maxValue={JSON.stringify(name.load.maxCount)}
                                                  text={`${currLoadCap*100}%`}
                                                  styles={{
                                                      path: {
