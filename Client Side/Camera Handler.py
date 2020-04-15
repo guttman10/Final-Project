@@ -8,8 +8,7 @@ from ImageComapre import compare
 import threading
 import time
 # pip install opencv-python
-#pip install pymongo[srv]
-#pip install pymongo
+
 myclient = pymongo.MongoClient('mongodb+srv://admin:admin@monitour-t8pfj.mongodb.net/load_data')
 mydb = myclient["load_data"]
 mycol = mydb["data"]
