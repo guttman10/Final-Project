@@ -1,9 +1,13 @@
 import cv2
 import pymongo
-from App.MotionDetector import GetMotion
+from App.MotionDetector import getMotion
 from App.ImageComapre import compare
+from App.Predictor import predict, writeToCsv, getDataFromCsv
 import threading
 import time
+import atexit
+import datetime
+
 
 # pip install opencv-python
 # pip install pymongo[srv]
@@ -14,6 +18,7 @@ mydb = myclient["load_data"]
 mycol = mydb["data"]
 
 x = mycol.find_one()
+name = "idk"  # need to get it from server
 
 
 def getBusyStatus(diff, maxCount, count):
@@ -24,12 +29,20 @@ def getBusyStatus(diff, maxCount, count):
 
 
 def Start(dataToSet):
+    dataset = getDataFromCsv(name)
+    data["suggestion"] = predict(dataset)[0]
+    now = datetime.datetime.now()
+    time = now.hour
     cameraPort = 0
     cap = cv2.VideoCapture(cameraPort)
     _, mainFrame = cap.read()
     totalCounts = 0
     countInstanced = 0
     while True:
+        now = datetime.datetime.now()
+        if now.hour != time:
+            time = now.hour
+            data["suggestion"] = predict(dataset)[0]
         # Capture frame-by-frame
         ret, frame = cap.read()
         if ret:
@@ -37,7 +50,7 @@ def Start(dataToSet):
         # if everything was captured correctly continue
         if ret2:
             score, count = compare(mainFrame, frame2)
-            mov = GetMotion(frame, frame2)
+            mov = getMotion(frame, frame2)
             if score < 0.95 and mov:
                 totalCounts += count
                 countInstanced += 1
@@ -72,3 +85,5 @@ if __name__ == "__main__":
     tServer.daemon = True
     tServer.start()
     Start(data)
+
+atexit.register(writeToCsv(name, data))
