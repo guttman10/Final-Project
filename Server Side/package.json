@@ -1,0 +1,23 @@
+{
+  "name": "MoniTour-server",
+  "version": "1.0.0",
+  "description": "serverside",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "monitour",
+    "heroku"
+  ],
+  "author": "Ofir and Omer",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongoose": "^5.9.6",
+    "morgan": "^1.9.1"
+  },
+  "engines": {
+    "node": "12.16.0"
+  }
+}
