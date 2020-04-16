@@ -41,8 +41,7 @@ def predict(data):
         if int(t[0]) < int(now):
             i += 1
         else:
-            if int(t[1]) < 50:
-                freelist.append(t)
+            freelist.append(t)
     return freelist
 
 
