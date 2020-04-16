@@ -28,20 +28,22 @@ def generateFakeData(name):
 def predict(data):
     i = 0
     tlist = []
+    freelist = []
+    info = []
     day = weekDays[datetime.datetime.today().weekday()]
     while i < len(data[day]):
         if data[day][i] == "T":
             tlist.append((data[day][i + 1], data[day][i + 2]))
         i += 3
-    tlist.sort(key=lambda x: x[1])
     i = 0
     now = datetime.datetime.now().hour
     for t in tlist:
         if int(t[0]) < int(now):
             i += 1
         else:
-            break
-    return tlist[i]
+            if int(t[1]) < 50:
+                freelist.append(t)
+    return freelist
 
 
 def getDataFromCsv(fname):
