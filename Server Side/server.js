@@ -19,7 +19,7 @@ app.use(
 
 //routes
 app.get('/load_data', asyncWrapper(controller.getAllLoads));
-
+app.get('/prediction', asyncWrapper(controller.getPrediction));
 
 //run the server
     app.listen(port, () => {

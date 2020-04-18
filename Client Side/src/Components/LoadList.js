@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Load from './Load'
+import Histogram from "./Histogram";
 import {MdAdd} from 'react-icons/md'
 import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -87,8 +88,8 @@ class LoadList extends Component {
     eachLoad(name, i) {
         console.log(this.state.loads)
         let currLoadCap;
-        if((name.load.currCount == 0 && name.load.maxCount == 0) ||
-            (name.load.currCount == 1 && name.load.maxCount == 0 ))
+        if((name.load.currCount === 0 && name.load.maxCount === 0) ||
+            (name.load.currCount === 1 && name.load.maxCount === 0 ))
             currLoadCap = 0;
         else
         {
