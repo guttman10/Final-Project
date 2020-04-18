@@ -87,12 +87,12 @@ class LoadList extends Component {
     eachLoad(name, i) {
         console.log(this.state.loads)
         let currLoadCap;
-        if((JSON.stringify(name.load.currCount) == 0 && JSON.stringify(name.load.maxCount) == 0) ||
-            (JSON.stringify(name.load.currCount) == 1 && JSON.stringify(name.load.maxCount) == 0)  )
+        if((name.load.currCount == 0 && name.load.maxCount == 0) ||
+            (name.load.currCount == 1 && name.load.maxCount == 0 ))
             currLoadCap = 0;
         else
         {
-            currLoadCap = JSON.stringify(name.load.currCount)/JSON.stringify(name.load.maxCount)
+            currLoadCap = name.load.currCount/name.load.maxCount
             currLoadCap = currLoadCap.toFixed(2)}
         return (
             <div key={`container ${i}`} className="card" style={this.listStyle}>
@@ -102,8 +102,8 @@ class LoadList extends Component {
                         <img style={this.loadPic} class="card-img-top" src={name.image}/>
                         <div style={this.loadBar}>
                             <CircularProgressbar style={this.loadBar}
-                                                 value={JSON.stringify(name.load.currCount)}
-                                                 maxValue={JSON.stringify(name.load.maxCount)}
+                                                 value={name.load.currCount}
+                                                 maxValue={name.load.maxCount}
                                                  text={`${currLoadCap*100}%`}
                                                  styles={{
                                                      path: {
