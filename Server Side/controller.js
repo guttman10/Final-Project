@@ -15,12 +15,8 @@ module.exports={
     async getPrediction(req, res, next){
 
         const csvFilePath='./file/idkreact.csv'
-        const csv=require('csvtojson')
+        const csv= require('csvtojson')
         csv()
-            .fromFile(csvFilePath)
-            .then((jsonObj)=>{
-                console.log(jsonObj);
-            })
         const result=await csv().fromFile(csvFilePath)
         if(result)
             res.json(result)
