@@ -57,7 +57,8 @@ class LoadList extends Component {
     componentDidMount() {
 
         try {
-            const url = 'https://moninode.herokuapp.com/load_data';
+            //const url = 'https://moninode.herokuapp.com/load_data'; for real use
+            const url = 'http://localhost:3000/load_data';
             fetch(url)
                 .then(res => res.json())
                 .then(data => data.map(item =>
@@ -65,7 +66,6 @@ class LoadList extends Component {
                 .catch(err => console.error(err));
 
                 setInterval(async () => {
-                    const url = 'https://moninode.herokuapp.com/load_data';
                     fetch(url)
                         .then(res => res.json())
                         .then(data => data.map(item =>
@@ -86,8 +86,14 @@ class LoadList extends Component {
 
     eachLoad(name, i) {
         console.log(this.state.loads)
-        let currLoadCap = JSON.stringify(name.load.currCount)/JSON.stringify(name.load.maxCount)
-        currLoadCap = currLoadCap.toFixed(2)
+        let currLoadCap;
+        if((JSON.stringify(name.load.currCount) == 0 && JSON.stringify(name.load.maxCount) == 0) ||
+            (JSON.stringify(name.load.currCount) == 1 && JSON.stringify(name.load.maxCount) == 0)  )
+            currLoadCap = 0;
+        else
+        {
+            currLoadCap = JSON.stringify(name.load.currCount)/JSON.stringify(name.load.maxCount)
+            currLoadCap = currLoadCap.toFixed(2)}
         return (
             <div key={`container ${i}`} className="card" style={this.listStyle}>
                 <div class="card-body">
