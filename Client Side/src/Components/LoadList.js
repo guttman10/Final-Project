@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
+import ReactDOM from "react-dom";
 import Load from './Load'
-import Histogram from "./Histogram";
 import {MdAdd} from 'react-icons/md'
+import VerticalProgress from "./VerticalProgress";
 import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-
+import "./pogstyle.css"
 class LoadList extends Component {
     listStyle  = {
         position:"relative",
@@ -23,11 +24,12 @@ class LoadList extends Component {
     loadPic = {
         height:"62%",
         width:"62%"
-    }
+    };
+
     constructor(props) {
         super(props);
         this.state = {
-            loads: []
+            loads: [],
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -95,6 +97,7 @@ class LoadList extends Component {
         {
             currLoadCap = name.load.currCount/name.load.maxCount
             currLoadCap = currLoadCap.toFixed(2)}
+        let predictload = parseInt(name.load.suggestion[1],10)
         return (
             <div key={`container ${i}`} className="card" style={this.listStyle}>
                 <div class="card-body">
@@ -125,6 +128,7 @@ class LoadList extends Component {
                                                  }}
 
                             />
+                            <VerticalProgress progress={predictload} />
                         </div>
                     </Load>
                 </div>
