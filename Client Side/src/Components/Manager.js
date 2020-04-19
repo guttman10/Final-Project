@@ -6,7 +6,7 @@ import VerticalProgress from "./VerticalProgress";
 import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import "./pogstyle.css"
-class LoadList extends Component {
+class Manager extends Component {
     listStyle  = {
         position:"relative",
         marginTop:30,
@@ -139,7 +139,7 @@ class LoadList extends Component {
     }
     render(){
         return (
-            <div className='loadList'>
+            <div className='Manager'>
                {this.state.loads.map(this.eachLoad)}
             </div>
 
@@ -147,4 +147,4 @@ class LoadList extends Component {
     }
 }
 
-export default LoadList
+export default Manager

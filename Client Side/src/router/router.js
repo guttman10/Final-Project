@@ -1,6 +1,7 @@
 import React from 'react';
 import {Route} from 'react-router-dom'
-import LoadList from '../Components/LoadList';
+import Tourist from '../Components/Tourist';
+import Manager from "../Components/Manager";
 import test from '../Components/test';
 import Header from '../Header'
 
@@ -9,8 +10,8 @@ const ReactRouter = () => {
         <React.Fragment>
             <Header />
             <title>{"MoniTour"}</title>
-            <Route exact path="/" component={LoadList}/>
-            <Route exact path="/test" component={test}/>
+            <Route exact path="/" component={Tourist}/>
+            <Route exact path="/manager" component={Manager}/>
         </React.Fragment>
     )
 }

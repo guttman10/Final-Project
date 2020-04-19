@@ -6,7 +6,7 @@ const  VerticalProgress = ({ progress }) => {
         <Spring from={{ percent: 0 }} to={{ percent: progress }}>
             {({ percent }) => (
                 <div className="progress vertical">
-                    <div style={{ height: `${percent}%` }} className="progress-bar">
+                    <div style={{ height: `${percent}%`, backgroundColor: progress >= 80 ? "#bd2327" : "#2293dd" }} className="progressBar">
                         <span className="sr-only">{`${progress}%`}</span>
                     </div>
                 </div>
