@@ -31,25 +31,47 @@ class Tourist extends Component {
         super(props);
         this.state = {
             loads: [],
+            Latitude:0,
+            Longitude:0
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
-
+        this.getPosition = this.getPosition.bind(this)
     }
     reset = () => {
         this.setState(this.baseState)
     }
 
-    add({event = null, id = null, txt = 'default title', ld = 'default load', img = null}){
-        console.log(event,id,txt,ld,img)
+     getPosition(){
+
+        let templong, templat
+        navigator.geolocation.getCurrentPosition(function(position) {
+            templat = position.coords.latitude
+            templong = position.coords.longitude
+            console.log(templat)
+        }
+        )
+         setTimeout(
+             function() {
+
+             }
+                 .bind(this),
+             3000
+         );
+         console.log(this.state.Latitude)
+    }
+    add({event = null, id = null, txt = 'default title', ld = 'default load', img = null, loc = null}){
+        console.log(event,id,txt,ld,img,loc)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
                 {id: id !== null ? id : this.nextID(prevState.loads),
                     name:txt,
                     load:ld,
-                    image:img
+                    image:img,
+                    location:loc,
+
                 }
             ]
         }))
@@ -61,35 +83,51 @@ class Tourist extends Component {
         return ++this.uniqueId
     }
     componentDidMount() {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            console.log("Latitude is :", position.coords.latitude);
-            console.log("Longitude is :", position.coords.longitude);
-        });
-        try {
-            //const url = 'https://moninode.herokuapp.com/load_data'; for real use
-            const url = 'http://localhost:3000/load_data';
-            fetch(url)
-                .then(res => res.json())
-                .then(data => data.map(item =>
-                    this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})))
-                .catch(err => console.error(err));
 
-                setInterval(async () => {
+        navigator.geolocation.getCurrentPosition(location => {
+            this.setState({
+                Latitude: location.coords.latitude,
+                Longitude: location.coords.longitude
+            })
+        });
+
+        setTimeout(
+            function() {
+                try {
+                    //const url = 'https://moninode.herokuapp.com/load_data'; for real use
+                    const url = 'http://localhost:3000/load_data';
                     fetch(url)
                         .then(res => res.json())
-                        .then(data => data.map(item =>
-                        {
-                            this.setState({
-                                loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
-                            });
-                        }
-
-                           ))
+                        .then(data => data.map(item =>{
+                            if((item.location.latitude - this.state.Latitude) > 0)
+                            {
+                                this.add(
+                                    {id: item.id, txt: item.name, ld: item.load, img: item.image}
+                                )}}
+                        ))
                         .catch(err => console.error(err));
-                }, 5000);
-        } catch(e) {
-            console.log(e);
-        }
+
+                    setInterval(async () => {
+                        fetch(url)
+                            .then(res => res.json())
+                            .then(data => data.map(item =>
+                                {
+                                    this.setState({
+                                        loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
+                                    });
+                                }
+
+                            ))
+                            .catch(err => console.error(err));
+                    }, 5000);
+                } catch(e) {
+                    console.log(e);
+                }
+            }
+                .bind(this),
+            1
+        );
+
 
 }
 
