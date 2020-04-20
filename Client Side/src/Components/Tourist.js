@@ -37,30 +37,11 @@ class Tourist extends Component {
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
-        this.getPosition = this.getPosition.bind(this)
     }
     reset = () => {
         this.setState(this.baseState)
     }
 
-     getPosition(){
-
-        let templong, templat
-        navigator.geolocation.getCurrentPosition(function(position) {
-            templat = position.coords.latitude
-            templong = position.coords.longitude
-            console.log(templat)
-        }
-        )
-         setTimeout(
-             function() {
-
-             }
-                 .bind(this),
-             3000
-         );
-         console.log(this.state.Latitude)
-    }
     add({event = null, id = null, txt = 'default title', ld = 'default load', img = null, loc = null}){
         console.log(event,id,txt,ld,img,loc)
         this.setState(prevState => ({
