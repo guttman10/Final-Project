@@ -4,6 +4,7 @@ import Load from './Load'
 import {MdAdd} from 'react-icons/md'
 import VerticalProgress from "./VerticalProgress";
 import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+
 import 'react-circular-progressbar/dist/styles.css';
 import "./pogstyle.css"
 class Tourist extends Component {
@@ -34,10 +35,12 @@ class Tourist extends Component {
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
+
     }
     reset = () => {
         this.setState(this.baseState)
     }
+
     add({event = null, id = null, txt = 'default title', ld = 'default load', img = null}){
         console.log(event,id,txt,ld,img)
         this.setState(prevState => ({
@@ -58,7 +61,10 @@ class Tourist extends Component {
         return ++this.uniqueId
     }
     componentDidMount() {
-
+        navigator.geolocation.getCurrentPosition(function(position) {
+            console.log("Latitude is :", position.coords.latitude);
+            console.log("Longitude is :", position.coords.longitude);
+        });
         try {
             //const url = 'https://moninode.herokuapp.com/load_data'; for real use
             const url = 'http://localhost:3000/load_data';
@@ -141,6 +147,7 @@ class Tourist extends Component {
         return (
             <div className='Tourist'>
                {this.state.loads.map(this.eachLoad)}
+
             </div>
 
         )
