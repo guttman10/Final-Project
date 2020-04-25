@@ -81,9 +81,7 @@ class Tourist extends Component {
                         .then(res => res.json())
                         .then(data => data.map(item =>{
                             if((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
-                                (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01) &&
-                                (Math.abs(item.location.longitude - this.state.Longitude) <= 0.01) &&
-                                (Math.abs(this.state.Longitude - item.location.longitude) <= 0.01))
+                                (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01))
                             {
                                 this.add(
                                     {id: item.id, txt: item.name, ld: item.load, img: item.image}
