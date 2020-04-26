@@ -9,22 +9,44 @@ import 'react-circular-progressbar/dist/styles.css';
 import "./pogstyle.css"
 class Tourist extends Component {
     listStyle  = {
-        position:"relative",
+        display: "flex",
+        alignItems: "stretch",
         marginTop:30,
-        width: 20 + 'rem',
+        width:"100%",
         marginBottom: 7 + 'px',
-        left: "50%",
+        left: "48%",
         transform: "translateX(-50%)"
     };
+    innerlistStyle = {
+
+    }
     loadBar = {
-        position:"absolute",
-        right:"10%",
-        top:"35%",
+        position:"relative",
+        marginLeft:"auto",
+        right:0,
+
         width:"20%"
     };
+    predictBar = {
+        position:"relative",
+        marginLeft:"auto",
+        right:0,
+        marginTop:"3%",
+        width:"12%"
+    };
+    listText = {
+        position:"absolute",
+        alignItems: 'center',
+
+    }
     loadPic = {
-        height:"42%",
-        width:"42%"
+        position:"relative",
+        marginTop:30,
+        marginBottom: 7 + 'px',
+        left: "50%",
+        transform: "translateX(-50%)",
+        height:"50%",
+        width:"50%"
     };
 
     constructor(props) {
@@ -126,36 +148,47 @@ class Tourist extends Component {
         let predictload = parseInt(name.load.suggestion[1],10)
         return (
             <div key={`container ${i}`} className="card" style={this.listStyle}>
-                <div class="card-body">
+                <div class="card-body" style={this.innerlistStyle}>
                     <Load key={`load${i}`} index={i}>
                         <h4 class="card-title">{name.name}</h4>
                         <img style={this.loadPic} class="card-img-top" src={name.image}/>
-                        <div style={this.loadBar}>
-                            <CircularProgressbar style={this.loadBar}
-                                                 value={name.load.currCount}
-                                                 maxValue={name.load.maxCount}
-                                                 text={`${currLoadCap*100}%`}
-                                                 styles={{
-                                                     path: {
-                                                         transformOrigin: "center center",
-                                                         strokeLinecap: "butt",
-                                                         stroke: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
-                                                     },
-                                                     trail: {
-                                                         strokeWidth: 7
-                                                     },
-                                                     text: {
-                                                         fontSize: 22,
-                                                         fontWeight: 500,
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item" ></li>
+                            <li className="list-group-item">
+                                <p className="font-weight-bold" style={this.listText}>Current Load:</p>
+                                <div style={this.loadBar}>
+                                <CircularProgressbar value={name.load.currCount}
+                                                     maxValue={name.load.maxCount}
+                                                     text={`${currLoadCap*100}%`}
+                                                     styles={{
+                                                         path: {
+                                                             transformOrigin: "center center",
+                                                             strokeLinecap: "butt",
+                                                             stroke: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                         },
+                                                         trail: {
+                                                             strokeWidth: 7
+                                                         },
+                                                         text: {
+                                                             fontSize: 22,
+                                                             fontWeight: 500,
 
-                                                         animation: "fadein 2s",
-                                                         fill: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
-                                                     }
-                                                 }}
+                                                             animation: "fadein 2s",
+                                                             fill: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                         }
+                                                     }}
 
-                            />
-                            <VerticalProgress progress={predictload} />
-                        </div>
+                                />
+                                </div>
+                            </li>
+                            <li className="list-group-item" >
+                                <p className="font-weight-bold" style={this.listText}>Predicted Load:</p>
+                                <div style={this.predictBar}>
+                                    <VerticalProgress progress={predictload} />
+                                </div>
+                            </li>
+
+                        </ul>
                     </Load>
                 </div>
             </div>
