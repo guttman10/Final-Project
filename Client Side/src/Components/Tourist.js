@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
-import ReactDOM from "react-dom";
 import Load from './Load'
 import {MdAdd} from 'react-icons/md'
-import VerticalProgress from "./VerticalProgress";
-import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import {  CircularProgressbar} from 'react-circular-progressbar';
 
 import 'react-circular-progressbar/dist/styles.css';
-import "./pogstyle.css"
 class Tourist extends Component {
     listStyle  = {
         display: "flex",
@@ -32,7 +29,7 @@ class Tourist extends Component {
         marginLeft:"auto",
         right:0,
         marginTop:"3%",
-        width:"12%"
+        width:"12%",
     };
     listText = {
         position:"absolute",
@@ -182,11 +179,33 @@ class Tourist extends Component {
                                 </div>
                             </li>
                             <li className="list-group-item" >
-                                <p className="font-weight-bold" style={this.listText}>Predicted Load:</p>
-                                <div style={this.predictBar}>
-                                    <VerticalProgress progress={predictload} />
+                                <p className="font-weight-bold" style={this.listText}>Predicted Load At {name.load.suggestion[0]}:00:</p>
+                                <div style={this.loadBar}>
+                                    <CircularProgressbar value={predictload}
+                                                         maxValue={100}
+                                                         text={`${predictload}%`}
+                                                         styles={{
+                                                             path: {
+                                                                 transformOrigin: "center center",
+                                                                 strokeLinecap: "butt",
+                                                                 stroke: predictload >= 70 ? "#bd2327" : "#2293dd"
+                                                             },
+                                                             trail: {
+                                                                 strokeWidth: 7
+                                                             },
+                                                             text: {
+                                                                 fontSize: 22,
+                                                                 fontWeight: 500,
+
+                                                                 animation: "fadein 2s",
+                                                                 fill: predictload >= 70 ? "#bd2327" : "#2293dd"
+                                                             }
+                                                         }}
+
+                                    />
                                 </div>
                             </li>
+                            <li className="list-group-item" />
 
                         </ul>
                     </Load>

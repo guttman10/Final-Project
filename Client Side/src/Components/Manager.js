@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import ReactDOM from "react-dom";
 import Load from './Load'
 import {MdAdd} from 'react-icons/md'
-import VerticalProgress from "./VerticalProgress";
 import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import "./pogstyle.css"
 class Manager extends Component {
     listStyle  = {
         position:"relative",
@@ -128,7 +126,7 @@ class Manager extends Component {
                                                  }}
 
                             />
-                            <VerticalProgress progress={predictload} />
+
                         </div>
                     </Load>
                 </div>
