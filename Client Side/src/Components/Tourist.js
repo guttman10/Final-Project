@@ -83,51 +83,41 @@ class Tourist extends Component {
         return ++this.uniqueId
     }
     componentDidMount() {
+        if(window.navigator.geolocation)
 
-        navigator.geolocation.getCurrentPosition(location => {
+        navigator.geolocation.getCurrentPosition(async location => {
             this.setState({
                 Latitude: location.coords.latitude,
                 Longitude: location.coords.longitude
             })
-        });
+                //const url = 'https://moninode.herokuapp.com/load_data'; for real use
+                const url = 'http://localhost:3000/load_data';
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => data.map(item =>{
+                        if((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
+                            (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01))
+                        {
+                            this.add(
+                                {id: item.id, txt: item.name, ld: item.load, img: item.image}
+                            )}}
+                    ))
+                    .catch(err => console.error(err));
 
-        setTimeout(
-            function() {
-                try {
-                    //const url = 'https://moninode.herokuapp.com/load_data'; for real use
-                    const url = 'http://localhost:3000/load_data';
+                setInterval(async () => {
                     fetch(url)
                         .then(res => res.json())
-                        .then(data => data.map(item =>{
-                            if((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
-                                (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01))
+                        .then(data => data.map(item =>
                             {
-                                this.add(
-                                    {id: item.id, txt: item.name, ld: item.load, img: item.image}
-                                )}}
+                                this.setState({
+                                    loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
+                                });
+                            }
+
                         ))
                         .catch(err => console.error(err));
-
-                    setInterval(async () => {
-                        fetch(url)
-                            .then(res => res.json())
-                            .then(data => data.map(item =>
-                                {
-                                    this.setState({
-                                        loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
-                                    });
-                                }
-
-                            ))
-                            .catch(err => console.error(err));
-                    }, 5000);
-                } catch(e) {
-                    console.log(e);
-                }
-            }
-                .bind(this),
-            2
-        );
+                }, 5000);
+        })
 
 
 }
