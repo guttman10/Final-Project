@@ -126,7 +126,7 @@ class Tourist extends Component {
                 }
             }
                 .bind(this),
-            1
+            2
         );
 
 
