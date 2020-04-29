@@ -14,22 +14,12 @@ class Tourist extends Component {
         left: "48%",
         transform: "translateX(-50%)"
     };
-    innerlistStyle = {
-
-    }
     loadBar = {
         position:"relative",
         marginLeft:"auto",
         right:0,
 
         width:"20%"
-    };
-    predictBar = {
-        position:"relative",
-        marginLeft:"auto",
-        right:0,
-        marginTop:"3%",
-        width:"12%",
     };
     listText = {
         position:"absolute",
@@ -51,7 +41,8 @@ class Tourist extends Component {
         this.state = {
             loads: [],
             Latitude:0,
-            Longitude:0
+            Longitude:0,
+            GPS:0
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -83,43 +74,42 @@ class Tourist extends Component {
         return ++this.uniqueId
     }
     componentDidMount() {
-        if(window.navigator.geolocation)
-
-        navigator.geolocation.getCurrentPosition(async location => {
-            this.setState({
-                Latitude: location.coords.latitude,
-                Longitude: location.coords.longitude
-            })
+        if (window.navigator.geolocation)
+        {
+            navigator.geolocation.getCurrentPosition(async location => {
+                this.setState({
+                    Latitude: location.coords.latitude,
+                    Longitude: location.coords.longitude
+                })
                 //const url = 'https://moninode.herokuapp.com/load_data'; for real use
                 const url = 'http://localhost:3000/load_data';
                 fetch(url)
                     .then(res => res.json())
-                    .then(data => data.map(item =>{
-                        if((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
-                            (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01))
-                        {
-                            this.add(
-                                {id: item.id, txt: item.name, ld: item.load, img: item.image}
-                            )}}
+                    .then(data => data.map(item => {
+                            if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
+                                (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
+                                this.add(
+                                    {id: item.id, txt: item.name, ld: item.load, img: item.image}
+                                )
+                            }
+                        }
                     ))
                     .catch(err => console.error(err));
-
+                this.setState({GPS:1})
                 setInterval(async () => {
                     fetch(url)
                         .then(res => res.json())
-                        .then(data => data.map(item =>
-                            {
+                        .then(data => data.map(item => {
                                 this.setState({
                                     loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
                                 });
                             }
-
                         ))
                         .catch(err => console.error(err));
                 }, 5000);
-        })
+            })
 
-
+    }
 }
 
     eachLoad(name, i) {
@@ -135,7 +125,7 @@ class Tourist extends Component {
         let predictload = parseInt(name.load.suggestion[1],10)
         return (
             <div key={`container ${i}`} className="card" style={this.listStyle}>
-                <div class="card-body" style={this.innerlistStyle}>
+                <div class="card-body">
                     <Load key={`load${i}`} index={i}>
                         <h4 class="card-title">{name.name}</h4>
                         <img style={this.loadPic} class="card-img-top" src={name.image}/>
@@ -206,13 +196,21 @@ class Tourist extends Component {
         )
     }
     render(){
-        return (
-            <div className='Tourist'>
-               {this.state.loads.map(this.eachLoad)}
+        if(this.state.GPS === 0)
+        {
+            return(
+                <div>Please Enable Your Gps Position</div>
+            )
+        }
+        else {
+            return (
+                <div className='Tourist'>
+                    {this.state.loads.map(this.eachLoad)}
 
-            </div>
+                </div>
 
-        )
+            )
+        }
     }
 }
 
