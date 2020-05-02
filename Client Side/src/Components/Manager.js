@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import Load from './Load'
 import {MdAdd} from 'react-icons/md'
 import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import ReactSpeedometer from "react-d3-speedometer"
 import 'react-circular-progressbar/dist/styles.css';
 class Manager extends Component {
     listStyle  = {
@@ -28,11 +29,16 @@ class Manager extends Component {
         height:"62%",
         width:"62%"
     };
+    charts = {
+        position:'absolute',
+        right:0,
+    }
 
     constructor(props) {
         super(props);
         this.state = {
-            loads: []
+            loads: [],
+            gaugeSum:0
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -67,26 +73,32 @@ class Manager extends Component {
 
                 //const url = 'https://moninode.herokuapp.com/load_data'; for real use
                 const url = 'http://localhost:3000/load_data';
+                let GaugeSumTemp = 0
                 fetch(url)
                     .then(res => res.json())
                     .then(data => data.map(item => {
                             if (item.manager === true) {
+                                GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
                                 this.add(
                                     {id: item.id, txt: item.name, ld: item.load, img: item.image}
                                 )
                             }
+                        this.setState({ gaugeSum: GaugeSumTemp})
                         }
                     ))
                     .catch(err => console.error(err));
-                this.setState({GPS:1})
                 setInterval(async () => {
+                    let GaugeSumTemp = 0
                     fetch(url)
                         .then(res => res.json())
                         .then(data => data.map(item => {
+                            if (item.manager === true) {
+                            GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
                                 this.setState({
                                     loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
                                 });
-                            }
+                            this.setState({ gaugeSum: GaugeSumTemp})
+                            }}
                         ))
                         .catch(err => console.error(err));
                 }, 5000);
@@ -180,9 +192,31 @@ class Manager extends Component {
     render(){
 
             return (
-                <div className='Tourist'>
-                    {this.state.loads.map(this.eachLoad)}
+                <div className='Manager'>
+                    <div className="card" style={this.charts}>
+                            <div className="card-body">
+                                Overall Load Gauge
+                                <ReactSpeedometer
+                                    value={this.state.gaugeSum}
+                                    needleColor="steelblue"
+                                    needleTransitionDuration={4000}
+                                    needleTransition="easeElastic"
+                                    currentValueText="Current Overall Load: ${value}"
+                                    minValue={0}
+                                    maxValue={20}
+                                    segments={4}
+                                    customSegmentStops={[0, 5, 10,15,20]}
+                                    segmentColors={[
+                                        "#72f507",
+                                        "#fff200",
+                                        "#ff8c00",
+                                        "#e32133",
+                                    ]}
 
+                                />
+                            </div>
+                    </div>
+                    {this.state.loads.map(this.eachLoad)}
                 </div>
 
             )
