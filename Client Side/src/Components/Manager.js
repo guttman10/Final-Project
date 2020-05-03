@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from "react-dom";
 import Load from './Load'
 import {MdAdd} from 'react-icons/md'
+import Test from "./test"
 import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import ReactSpeedometer from "react-d3-speedometer"
 import 'react-circular-progressbar/dist/styles.css';
@@ -215,6 +216,9 @@ class Manager extends Component {
 
                                 />
                             </div>
+                        <div className="card-body">
+                            <Test></Test>
+                        </div>
                     </div>
                     {this.state.loads.map(this.eachLoad)}
                 </div>
