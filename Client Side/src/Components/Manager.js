@@ -4,9 +4,13 @@ import Load from './Load'
 import {MdAdd} from 'react-icons/md'
 import Test from "./test"
 import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import RTChart from 'react-rt-chart';
+import './c3.css';
 import ReactSpeedometer from "react-d3-speedometer"
 import 'react-circular-progressbar/dist/styles.css';
 class Manager extends Component {
+    hasUnmounted = false;
+    _isMounted = false;
     listStyle  = {
         position:"relative",
         marginTop:30,
@@ -33,13 +37,15 @@ class Manager extends Component {
     charts = {
         position:'absolute',
         right:0,
+        width:"40%",
     }
 
     constructor(props) {
         super(props);
         this.state = {
             loads: [],
-            gaugeSum:0
+            gaugeSum:0,
+            counter:0
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -71,42 +77,48 @@ class Manager extends Component {
         return ++this.uniqueId
     }
     componentDidMount() {
-
-                //const url = 'https://moninode.herokuapp.com/load_data'; for real use
-                const url = 'http://localhost:3000/load_data';
-                let GaugeSumTemp = 0
-                fetch(url)
-                    .then(res => res.json())
-                    .then(data => data.map(item => {
-                            if (item.manager === true) {
-                                GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
-                                this.add(
-                                    {id: item.id, txt: item.name, ld: item.load, img: item.image}
-                                )
-                            }
-                        this.setState({ gaugeSum: GaugeSumTemp})
+        this._isMounted = true;
+        //const url = 'https://moninode.herokuapp.com/load_data'; for real use
+        const url = 'http://localhost:3000/load_data';
+        let GaugeSumTemp = 0
+        fetch(url)
+            .then(res => res.json())
+            .then(data => data.map(item => {
+                    if (item.manager === true) {
+                        GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
+                        this.add(
+                            {id: item.id, txt: item.name, ld: item.load, img: item.image}
+                        )
+                    }
+                if (this._isMounted) {
+                    this.setState({gaugeSum: GaugeSumTemp})
+                }
+                }
+            ))
+            .catch(err => console.error(err));
+        setInterval(async () => {
+            GaugeSumTemp = 0
+            fetch(url)
+                .then(res => res.json())
+                .then(data => data.map(item => {
+                    if (item.manager === true) {
+                        GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
+                        if (this._isMounted) {
+                        this.setState({
+                            loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
+                        });
+                        this.setState({gaugeSum: GaugeSumTemp})
                         }
-                    ))
-                    .catch(err => console.error(err));
-                setInterval(async () => {
-                    let GaugeSumTemp = 0
-                    fetch(url)
-                        .then(res => res.json())
-                        .then(data => data.map(item => {
-                            if (item.manager === true) {
-                            GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
-                                this.setState({
-                                    loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
-                                });
-                            this.setState({ gaugeSum: GaugeSumTemp})
-                            }}
-                        ))
-                        .catch(err => console.error(err));
-                }, 5000);
+                    }}
+                ))
+                .catch(err => console.error(err));
+        }, 5000);
 
 
     }
-
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
     eachLoad(name, i) {
         console.log(this.state.loads)
         let currLoadCap;
@@ -191,7 +203,18 @@ class Manager extends Component {
         )
     }
     render(){
-
+        let data = {
+            date: new Date(),
+            Visitors:this.state.gaugeSum,
+        };
+        let chart = {
+            axis: {
+                y: { min: 0, max: 30 }
+            },
+            point: {
+                show: true
+            }
+        };
             return (
                 <div className='Manager'>
                     <div className="card" style={this.charts}>
@@ -217,7 +240,11 @@ class Manager extends Component {
                                 />
                             </div>
                         <div className="card-body">
-                            <Test></Test>
+                            <RTChart
+                                chart={chart}
+                                fields={['Visitors']}
+                                data={data}
+                                maxValues={3}/>
                         </div>
                     </div>
                     {this.state.loads.map(this.eachLoad)}
@@ -227,4 +254,4 @@ class Manager extends Component {
         }
 }
 
-export default Manager
+export default Manager;

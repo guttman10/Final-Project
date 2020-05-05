@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import Load from './Load'
 import {MdAdd} from 'react-icons/md'
 import {  CircularProgressbar} from 'react-circular-progressbar';
-
 import 'react-circular-progressbar/dist/styles.css';
 class Tourist extends Component {
+    hasUnmounted = false;
+    _isMounted = false;
     listStyle  = {
         display: "flex",
         alignItems: "stretch",
@@ -74,13 +75,16 @@ class Tourist extends Component {
         return ++this.uniqueId
     }
     componentDidMount() {
+        this._isMounted = true;
         if (window.navigator.geolocation)
         {
             navigator.geolocation.getCurrentPosition(async location => {
-                this.setState({
-                    Latitude: location.coords.latitude,
-                    Longitude: location.coords.longitude
-                })
+                if (this._isMounted) {
+                    this.setState({
+                        Latitude: location.coords.latitude,
+                        Longitude: location.coords.longitude
+                    })
+                }
                 //const url = 'https://moninode.herokuapp.com/load_data'; for real use
                 const url = 'http://localhost:3000/load_data';
                 fetch(url)
@@ -95,14 +99,21 @@ class Tourist extends Component {
                         }
                     ))
                     .catch(err => console.error(err));
-                this.setState({GPS:1})
+                if (this._isMounted) {
+                    this.setState({GPS: 1})
+                }
                 setInterval(async () => {
                     fetch(url)
                         .then(res => res.json())
                         .then(data => data.map(item => {
+                            if (this._isMounted) {
                                 this.setState({
-                                    loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
+                                    loads: this.state.loads.map(el => (el.id === item.id ? {
+                                        ...el,
+                                        load: item.load
+                                    } : el))
                                 });
+                            }
                             }
                         ))
                         .catch(err => console.error(err));
@@ -111,7 +122,9 @@ class Tourist extends Component {
 
     }
 }
-
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
     eachLoad(name, i) {
         console.log(this.state.loads)
         let currLoadCap;
@@ -214,4 +227,4 @@ class Tourist extends Component {
     }
 }
 
-export default Tourist
+export default Tourist;

@@ -12,20 +12,29 @@ class test extends Component {
     }
 
     componentDidMount() {
-        setInterval(() => this.forceUpdate(), 1000);
+        //setInterval(() => this.forceUpdate(), 5000);
     }
 
 
     render() {
-        var data = {
+        let data = {
             date: new Date(),
             Visitors:getRandomInt(1,10),
         };
+        let chart = {
+            axis: {
+                y: { min: 0, max: 30 }
+            },
+            point: {
+                show: true
+            }
+        };
 
         return <RTChart
+            chart={chart}
             fields={['Visitors']}
             data={data}
-            maxValues={10}/>
+            maxValues={3}/>
     }
 }
 

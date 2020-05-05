@@ -11,7 +11,7 @@ const ReactRouter = () => {
             <Header />
             <title>{"MoniTour"}</title>
             <Route exact path="/" component={Tourist}/>
-                <Route exact path="/manager" component={test}/>
+                <Route exact path="/manager" component={Manager}/>
         </React.Fragment>
     )
 }
