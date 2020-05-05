@@ -82,9 +82,11 @@ class Tourist extends Component {
                 if (this._isMounted) {
                     this.setState({
                         Latitude: location.coords.latitude,
-                        Longitude: location.coords.longitude
+                        Longitude: location.coords.longitude,
+                        GPS: 1
                     })
                 }
+
                 //const url = 'https://moninode.herokuapp.com/load_data'; for real use
                 const url = 'http://localhost:3000/load_data';
                 fetch(url)
@@ -99,20 +101,16 @@ class Tourist extends Component {
                         }
                     ))
                     .catch(err => console.error(err));
-                if (this._isMounted) {
-                    this.setState({GPS: 1})
-                }
                 setInterval(async () => {
                     fetch(url)
                         .then(res => res.json())
                         .then(data => data.map(item => {
                             if (this._isMounted) {
+                                if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
+                                    (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                                 this.setState({
-                                    loads: this.state.loads.map(el => (el.id === item.id ? {
-                                        ...el,
-                                        load: item.load
-                                    } : el))
-                                });
+                                    loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
+                                });}
                             }
                             }
                         ))
@@ -126,7 +124,6 @@ class Tourist extends Component {
         this._isMounted = false;
     }
     eachLoad(name, i) {
-        console.log(this.state.loads)
         let currLoadCap;
         if((name.load.currCount === 0 && name.load.maxCount === 0) ||
             (name.load.currCount === 1 && name.load.maxCount === 0 ))
@@ -209,6 +206,7 @@ class Tourist extends Component {
         )
     }
     render(){
+        console.log("call")
         if(this.state.GPS === 0)
         {
             return(

@@ -45,7 +45,6 @@ class Manager extends Component {
         this.state = {
             loads: [],
             gaugeSum:0,
-            counter:0
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -55,8 +54,8 @@ class Manager extends Component {
         this.setState(this.baseState)
     }
 
-    add({event = null, id = null, txt = 'default title', ld = 'default load', img = null, loc = null}){
-        console.log(event,id,txt,ld,img,loc)
+    add({event = null, id = null, txt = 'default title', ld = 'default load', img = null}){
+        console.log(event,id,txt,ld,img,)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
@@ -64,7 +63,6 @@ class Manager extends Component {
                     name:txt,
                     load:ld,
                     image:img,
-                    location:loc,
 
                 }
             ]
@@ -120,7 +118,6 @@ class Manager extends Component {
         this._isMounted = false;
     }
     eachLoad(name, i) {
-        console.log(this.state.loads)
         let currLoadCap;
         if((name.load.currCount === 0 && name.load.maxCount === 0) ||
             (name.load.currCount === 1 && name.load.maxCount === 0 ))
@@ -203,6 +200,7 @@ class Manager extends Component {
         )
     }
     render(){
+        console.log("call")
         let data = {
             date: new Date(),
             Visitors:this.state.gaugeSum,
