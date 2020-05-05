@@ -102,7 +102,7 @@ class Manager extends Component {
                 }
             ))
             .catch(err => console.error(err));
-        setInterval(async () => {
+        setInterval( async () => {
             innercount = 0
             let loadtemp = this.state.loads
             fetch(url)
@@ -119,21 +119,23 @@ class Manager extends Component {
                         if(innercount === counter)
                         {   if (this._isMounted) {
                             console.log(GaugePrev)
-                            console.log(GaugeSumTemp2)
-                            if(GaugePrev === GaugeSumTemp2)
+                            if(false)
                             {
                                 this.setState({
                                     loads: loadtemp
                                 })
                             }
                             else {
+                                let gaudgeshow =    GaugeSumTemp2
+                                GaugeSumTemp2 = 0
                                 this.setState({
                                     loads: loadtemp,
-                                    gaugeSum: GaugeSumTemp2
+                                    gaugeSum: gaudgeshow
                                 })
                             }
                         }}
                     }
+
 
                 }
                 ))
