@@ -79,6 +79,10 @@ class Manager extends Component {
         //const url = 'https://moninode.herokuapp.com/load_data'; for real use
         const url = 'http://localhost:3000/load_data';
         let GaugeSumTemp = 0
+        let GaugeSumTemp2 = 0
+        let GaugePrev = 0
+        let counter = 0
+        let innercount = 0
         fetch(url)
             .then(res => res.json())
             .then(data => data.map(item => {
@@ -87,36 +91,53 @@ class Manager extends Component {
                         this.add(
                             {id: item.id, txt: item.name, ld: item.load, img: item.image}
                         )
+                        counter = counter+1
                     }
+                    console.log(GaugeSumTemp)
                 if (this._isMounted) {
                     this.setState({gaugeSum: GaugeSumTemp})
                 }
+                GaugeSumTemp2 = GaugeSumTemp
+                GaugePrev = GaugeSumTemp
                 }
             ))
             .catch(err => console.error(err));
         setInterval(async () => {
+            innercount = 0
             let loadtemp = this.state.loads
-            GaugeSumTemp = 0
             fetch(url)
                 .then(res => res.json())
                 .then(data => data.map(item => {
                     if (item.manager === true) {
-                        GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
                         let loadindex =  loadtemp.findIndex(x => x.id == item.id);
                         loadtemp[loadindex].load = item.load
                             //loadtemp.map(el => (el.id === item.id ? {...el, load: item.load} : el))
+                        GaugeSumTemp2 = GaugeSumTemp2 +  (item.load.currCount)
 
+                        innercount++
+                        console.log(counter)
+                        if(innercount === counter)
+                        {   if (this._isMounted) {
+                            console.log(GaugePrev)
+                            console.log(GaugeSumTemp2)
+                            if(GaugePrev === GaugeSumTemp2)
+                            {
+                                this.setState({
+                                    loads: loadtemp
+                                })
+                            }
+                            else {
+                                this.setState({
+                                    loads: loadtemp,
+                                    gaugeSum: GaugeSumTemp2
+                                })
+                            }
+                        }}
                     }
-                console.log(loadtemp)}
 
+                }
                 ))
                 .catch(err => console.error(err));
-            if (this._isMounted) {
-                this.setState({
-                    loads: loadtemp,
-                    gaugeSum: GaugeSumTemp
-                })
-            }
         }, 5000);
 
 
