@@ -95,21 +95,28 @@ class Manager extends Component {
             ))
             .catch(err => console.error(err));
         setInterval(async () => {
+            let loadtemp = this.state.loads
             GaugeSumTemp = 0
             fetch(url)
                 .then(res => res.json())
                 .then(data => data.map(item => {
                     if (item.manager === true) {
                         GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
-                        if (this._isMounted) {
-                        this.setState({
-                            loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
-                        });
-                        this.setState({gaugeSum: GaugeSumTemp})
-                        }
-                    }}
+                        let loadindex =  loadtemp.findIndex(x => x.id == item.id);
+                        loadtemp[loadindex].load = item.load
+                            //loadtemp.map(el => (el.id === item.id ? {...el, load: item.load} : el))
+
+                    }
+                console.log(loadtemp)}
+
                 ))
                 .catch(err => console.error(err));
+            if (this._isMounted) {
+                this.setState({
+                    loads: loadtemp,
+                    gaugeSum: GaugeSumTemp
+                })
+            }
         }, 5000);
 
 
