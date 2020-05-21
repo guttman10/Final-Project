@@ -81,7 +81,6 @@ class Manager extends Component {
         //const url = 'https://moninode.herokuapp.com/load_data'; for real use
         const url = 'http://localhost:3000/load_data';
         let GaugeSumTemp = 0
-        let GaugeSumTemp2 = 0
         let counter = 0
         let innercount = 0
         showchart = true;
@@ -99,16 +98,13 @@ class Manager extends Component {
                 if (this._isMounted) {
                     this.setState({gaugeSum: GaugeSumTemp})
                 }
-                GaugeSumTemp2 = GaugeSumTemp
-                console.log(GaugeSumTemp2);
                 }
             ))
             .catch(err => console.error(err));
         setInterval( async () => {
             innercount = 0
             let loadtemp = this.state.loads
-            console.log(GaugeSumTemp2);
-            GaugeSumTemp2 = 0;
+            GaugeSumTemp = 0;
             fetch(url)
                 .then(res => res.json())
                 .then(data => data.map(item => {
@@ -116,14 +112,14 @@ class Manager extends Component {
                         let loadindex = loadtemp.findIndex(x => x.id == item.id);
                         loadtemp[loadindex].load = item.load
                         //loadtemp.map(el => (el.id === item.id ? {...el, load: item.load} : el))
-                        GaugeSumTemp2 = GaugeSumTemp2 + (item.load.currCount)
-                        console.log(GaugeSumTemp2);
+                        GaugeSumTemp = GaugeSumTemp + (item.load.currCount)
+                        console.log(GaugeSumTemp);
                         //console.log(item.load.currCount);
                         innercount++
                         if (this._isMounted) {
                             if (innercount === counter) {
-                                let gaudgeshow = GaugeSumTemp2
-                                GaugeSumTemp2 = 0
+                                let gaudgeshow = GaugeSumTemp
+                                GaugeSumTemp = 0
                                 console.log(gaudgeshow);
                                 this.setState({
                                     loads: loadtemp,
