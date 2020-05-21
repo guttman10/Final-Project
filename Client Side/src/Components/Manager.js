@@ -8,6 +8,8 @@ import RTChart from 'react-rt-chart';
 import './c3.css';
 import ReactSpeedometer from "react-d3-speedometer"
 import 'react-circular-progressbar/dist/styles.css';
+
+let showchart = false;
 class Manager extends Component {
     hasUnmounted = false;
     _isMounted = false;
@@ -82,6 +84,7 @@ class Manager extends Component {
         let GaugeSumTemp2 = 0
         let counter = 0
         let innercount = 0
+        showchart = true;
         fetch(url)
             .then(res => res.json())
             .then(data => data.map(item => {
@@ -97,13 +100,15 @@ class Manager extends Component {
                     this.setState({gaugeSum: GaugeSumTemp})
                 }
                 GaugeSumTemp2 = GaugeSumTemp
-                console.log(GaugeSumTemp);
+                console.log(GaugeSumTemp2);
                 }
             ))
             .catch(err => console.error(err));
         setInterval( async () => {
             innercount = 0
             let loadtemp = this.state.loads
+            console.log(GaugeSumTemp2);
+            GaugeSumTemp2 = 0;
             fetch(url)
                 .then(res => res.json())
                 .then(data => data.map(item => {
@@ -112,28 +117,18 @@ class Manager extends Component {
                         loadtemp[loadindex].load = item.load
                         //loadtemp.map(el => (el.id === item.id ? {...el, load: item.load} : el))
                         GaugeSumTemp2 = GaugeSumTemp2 + (item.load.currCount)
-
+                        console.log(GaugeSumTemp2);
+                        //console.log(item.load.currCount);
                         innercount++
-                        console.log( innercount)
-                        console.log(counter)
                         if (this._isMounted) {
                             if (innercount === counter) {
                                 let gaudgeshow = GaugeSumTemp2
                                 GaugeSumTemp2 = 0
+                                console.log(gaudgeshow);
                                 this.setState({
                                     loads: loadtemp,
                                     gaugeSum: gaudgeshow
-                                })
-                            }
-                                 else {
-                                }
-                            }
-                        }
-
-
-                }
-                ))
-                .catch(err => console.error(err));
+                                })}}}})).catch(err => console.error(err));
         }, 5000);
 
 
@@ -261,13 +256,12 @@ class Manager extends Component {
 
                                 />
                             </div>
-                        <div className="card-body">
-                            <RTChart
+                            {showchart ?<div className="card-body">  <RTChart
                                 chart={chart}
                                 fields={['Visitors']}
                                 data={data}
                                 maxValues={3}/>
-                        </div>
+                            </div> : <div className="card-body"/>}
                     </div>
                     {this.state.loads.map(this.eachLoad)}
                 </div>
