@@ -11,7 +11,6 @@ import 'react-circular-progressbar/dist/styles.css';
 
 let showchart = false;
 class Manager extends Component {
-    hasUnmounted = false;
     _isMounted = false;
     listStyle  = {
         position:"relative",
@@ -82,7 +81,6 @@ class Manager extends Component {
         let GaugeSumTemp = 0
         let counter = 0
         let innercount = 0
-        //showchart = true;
         fetch(url)
             .then(res => res.json())
             .then(data => data.map(item => {
@@ -131,6 +129,7 @@ class Manager extends Component {
     }
     componentWillUnmount() {
         this._isMounted = false;
+        showchart = false;
     }
     eachLoad(name, i) {
         let currLoadCap;
