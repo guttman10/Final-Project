@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
-import ReactDOM from "react-dom";
 import Load from './Load'
-import {MdAdd} from 'react-icons/md'
-import Test from "./test"
-import {  CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import {  CircularProgressbar} from 'react-circular-progressbar';
 import RTChart from 'react-rt-chart';
 import './c3.css';
 import ReactSpeedometer from "react-d3-speedometer"
@@ -86,17 +83,11 @@ class Manager extends Component {
             .then(data => data.map(item => {
                     if (item.manager === true) {
                         GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
-                        this.add(
-                            {id: item.id, txt: item.name, ld: item.load, img: item.image}
-                        )
+                        this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})
                         counter = counter+1
                     }
-                if (this._isMounted) {
-                    this.setState({gaugeSum: GaugeSumTemp})
-                }
-                }
-            ))
-            .catch(err => console.error(err));
+                    if (this._isMounted) {this.setState({gaugeSum: GaugeSumTemp})}
+                })).catch(err => console.error(err));
 
         setTimeout( () => {
             showchart = true;
@@ -122,10 +113,7 @@ class Manager extends Component {
                                 this.setState({
                                     loads: loadtemp,
                                     gaugeSum: gaudgeshow
-                                })}}}})).catch(err => console.error(err));
-        }, 10000);
-
-
+                                })}}}})).catch(err => console.error(err));}, 10000);
     }
     componentWillUnmount() {
         this._isMounted = false;
