@@ -57,7 +57,6 @@ class Manager extends Component {
     }
 
     add({event = null, id = null, txt = 'default title', ld = 'default load', img = null}){
-        console.log(event,id,txt,ld,img,)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
@@ -83,7 +82,7 @@ class Manager extends Component {
         let GaugeSumTemp = 0
         let counter = 0
         let innercount = 0
-        showchart = true;
+        //showchart = true;
         fetch(url)
             .then(res => res.json())
             .then(data => data.map(item => {
@@ -94,13 +93,18 @@ class Manager extends Component {
                         )
                         counter = counter+1
                     }
-                    console.log(GaugeSumTemp)
                 if (this._isMounted) {
                     this.setState({gaugeSum: GaugeSumTemp})
                 }
                 }
             ))
             .catch(err => console.error(err));
+
+        setTimeout( () => {
+            showchart = true;
+            this.setState({})
+        }, 200);
+
         setInterval( async () => {
             innercount = 0
             let loadtemp = this.state.loads
@@ -111,21 +115,17 @@ class Manager extends Component {
                     if (item.manager === true) {
                         let loadindex = loadtemp.findIndex(x => x.id == item.id);
                         loadtemp[loadindex].load = item.load
-                        //loadtemp.map(el => (el.id === item.id ? {...el, load: item.load} : el))
                         GaugeSumTemp = GaugeSumTemp + (item.load.currCount)
-                        console.log(GaugeSumTemp);
-                        //console.log(item.load.currCount);
                         innercount++
                         if (this._isMounted) {
                             if (innercount === counter) {
                                 let gaudgeshow = GaugeSumTemp
                                 GaugeSumTemp = 0
-                                console.log(gaudgeshow);
                                 this.setState({
                                     loads: loadtemp,
                                     gaugeSum: gaudgeshow
                                 })}}}})).catch(err => console.error(err));
-        }, 5000);
+        }, 10000);
 
 
     }
@@ -215,7 +215,6 @@ class Manager extends Component {
         )
     }
     render(){
-        console.log("call")
         let data = {
             date: new Date(),
             Visitors:this.state.gaugeSum,
