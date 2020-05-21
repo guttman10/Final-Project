@@ -80,7 +80,6 @@ class Manager extends Component {
         const url = 'http://localhost:3000/load_data';
         let GaugeSumTemp = 0
         let GaugeSumTemp2 = 0
-        let GaugePrev = 0
         let counter = 0
         let innercount = 0
         fetch(url)
@@ -98,7 +97,7 @@ class Manager extends Component {
                     this.setState({gaugeSum: GaugeSumTemp})
                 }
                 GaugeSumTemp2 = GaugeSumTemp
-                GaugePrev = GaugeSumTemp
+                console.log(GaugeSumTemp);
                 }
             ))
             .catch(err => console.error(err));
@@ -109,32 +108,27 @@ class Manager extends Component {
                 .then(res => res.json())
                 .then(data => data.map(item => {
                     if (item.manager === true) {
-                        let loadindex =  loadtemp.findIndex(x => x.id == item.id);
+                        let loadindex = loadtemp.findIndex(x => x.id == item.id);
                         loadtemp[loadindex].load = item.load
-                            //loadtemp.map(el => (el.id === item.id ? {...el, load: item.load} : el))
-                        GaugeSumTemp2 = GaugeSumTemp2 +  (item.load.currCount)
+                        //loadtemp.map(el => (el.id === item.id ? {...el, load: item.load} : el))
+                        GaugeSumTemp2 = GaugeSumTemp2 + (item.load.currCount)
 
                         innercount++
+                        console.log( innercount)
                         console.log(counter)
-                        if(innercount === counter)
-                        {   if (this._isMounted) {
-                            console.log(GaugePrev)
-                            if(false)
-                            {
-                                this.setState({
-                                    loads: loadtemp
-                                })
-                            }
-                            else {
-                                let gaudgeshow =    GaugeSumTemp2
+                        if (this._isMounted) {
+                            if (innercount === counter) {
+                                let gaudgeshow = GaugeSumTemp2
                                 GaugeSumTemp2 = 0
                                 this.setState({
                                     loads: loadtemp,
                                     gaugeSum: gaudgeshow
                                 })
                             }
-                        }}
-                    }
+                                 else {
+                                }
+                            }
+                        }
 
 
                 }
