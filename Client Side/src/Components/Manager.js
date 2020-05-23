@@ -9,13 +9,17 @@ import 'react-circular-progressbar/dist/styles.css';
 let showchart = false;
 class Manager extends Component {
     _isMounted = false;
+    Manager = {
+      backgroundColor: "#FFDBA4"
+    };
     listStyle  = {
         position:"relative",
         marginTop:30,
         width: 34 + 'rem',
         marginBottom: 7 + 'px',
         left: "30%",
-        transform: "translateX(-50%)"
+        transform: "translateX(-50%)",
+        backgroundColor: "#FFE6C0"
     };
     loadBar = {
         position:"relative",
@@ -26,6 +30,7 @@ class Manager extends Component {
     listText = {
         position:"absolute",
         alignItems: 'center',
+        backgroundColor: "#FFE6C0"
 
     }
     loadPic = {
@@ -36,6 +41,7 @@ class Manager extends Component {
         position:'absolute',
         right:0,
         width:"40%",
+        backgroundColor: "#FFE6C0"
     }
 
     constructor(props) {
@@ -86,13 +92,12 @@ class Manager extends Component {
                         this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})
                         counter = counter+1
                     }
-                    if (this._isMounted) {this.setState({gaugeSum: GaugeSumTemp})}
                 })).catch(err => console.error(err));
 
         setTimeout( () => {
             showchart = true;
-            this.setState({})
-        }, 200);
+            if (this._isMounted) {this.setState({gaugeSum: GaugeSumTemp})}
+        }, 500);
 
         setInterval( async () => {
             innercount = 0
@@ -215,7 +220,7 @@ class Manager extends Component {
             }
         };
             return (
-                <div className='Manager'>
+                <div className='Manager' style={this.Manager}>
                     <div className="card" style={this.charts}>
                             <div className="card-body">
                                 Overall Load Gauge
