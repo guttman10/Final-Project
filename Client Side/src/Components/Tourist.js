@@ -85,9 +85,7 @@ class Tourist extends Component {
                     this.setState({
                         Latitude: location.coords.latitude,
                         Longitude: location.coords.longitude,
-                        GPS: 1
-                    })
-                }
+                        GPS: 1})}
 
                 //const url = 'https://moninode.herokuapp.com/load_data'; for real use
                 const url = 'http://localhost:3000/load_data';
@@ -98,8 +96,7 @@ class Tourist extends Component {
                                 (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                                 counter = counter+1;
                                 this.add(
-                                    {
-                                        id: item.id, txt: item.name, ld: item.load, img: item.image})}}))
+                                    {id: item.id, txt: item.name, ld: item.load, img: item.image})}}))
                     .catch(err => console.error(err));
 
                 setInterval(async () => {
@@ -118,16 +115,7 @@ class Tourist extends Component {
                                         if (innercount === counter) {
                                             this.setState({
                                                 loads: loadtemp
-                                            })}};}
-                            }
-                            }
-                        ))
-                        .catch(err => console.error(err));
-                }, 5000);
-            })
-
-    }
-}
+                                            })}};}}})).catch(err => console.error(err));}, 5000);})}}
     componentWillUnmount() {
         this._isMounted = false;
     }

@@ -22,12 +22,6 @@ class Header extends Component {
             <div>
                 <img style={this.picture} src={require('./images/monitourLogo.png')} />
                     <div style={this.header}>
-                        <NavLink exact to="/" activeStyle={this.active}>
-                            Tourist
-                        </NavLink>
-                        <NavLink exact to="/manager" activeStyle={this.active}>
-                            Manager
-                        </NavLink>
                     </div>
             </div>
         )

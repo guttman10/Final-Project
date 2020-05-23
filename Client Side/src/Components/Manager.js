@@ -113,7 +113,7 @@ class Manager extends Component {
                                 this.setState({
                                     loads: loadtemp,
                                     gaugeSum: gaudgeshow
-                                })}}}})).catch(err => console.error(err));}, 10000);
+                                })}}}})).catch(err => console.error(err));}, 5000);
     }
     componentWillUnmount() {
         this._isMounted = false;
@@ -242,7 +242,7 @@ class Manager extends Component {
                                 chart={chart}
                                 fields={['Visitors']}
                                 data={data}
-                                maxValues={3}/>
+                                maxValues={8}/>
                             </div> : <div className="card-body"/>}
                     </div>
                     {this.state.loads.map(this.eachLoad)}
