@@ -13,20 +13,32 @@ class Tourist extends Component {
         width:"100%",
         marginBottom: 7 + 'px',
         left: "48%",
-        transform: "translateX(-50%)"
+        transform: "translateX(-50%)",
+        backgroundColor:"#faf8f6"
     };
     loadBar = {
         position:"relative",
         marginLeft:"auto",
         right:0,
-
         width:"20%"
     };
+    titleStyle = {
+        fontSize: "calc(19px + 1vw)",
+    }
     listText = {
         position:"absolute",
         alignItems: 'center',
+        fontSize: "calc(14px + 1vw)",
+        color:"#8c8a88",
+        whiteSpace: "pre-wrap",
+        top : "50%",
+        left:"25%",
+        transform: "translate(-25%, -50%)",
+};
+    listcolor= {
 
-    }
+        backgroundColor:"#faf8f6"
+    };
     loadPic = {
         position:"relative",
         marginTop:30,
@@ -133,12 +145,12 @@ class Tourist extends Component {
             <div key={`container ${i}`} className="card" style={this.listStyle}>
                 <div class="card-body">
                     <Load key={`load${i}`} index={i}>
-                        <h4 class="card-title">{name.name}</h4>
+                        <h4 class="card-title" style={this.titleStyle}>{name.name}</h4>
                         <img style={this.loadPic} class="card-img-top" src={name.image}/>
                         <ul className="list-group list-group-flush">
-                            <li className="list-group-item" ></li>
-                            <li className="list-group-item">
-                                <p className="font-weight-bold" style={this.listText}>Current Load:</p>
+                            <li className="list-group-item" style={this.listcolor}></li>
+                            <li className="list-group-item"  style={this.listcolor}>
+                                <p className="font-weight-bold"  style={this.listText}>Current Load:</p>
                                 <div style={this.loadBar}>
                                 <CircularProgressbar value={name.load.currCount}
                                                      maxValue={name.load.maxCount}
@@ -164,8 +176,10 @@ class Tourist extends Component {
                                 />
                                 </div>
                             </li>
-                            <li className="list-group-item" >
-                                <p className="font-weight-bold" style={this.listText}>Predicted Load At {name.load.suggestion[0]}:00:</p>
+                            <li className="list-group-item" style={this.listcolor}>
+                                <p className="font-weight-bold" style={this.listText}>Predicted Load
+                                    {"\n"}At {name.load.suggestion[0]}:00:
+                                </p>
                                 <div style={this.loadBar}>
                                     <CircularProgressbar value={predictload}
                                                          maxValue={100}
@@ -191,7 +205,7 @@ class Tourist extends Component {
                                     />
                                 </div>
                             </li>
-                            <li className="list-group-item" />
+                            <li className="list-group-item" style={this.listcolor} />
 
                         </ul>
                     </Load>
@@ -212,6 +226,7 @@ class Tourist extends Component {
         else {
             return (
                 <div className='Tourist'>
+
                     {this.state.loads.map(this.eachLoad)}
 
                 </div>
