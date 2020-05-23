@@ -76,6 +76,8 @@ class Tourist extends Component {
     }
     componentDidMount() {
         this._isMounted = true;
+        let counter = 0
+        let innercount = 0
         if (window.navigator.geolocation)
         {
             navigator.geolocation.getCurrentPosition(async location => {
@@ -94,23 +96,29 @@ class Tourist extends Component {
                     .then(data => data.map(item => {
                             if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                                 (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
+                                counter = counter+1;
                                 this.add(
-                                    {id: item.id, txt: item.name, ld: item.load, img: item.image}
-                                )
-                            }
-                        }
-                    ))
+                                    {
+                                        id: item.id, txt: item.name, ld: item.load, img: item.image})}}))
                     .catch(err => console.error(err));
+
                 setInterval(async () => {
+                    innercount = 0
+                    let loadtemp = this.state.loads
                     fetch(url)
                         .then(res => res.json())
                         .then(data => data.map(item => {
                             if (this._isMounted) {
                                 if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                                     (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
-                                this.setState({
-                                    loads: this.state.loads.map(el => (el.id === item.id ? {...el, load: item.load} : el))
-                                });}
+                                    let loadindex = loadtemp.findIndex(x => x.id == item.id);
+                                    loadtemp[loadindex].load = item.load
+                                    innercount++
+                                    if (this._isMounted) {
+                                        if (innercount === counter) {
+                                            this.setState({
+                                                loads: loadtemp
+                                            })}};}
                             }
                             }
                         ))
