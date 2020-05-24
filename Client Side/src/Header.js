@@ -21,7 +21,7 @@ class Header extends Component {
     render() {
         return (
             <div>
-                <img style={this.picture} src={require('./images/monitourLogoSmall.png')} />
+
             </div>
         )
     }

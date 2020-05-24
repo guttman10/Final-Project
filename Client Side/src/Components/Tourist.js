@@ -53,8 +53,14 @@ class Tourist extends Component {
         transform: "translateX(-50%)",
         height:"60%",
         width:"60%",
-        borderRadius: 100/ 9
+        borderRadius: 100/ 9,
     };
+    picture= {
+        position:"relative",
+        left: "-5%",
+        //transform: "translateX(-5%)",
+        top:0
+    }
 
     constructor(props) {
         super(props);
@@ -247,6 +253,7 @@ class Tourist extends Component {
         else {
             return (
                 <div className='Tourist'>
+                    <img style={this.picture} src={require('../images/monitourLogoSmall.png')} />
                 <p style={this.greetext}>{this.greet()}</p>
                     {this.state.loads.map(this.eachLoad)}
 

@@ -8,7 +8,6 @@ import Header from '../Header'
 const ReactRouter = () => {
     return (
         <React.Fragment>
-            <Header />
             <title>{"MoniTour"}</title>
             <Route exact path="/" component={Tourist}/>
                 <Route exact path="/manager" component={Manager}/>
