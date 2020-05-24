@@ -18,8 +18,8 @@ class Manager extends Component {
         marginTop:30,
         width: 34 + 'rem',
         marginBottom: 7 + 'px',
-        left: "30%",
-        transform: "translateX(-50%)",
+        left: "5%",
+        transform: "translateX(-5%)",
         backgroundColor:"#faf8f6"
     };
     loadBar = {
@@ -32,6 +32,9 @@ class Manager extends Component {
 
         backgroundColor:"#faf8f6"
     };
+    titleStyle = {
+        fontSize: "calc(9px + 1vw)",
+    }
     listText = {
         position:"absolute",
         alignItems: 'center',
@@ -48,9 +51,10 @@ class Manager extends Component {
         width:"62%"
     };
     charts = {
-        position:'absolute',
-        right:0,
-        width:"40%",
+        position:'fixed',
+        marginTop:30,
+        right:"10%",
+        width:"30%",
         backgroundColor:"#faf8f6"
     }
     headerPicture= {
@@ -153,7 +157,7 @@ class Manager extends Component {
             <div key={`container ${i}`} className="card" style={this.listStyle}>
                 <div class="card-body">
                     <Load key={`load${i}`} index={i}>
-                        <h4 class="card-title">{name.name}</h4>
+                        <h4 class="card-title" style={this.titleStyle}>{name.name} </h4>
                         <img style={this.loadPic} class="card-img-top" src={name.image}/>
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item" style={this.listcolor} ></li>
