@@ -47,16 +47,24 @@ class Manager extends Component {
 
     }
     loadPic = {
-        height:"62%",
-        width:"62%",
+        margin: "0 auto",
+       
         borderRadius: 100/ 9,
     };
     charts = {
         position:'fixed',
-        marginTop:30,
+        marginTop:28,
         right:"10%",
         width:"30%",
         backgroundColor:"#faf8f6"
+    }
+    chartStyle = {
+        marginTop:-100,
+        textAlign:"center",
+    }
+    gaugeStyle ={
+        margin: "0 auto"
+        //transform: "translateX(-50%)",
     }
     headerPicture= {
         position:"relative",
@@ -245,8 +253,7 @@ class Manager extends Component {
                 <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogo.png')} />
                     <div className="card" style={this.charts}>
-                            <div className="card-body">
-                                Overall Load Gauge
+                            <div className="card-body" style={this.gaugeStyle}>
                                 <ReactSpeedometer
                                     value={this.state.gaugeSum}
                                     needleColor="steelblue"
@@ -266,7 +273,9 @@ class Manager extends Component {
 
                                 />
                             </div>
-                            {showchart ?<div className="card-body">  <RTChart
+                            {showchart ?<div className="card-body" style = {this.chartStyle}>
+                                <p style = {this.titleStyle}>Load History</p>
+                                <RTChart
                                 chart={chart}
                                 fields={['Visitors']}
                                 data={data}
