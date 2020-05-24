@@ -28,6 +28,10 @@ class Manager extends Component {
         right:0,
         width:"20%"
     };
+    listcolor= {
+
+        backgroundColor:"#faf8f6"
+    };
     listText = {
         position:"absolute",
         alignItems: 'center',
@@ -47,7 +51,7 @@ class Manager extends Component {
         position:'absolute',
         right:0,
         width:"40%",
-        backgroundColor: "#FFE6C0"
+        backgroundColor:"#faf8f6"
     }
     headerPicture= {
         position:"relative",
@@ -108,7 +112,7 @@ class Manager extends Component {
         setTimeout( () => {
             showchart = true;
             if (this._isMounted) {this.setState({gaugeSum: GaugeSumTemp})}
-        }, 500);
+        }, 1000);
 
         setInterval( async () => {
             innercount = 0
@@ -152,8 +156,8 @@ class Manager extends Component {
                         <h4 class="card-title">{name.name}</h4>
                         <img style={this.loadPic} class="card-img-top" src={name.image}/>
                         <ul className="list-group list-group-flush">
-                            <li className="list-group-item" ></li>
-                            <li className="list-group-item">
+                            <li className="list-group-item" style={this.listcolor} ></li>
+                            <li className="list-group-item" style={this.listcolor}>
                                 <p className="font-weight-bold" style={this.listText}>Current Load:</p>
                                 <div style={this.loadBar}>
                                     <CircularProgressbar value={name.load.currCount}
@@ -180,7 +184,7 @@ class Manager extends Component {
                                     />
                                 </div>
                             </li>
-                            <li className="list-group-item" >
+                            <li className="list-group-item"style={this.listcolor} >
                                 <p className="font-weight-bold" style={this.listText}>Predicted Load
                                     {"\n"}At {name.load.suggestion[0]}:00:</p>
                                 <div style={this.loadBar}>
@@ -208,7 +212,7 @@ class Manager extends Component {
                                     />
                                 </div>
                             </li>
-                            <li className="list-group-item" />
+                            <li className="list-group-item" style={this.listcolor}/>
 
                         </ul>
                     </Load>
