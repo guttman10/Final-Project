@@ -11,7 +11,6 @@ class Manager extends Component {
     _isMounted = false;
     Manager = {
 
-
     };
     listStyle  = {
         position:"relative",
@@ -71,10 +70,21 @@ class Manager extends Component {
         borderRadius: 100/ 9,
     };
     charts = {
+        left:200,
         display:"flex",
         flexDirection: "row",
         marginTop:28,
-        width:"90%",
+        width:"70%",
+        backgroundColor:"#faf8f6"
+    }
+    charts2 = {
+
+        display:"flex",
+        flexDirection: "row",
+        marginTop:28,
+        width:422,
+        margin:"0 auto",
+        right:150,
         backgroundColor:"#faf8f6"
     }
     chartStyle = {
@@ -93,6 +103,34 @@ class Manager extends Component {
         //transform: "translateX(-5%)",
         top:0,
         left:"3%",
+    }
+    sideBar = {
+       position:"absolute",
+        display:"flex",
+        flexDirection: "column",
+        left:0,
+        top:0,
+        height:"100%",
+        overflow:"hidden",
+        width:"5%",
+        backgroundColor:"#2c3652"
+    }
+    sidePicture= {
+        position:"relative",
+        //transform: "translateX(-5%)",
+        marginTop:30,
+        textAlign:"center",
+        AlignItems: "center",
+    JustifyContent: "center",
+        left:12
+    }
+   sideText = {
+        fontSize: "18",
+        fontWeight:"bold",
+        color:"#ffffff",
+    }
+    selectedSideBar = {
+        backgroundColor:"#404c79"
     }
 
     constructor(props) {
@@ -279,8 +317,24 @@ class Manager extends Component {
             return (
                     <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')} />
+                    <div style={this.sideBar}>
+                        <div>
+                            <img style={this.sidePicture} src={require('../images/weblogo.png')} />
+                        </div>
+                        <hr
+                            style={{
+                                color: "black",
+                                backgroundColor: "white",
+                                height: 5
+                            }}
+                        />
+                        <div style={this.selectedSideBar}>
+                            <img style={this.sidePicture} src={require('../images/dashboard.png')} />
+                            <p style={this.sideText}>Dashboard</p>
+                        </div>
+                    </div>
                     <div style={this.infoData}>
-                        <div className="card" style={this.charts}>
+                        <div className="card" style={this.charts2}>
                             <div className="card" >
                                 <div className="card-body" style={this.infoWarp}>
                                     <img style = {this. infoImage}  src={require('../images/building2.png')} />
