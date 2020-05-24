@@ -48,22 +48,24 @@ class Manager extends Component {
     }
     loadPic = {
         margin: "0 auto",
-       
         borderRadius: 100/ 9,
     };
     charts = {
-        position:'fixed',
+        display:"flex",
+        flexDirection: "row",
         marginTop:28,
-        right:"10%",
-        width:"30%",
+        width:"90%",
         backgroundColor:"#faf8f6"
     }
     chartStyle = {
-        marginTop:-100,
+        flex:1,
         textAlign:"center",
     }
     gaugeStyle ={
-        margin: "0 auto"
+        flex:1,
+        textAlign:"center",
+        top : "23%",
+        transform: "translate(0%, 23%)",
         //transform: "translateX(-50%)",
     }
     headerPicture= {
@@ -251,7 +253,7 @@ class Manager extends Component {
         };
             return (
                 <div className='Manager' style={this.Manager}>
-                    <img style={this.headerPicture} src={require('../images/monitourLogo.png')} />
+                    <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')} />
                     <div className="card" style={this.charts}>
                             <div className="card-body" style={this.gaugeStyle}>
                                 <ReactSpeedometer
@@ -282,7 +284,7 @@ class Manager extends Component {
                                 maxValues={8}/>
                             </div> : <div className="card-body"/>}
                     </div>
-                    {this.state.loads.map(this.eachLoad)}
+
                 </div>
 
             )
