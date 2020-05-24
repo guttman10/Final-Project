@@ -14,15 +14,14 @@ class Header extends Component {
     };
     picture= {
         position:"relative",
-        left: "50%",
-    transform: "translateX(-50%)"
+        left: "-5%",
+    //transform: "translateX(-5%)",
+        top:0
     }
     render() {
         return (
             <div>
-                <img style={this.picture} src={require('./images/monitourLogo.png')} />
-                    <div style={this.header}>
-                    </div>
+                <img style={this.picture} src={require('./images/monitourLogoSmall.png')} />
             </div>
         )
     }

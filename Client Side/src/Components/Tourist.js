@@ -9,7 +9,7 @@ class Tourist extends Component {
     listStyle  = {
         display: "flex",
         alignItems: "stretch",
-        marginTop:30,
+        marginTop:10,
         width:"100%",
         marginBottom: 7 + 'px',
         left: "48%",
@@ -39,14 +39,21 @@ class Tourist extends Component {
 
         backgroundColor:"#faf8f6"
     };
+    greetext = {
+        fontSize: "calc(14px + 1vw)",
+        color:"#8c8a88",
+        marginTop:"10%",
+        transform: "translate(-0%, -50%)",
+    }
     loadPic = {
         position:"relative",
         marginTop:30,
         marginBottom: 7 + 'px',
         left: "50%",
         transform: "translateX(-50%)",
-        height:"50%",
-        width:"50%"
+        height:"60%",
+        width:"60%",
+        borderRadius: 100/ 9
     };
 
     constructor(props) {
@@ -215,6 +222,20 @@ class Tourist extends Component {
 
         )
     }
+    greet()
+    {
+        const currentHour = new Date().getHours();
+
+        const greetingMessage =
+            currentHour >= 4 && currentHour < 12 ? // after 4:00AM and before 12:00PM
+                'Good morning.' :
+                currentHour >= 12 && currentHour <= 17 ? // after 12:00PM and before 6:00pm
+                    'Good afternoon.' :
+                    currentHour > 17 || currentHour < 4 ? // after 5:59pm or before 4:00AM (to accommodate night owls)
+                        'Good evening.' : // if for some reason the calculation didn't work
+                        'Welcome'
+        return greetingMessage
+    }
     render(){
         console.log("call")
         if(this.state.GPS === 0)
@@ -226,7 +247,7 @@ class Tourist extends Component {
         else {
             return (
                 <div className='Tourist'>
-
+                <p style={this.greetext}>{this.greet()}</p>
                     {this.state.loads.map(this.eachLoad)}
 
                 </div>
