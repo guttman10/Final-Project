@@ -48,7 +48,8 @@ class Manager extends Component {
     }
     loadPic = {
         height:"62%",
-        width:"62%"
+        width:"62%",
+        borderRadius: 100/ 9,
     };
     charts = {
         position:'fixed',
@@ -60,7 +61,8 @@ class Manager extends Component {
     headerPicture= {
         position:"relative",
         //transform: "translateX(-5%)",
-        top:0
+        top:0,
+        left:"3%",
     }
 
     constructor(props) {
