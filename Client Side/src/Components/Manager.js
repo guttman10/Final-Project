@@ -46,6 +46,26 @@ class Manager extends Component {
         transform: "translate(-25%, -50%)",
 
     }
+    infoText = {
+        fontSize: "calc(8px + 1vw)",
+        fontWeight:"bold",
+        color:"#d48636",
+        display:"inline-block",
+        whiteSpace: "pre-wrap",
+    }
+    infoWarp = {
+        flex: "1 1 auto",
+        textAlign: "center",
+        backgroundColor:"#faf8f6"
+
+    }
+    infoImage = {
+        margin: "-10px 50px 0 0",
+        width: "100px",
+        objectFit: "contain",
+    alignSelf: "flex-start",
+
+    }
     loadPic = {
         margin: "0 auto",
         borderRadius: 100/ 9,
@@ -80,6 +100,7 @@ class Manager extends Component {
         this.state = {
             loads: [],
             gaugeSum:0,
+            counter:0,
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -127,7 +148,11 @@ class Manager extends Component {
 
         setTimeout( () => {
             showchart = true;
-            if (this._isMounted) {this.setState({gaugeSum: GaugeSumTemp})}
+            if (this._isMounted) {this.setState({
+                gaugeSum: GaugeSumTemp,
+                counter: counter
+
+            })}
         }, 1000);
 
         setInterval( async () => {
@@ -252,9 +277,25 @@ class Manager extends Component {
             }
         };
             return (
-                <div className='Manager' style={this.Manager}>
+                    <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')} />
-                    <div className="card" style={this.charts}>
+                    <div style={this.infoData}>
+                        <div className="card" style={this.charts}>
+                            <div className="card" >
+                                <div className="card-body" style={this.infoWarp}>
+                                    <img style = {this. infoImage}  src={require('../images/building2.png')} />
+                                    <p style={this.infoText}>{this.state.counter}</p>
+                                </div>
+                            </div>
+                            <div className="card" >
+                                <div className="card-body" style={this.infoWarp}>
+                                    <img style = {this. infoImage}  src={require('../images/warning2.png')} />
+                                    <p style={this.infoText}>0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="card" style={this.charts}>
                             <div className="card-body" style={this.gaugeStyle}>
                                 <ReactSpeedometer
                                     value={this.state.gaugeSum}
@@ -283,6 +324,7 @@ class Manager extends Component {
                                 data={data}
                                 maxValues={8}/>
                             </div> : <div className="card-body"/>}
+                    </div>
                     </div>
 
                 </div>
