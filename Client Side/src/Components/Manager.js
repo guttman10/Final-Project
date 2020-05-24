@@ -10,7 +10,8 @@ let showchart = false;
 class Manager extends Component {
     _isMounted = false;
     Manager = {
-      backgroundColor: "#FFDBA4"
+
+
     };
     listStyle  = {
         position:"relative",
@@ -19,7 +20,7 @@ class Manager extends Component {
         marginBottom: 7 + 'px',
         left: "30%",
         transform: "translateX(-50%)",
-        backgroundColor: "#FFE6C0"
+        backgroundColor:"#faf8f6"
     };
     loadBar = {
         position:"relative",
@@ -30,7 +31,12 @@ class Manager extends Component {
     listText = {
         position:"absolute",
         alignItems: 'center',
-        backgroundColor: "#FFE6C0"
+        fontSize: "calc(4px + 1vw)",
+        color:"#8c8a88",
+        whiteSpace: "pre-wrap",
+        top : "50%",
+        left:"25%",
+        transform: "translate(-25%, -50%)",
 
     }
     loadPic = {
@@ -42,6 +48,11 @@ class Manager extends Component {
         right:0,
         width:"40%",
         backgroundColor: "#FFE6C0"
+    }
+    headerPicture= {
+        position:"relative",
+        //transform: "translateX(-5%)",
+        top:0
     }
 
     constructor(props) {
@@ -170,7 +181,8 @@ class Manager extends Component {
                                 </div>
                             </li>
                             <li className="list-group-item" >
-                                <p className="font-weight-bold" style={this.listText}>Predicted Load At {name.load.suggestion[0]}:00:</p>
+                                <p className="font-weight-bold" style={this.listText}>Predicted Load
+                                    {"\n"}At {name.load.suggestion[0]}:00:</p>
                                 <div style={this.loadBar}>
                                     <CircularProgressbar value={predictload}
                                                          maxValue={100}
@@ -221,6 +233,7 @@ class Manager extends Component {
         };
             return (
                 <div className='Manager' style={this.Manager}>
+                    <img style={this.headerPicture} src={require('../images/monitourLogo.png')} />
                     <div className="card" style={this.charts}>
                             <div className="card-body">
                                 Overall Load Gauge

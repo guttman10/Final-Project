@@ -55,7 +55,7 @@ class Tourist extends Component {
         width:"60%",
         borderRadius: 100/ 9,
     };
-    picture= {
+    headerPicture= {
         position:"relative",
         left: "-5%",
         //transform: "translateX(-5%)",
@@ -191,8 +191,7 @@ class Tourist extends Component {
                             </li>
                             <li className="list-group-item" style={this.listcolor}>
                                 <p className="font-weight-bold" style={this.listText}>Predicted Load
-                                    {"\n"}At {name.load.suggestion[0]}:00:
-                                </p>
+                                    {"\n"}At {name.load.suggestion[0]}:00:</p>
                                 <div style={this.loadBar}>
                                     <CircularProgressbar value={predictload}
                                                          maxValue={100}
@@ -253,7 +252,7 @@ class Tourist extends Component {
         else {
             return (
                 <div className='Tourist'>
-                    <img style={this.picture} src={require('../images/monitourLogoSmall.png')} />
+                    <img style={this.headerPicture} src={require('../images/monitourLogoSmall.png')} />
                 <p style={this.greetext}>{this.greet()}</p>
                     {this.state.loads.map(this.eachLoad)}
 
