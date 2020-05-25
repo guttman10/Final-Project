@@ -10,10 +10,10 @@ class Tourist extends Component {
         display: "flex",
         alignItems: "stretch",
         marginTop:10,
-        width:"100%",
+        width:"96%",
         marginBottom: 7 + 'px',
-        left: "48%",
-        transform: "translateX(-50%)",
+        //left: "42%",
+        //transform: "translateX(-52%)",
         backgroundColor:"#faf8f6"
     };
     loadBar = {
@@ -61,6 +61,12 @@ class Tourist extends Component {
         //transform: "translateX(-5%)",
         top:0
     }
+    searchStyle = {
+    margin: "0 auto",
+    display: "block",
+        padding: 10,
+    textAlign: "center",
+}
 
     constructor(props) {
         super(props);
@@ -68,18 +74,20 @@ class Tourist extends Component {
             loads: [],
             Latitude:0,
             Longitude:0,
-            GPS:0
+            GPS:0,
+            searchString: "",
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
+        this.handleChange = this.handleChange.bind(this);
     }
     reset = () => {
         this.setState(this.baseState)
     }
 
-    add({event = null, id = null, txt = 'default title', ld = 'default load', img = null, loc = null}){
-        console.log(event,id,txt,ld,img,loc)
+    add({event = null, id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null}){
+        console.log(event,id,txt,ld,img,loc,cate)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
@@ -88,6 +96,7 @@ class Tourist extends Component {
                     load:ld,
                     image:img,
                     location:loc,
+                    category:cate,
 
                 }
             ]
@@ -121,7 +130,7 @@ class Tourist extends Component {
                                 (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                                 counter = counter+1;
                                 this.add(
-                                    {id: item.id, txt: item.name, ld: item.load, img: item.image})}}))
+                                    {id: item.id, txt: item.name, ld: item.load, img: item.image,cate: item.category})}}))
                     .catch(err => console.error(err));
 
                 setInterval(async () => {
@@ -227,6 +236,11 @@ class Tourist extends Component {
 
         )
     }
+    handleChange() {
+        this.setState({
+            searchString: this.refs.search.value
+        })
+    }
     greet()
     {
         const currentHour = new Date().getHours();
@@ -250,11 +264,31 @@ class Tourist extends Component {
             )
         }
         else {
+            let _loads = this.state.loads;
+            console.log(_loads)
+            let search = this.state.searchString.trim().toLowerCase();
+
+            if (search.length > 0) {
+                _loads = _loads.filter(function(loads) {
+                    return loads.category.toLowerCase().match(search);
+                });
+            }
             return (
                 <div className='Tourist'>
                     <img style={this.headerPicture} src={require('../images/monitourLogoSmall.png')} />
-                <p style={this.greetext}>{this.greet()}</p>
-                    {this.state.loads.map(this.eachLoad)}
+                    <p style={this.greetext}>{this.greet()}</p>
+                    <input
+                        style={this.searchStyle}
+                        type="text"
+                        value={this.state.searchString}
+                        ref="search"
+                        onChange={this.handleChange}
+                        placeholder="Search"
+                    />
+                    <ul>
+                        {_loads.map(this.eachLoad)}
+                    </ul>
+
 
                 </div>
 
