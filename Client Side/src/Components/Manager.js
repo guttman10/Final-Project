@@ -2,15 +2,28 @@ import React, {Component} from 'react';
 import Load from './Load'
 import {  CircularProgressbar} from 'react-circular-progressbar';
 import RTChart from 'react-rt-chart';
+import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBIcon } from 'mdbreact';
 import './c3.css';
 import ReactSpeedometer from "react-d3-speedometer"
 import 'react-circular-progressbar/dist/styles.css';
-
+import '../mdb/css/mdb.css'
 let showchart = false;
 class Manager extends Component {
     _isMounted = false;
-    Manager = {
-        marginLeft:"-600"
+    loginBack = {
+        background:"linear-gradient(rgba(250,0,0,0.5),transparent)",
+        backgroundColor:"#ffbc78", /*this your primary color*/
+        minHeight: "100%",
+        minWidth: "1024px",
+
+    /* Set up proportionate scaling */
+    width: "100%",
+    height: "auto",
+
+    /* Set up positioning */
+    position: "fixed",
+    top: 0,
+    left: 0,
     };
     formStyle = {
         display:"flex",
@@ -443,28 +456,34 @@ class Manager extends Component {
         }
         else
         {
+
             return (
-                <div className='Manager' style={this.Manager}>
+                <div className='Manager' style={this.loginBack}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
-                <div className="Login">
-                    <form onSubmit={this.handleSubmit} style={this.formStyle}>
-                        {
-                            this.state.error &&
-                            <h3 data-test="error" onClick={this.dismissError}>
-                                <button onClick={this.dismissError}>✖</button>
-                                {this.state.error}
-                            </h3>
-                        }
-                        <p>Welcome</p>
-                        <label>User Name</label>
-                        <input type="text" data-test="username" value={this.state.username} onChange={this.handleUserChange} />
+                    <MDBContainer>
+                        <MDBRow>
 
-                        <label>Password</label>
-                        <input type="password" data-test="password" value={this.state.password} onChange={this.handlePassChange} />
+                                <form onSubmit={this.handleSubmit} style={this.formStyle}>
+                                    {
+                                        this.state.error &&
+                                        <h3 data-test="error" onClick={this.dismissError}>
+                                            <button onClick={this.dismissError}>✖</button>
+                                            {this.state.error}
+                                        </h3>
+                                    }
+                                    <p className="h5 text-center mb-4">Welcome</p>
+                                    <div className="white-text">
+                                        <MDBInput  label="Type your username" icon="user" group type="text" validate error="wrong"
+                                                  input = "ttt"success="right" data-test="username" value={this.state.username} onChange={this.handleUserChange}/>
+                                        <MDBInput label="Type your password" icon="lock" group type="password" validate data-test="password"  value={this.state.password} onChange={this.handlePassChange}/>
+                                    </div>
+                                    <div className="text-center">
+                                        <MDBBtn class="btn peach-gradient" type="submit">Login</MDBBtn>
+                                    </div>
 
-                        <input type="submit" value="Log In" data-test="submit" />
-                    </form>
-                </div>
+                                </form>
+                        </MDBRow>
+                    </MDBContainer>
                 </div>
             );
         }
