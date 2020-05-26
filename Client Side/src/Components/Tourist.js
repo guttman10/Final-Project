@@ -10,10 +10,10 @@ class Tourist extends Component {
         display: "flex",
         alignItems: "stretch",
         marginTop:10,
-        width:"96%",
+        width:"95%",
         marginBottom: 7 + 'px',
-        //left: "42%",
-        //transform: "translateX(-52%)",
+        left: "50%",
+        transform: "translateX(-50%)",
         backgroundColor:"#faf8f6"
     };
     loadBar = {
@@ -42,8 +42,8 @@ class Tourist extends Component {
     greetext = {
         fontSize: "calc(14px + 1vw)",
         color:"#8c8a88",
-        marginTop:"10%",
-        transform: "translate(-0%, -50%)",
+        marginTop:"5%",
+        textAlign: "center",
     }
     loadPic = {
         position:"relative",
@@ -57,15 +57,15 @@ class Tourist extends Component {
     };
     headerPicture= {
         position:"relative",
-        left: "-5%",
         //transform: "translateX(-5%)",
         top:0
     }
     searchStyle = {
-    margin: "0 auto",
-    display: "block",
+        margin: "0 auto",
+        display: "block",
         padding: 10,
-    textAlign: "center",
+        textAlign: "center",
+        borderRadius: 100/ 4,
 }
 
     constructor(props) {
@@ -285,9 +285,9 @@ class Tourist extends Component {
                         onChange={this.handleChange}
                         placeholder="Search"
                     />
-                    <ul>
+                  
                         {_loads.map(this.eachLoad)}
-                    </ul>
+
 
 
                 </div>

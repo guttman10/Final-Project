@@ -10,8 +10,16 @@ let showchart = false;
 class Manager extends Component {
     _isMounted = false;
     Manager = {
-
+        marginLeft:"-600"
     };
+    formStyle = {
+        display:"flex",
+        margin:"0 auto",
+        marginLeft:"300",
+        flexDirection: "column",
+        marginTop:28,
+        width:"30%",
+    }
     listStyle  = {
         position:"relative",
         marginTop:30,
@@ -331,6 +339,8 @@ class Manager extends Component {
         if(this.state.username === "admin" && this.state.password === "admin") {
             this.setState({logged: true})
         }
+        else
+            return this.setState({ error: 'invalid username or password' });
         return this.setState({ error: '' });
     }
 
@@ -434,8 +444,10 @@ class Manager extends Component {
         else
         {
             return (
+                <div className='Manager' style={this.Manager}>
+                    <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
                 <div className="Login">
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={this.handleSubmit} style={this.formStyle}>
                         {
                             this.state.error &&
                             <h3 data-test="error" onClick={this.dismissError}>
@@ -443,6 +455,7 @@ class Manager extends Component {
                                 {this.state.error}
                             </h3>
                         }
+                        <p>Welcome</p>
                         <label>User Name</label>
                         <input type="text" data-test="username" value={this.state.username} onChange={this.handleUserChange} />
 
@@ -451,6 +464,7 @@ class Manager extends Component {
 
                         <input type="submit" value="Log In" data-test="submit" />
                     </form>
+                </div>
                 </div>
             );
         }
