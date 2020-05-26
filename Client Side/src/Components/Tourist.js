@@ -43,6 +43,7 @@ class Tourist extends Component {
         fontSize: "calc(14px + 1vw)",
         color:"#8c8a88",
         marginTop:"5%",
+        marginBottom:"3%",
         textAlign: "center",
     }
     loadPic = {
@@ -285,7 +286,7 @@ class Tourist extends Component {
                         onChange={this.handleChange}
                         placeholder="Search"
                     />
-                  
+
                         {_loads.map(this.eachLoad)}
 
 
