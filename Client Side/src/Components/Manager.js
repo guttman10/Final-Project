@@ -46,7 +46,7 @@ class Manager extends Component {
 
     }
     infoText = {
-        fontSize: "calc(8px + 1vw)",
+        fontSize: 20,
         fontWeight:"bold",
         color:"#d48636",
         display:"inline-block",
@@ -82,9 +82,11 @@ class Manager extends Component {
         display:"flex",
         flexDirection: "row",
         marginTop:28,
-        width:422,
+        width:413,
         margin:"0 auto",
-        right:150,
+        right:"3%",
+        transform: "translateX(-3%)",
+        marginBottom:"-1%",
         backgroundColor:"#faf8f6"
     }
     chartStyle = {
@@ -94,9 +96,11 @@ class Manager extends Component {
     gaugeStyle ={
         flex:1,
         textAlign:"center",
-        top : "23%",
-        transform: "translate(0%, 23%)",
+        marginTop:"10%",
+        //transform: "translate(0%, 23%)",
         //transform: "translateX(-50%)",
+        //verflow:"hidden",
+        padding:0,
     }
     headerPicture= {
         position:"relative",
@@ -112,7 +116,7 @@ class Manager extends Component {
         top:0,
         height:"100%",
         overflow:"hidden",
-        width:"5%",
+        width:"7%",
         backgroundColor:"#2c3652"
     }
     sidePicture= {
@@ -121,7 +125,7 @@ class Manager extends Component {
         marginTop:30,
         textAlign:"center",
         AlignItems: "center",
-    JustifyContent: "center",
+        JustifyContent: "center",
         left:12
     }
    sideText = {
