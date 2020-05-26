@@ -143,10 +143,18 @@ class Manager extends Component {
             loads: [],
             gaugeSum:0,
             counter:0,
+            username: '',
+            password: '',
+            error: '',
+            logged:false,
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
+        this.handlePassChange = this.handlePassChange.bind(this);
+        this.handleUserChange = this.handleUserChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.dismissError = this.dismissError.bind(this);
     }
     reset = () => {
         this.setState(this.baseState)
@@ -305,25 +313,59 @@ class Manager extends Component {
 
         )
     }
-    render(){
+    dismissError() {
+        this.setState({ error: '' });
+    }
+
+    handleSubmit(evt) {
+        evt.preventDefault();
+
+        if (!this.state.username) {
+            return this.setState({ error: 'Username is required' });
+        }
+
+        if (!this.state.password) {
+            return this.setState({ error: 'Password is required' });
+        }
+
+        if(this.state.username === "admin" && this.state.password === "admin") {
+            this.setState({logged: true})
+        }
+        return this.setState({ error: '' });
+    }
+
+    handleUserChange(evt) {
+        this.setState({
+            username: evt.target.value,
+        });
+    };
+
+    handlePassChange(evt) {
+        this.setState({
+            password: evt.target.value,
+        });
+    }
+
+    render() {
         let data = {
             date: new Date(),
-            Visitors:this.state.gaugeSum,
+            Visitors: this.state.gaugeSum,
         };
         let chart = {
             axis: {
-                y: { min: 0, max: 30 }
+                y: {min: 0, max: 30}
             },
             point: {
                 show: true
             }
         };
+        if (this.state.logged) {
             return (
-                    <div className='Manager' style={this.Manager}>
-                    <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')} />
+                <div className='Manager' style={this.Manager}>
+                    <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
                     <div style={this.sideBar}>
                         <div>
-                            <img style={this.sidePicture} src={require('../images/weblogo.png')} />
+                            <img style={this.sidePicture} src={require('../images/weblogo.png')}/>
                         </div>
                         <hr
                             style={{
@@ -333,21 +375,21 @@ class Manager extends Component {
                             }}
                         />
                         <div style={this.selectedSideBar}>
-                            <img style={this.sidePicture} src={require('../images/dashboard.png')} />
+                            <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
                             <p style={this.sideText}>Dashboard</p>
                         </div>
                     </div>
                     <div style={this.infoData}>
                         <div className="card" style={this.charts2}>
-                            <div className="card" >
+                            <div className="card">
                                 <div className="card-body" style={this.infoWarp}>
-                                    <img style = {this. infoImage}  src={require('../images/building2.png')} />
+                                    <img style={this.infoImage} src={require('../images/building2.png')}/>
                                     <p style={this.infoText}>{this.state.counter}</p>
                                 </div>
                             </div>
-                            <div className="card" >
+                            <div className="card">
                                 <div className="card-body" style={this.infoWarp}>
-                                    <img style = {this. infoImage}  src={require('../images/warning2.png')} />
+                                    <img style={this.infoImage} src={require('../images/warning2.png')}/>
                                     <p style={this.infoText}>0</p>
                                 </div>
                             </div>
@@ -364,7 +406,7 @@ class Manager extends Component {
                                     minValue={0}
                                     maxValue={20}
                                     segments={4}
-                                    customSegmentStops={[0, 5, 10,15,20]}
+                                    customSegmentStops={[0, 5, 10, 15, 20]}
                                     segmentColors={[
                                         "#72f507",
                                         "#fff200",
@@ -374,21 +416,47 @@ class Manager extends Component {
 
                                 />
                             </div>
-                            {showchart ?<div className="card-body" style = {this.chartStyle}>
-                                <p style = {this.titleStyle}>Load History</p>
+                            {showchart ? <div className="card-body" style={this.chartStyle}>
+                                <p style={this.titleStyle}>Load History</p>
                                 <RTChart
-                                chart={chart}
-                                fields={['Visitors']}
-                                data={data}
-                                maxValues={8}/>
+                                    chart={chart}
+                                    fields={['Visitors']}
+                                    data={data}
+                                    maxValues={8}/>
                             </div> : <div className="card-body"/>}
-                    </div>
+                        </div>
                     </div>
 
                 </div>
 
             )
         }
+        else
+        {
+            return (
+                <div className="Login">
+                    <form onSubmit={this.handleSubmit}>
+                        {
+                            this.state.error &&
+                            <h3 data-test="error" onClick={this.dismissError}>
+                                <button onClick={this.dismissError}>✖</button>
+                                {this.state.error}
+                            </h3>
+                        }
+                        <label>User Name</label>
+                        <input type="text" data-test="username" value={this.state.username} onChange={this.handleUserChange} />
+
+                        <label>Password</label>
+                        <input type="password" data-test="password" value={this.state.password} onChange={this.handlePassChange} />
+
+                        <input type="submit" value="Log In" data-test="submit" />
+                    </form>
+                </div>
+            );
+        }
+        }
+
+
 }
 
 export default Manager;
