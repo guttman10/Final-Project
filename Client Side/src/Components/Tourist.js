@@ -78,16 +78,11 @@ class Tourist extends Component {
             Longitude:0,
             GPS:0,
             searchString: "",
-           id:0,
-            category:""
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
         this.handleChange = this.handleChange.bind(this);
-        this.handleIDChange = this.handleIDChange.bind(this);
-        this.handlecatchange = this.handlecatchange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this)
     }
     reset = () => {
         this.setState(this.baseState)
@@ -96,10 +91,10 @@ class Tourist extends Component {
     handleIDChange = event => {
         this.setState({ id: event.target.value });
     }
-    handlecatchange = event => {
+    handleCategoryChange = event => {
         this.setState({ category: event.target.value });
     }
-    handleSubmit(evt) {
+    handleSubmitPost(evt) {
         evt.preventDefault();
 
         const user = {
@@ -301,17 +296,6 @@ class Tourist extends Component {
             }
             return (
                 <div className='Tourist'>
-                    <div>
-                        <form onSubmit={this.handleSubmit}>
-                            <label>
-                                ID:
-                                <input type="number" name="name" onChange={this.handleIDChange} />
-                                Category
-                                <input type="txt" name="name" onChange={this.handlecatchange} />
-                            </label>
-                            <button type="submit">Add</button>
-                        </form>
-                    </div>
                     <img style={this.headerPicture} src={require('../images/monitourLogoSmall.png')} />
                     <p style={this.greetext}>{this.greet()}</p>
                     <input

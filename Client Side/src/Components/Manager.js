@@ -7,6 +7,7 @@ import './c3.css';
 import ReactSpeedometer from "react-d3-speedometer"
 import 'react-circular-progressbar/dist/styles.css';
 import '../mdb/css/mdb.css'
+import axios from "axios";
 let showchart = false;
 class Manager extends Component {
     _isMounted = false;
@@ -168,6 +169,8 @@ class Manager extends Component {
             password: '',
             error: '',
             logged:false,
+            id:0,
+            category:""
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -176,6 +179,9 @@ class Manager extends Component {
         this.handleUserChange = this.handleUserChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.dismissError = this.dismissError.bind(this);
+        this.handleIDChange = this.handleIDChange.bind(this);
+        this.handleCategoryChange = this.handleCategoryChange.bind(this);
+        this.handleSubmitPost = this.handleSubmitPost.bind(this)
     }
     reset = () => {
         this.setState(this.baseState)
@@ -368,7 +374,26 @@ class Manager extends Component {
             password: evt.target.value,
         });
     }
+    handleIDChange = event => {
+        this.setState({ id: event.target.value });
+    }
+    handleCategoryChange = event => {
+        this.setState({ category: event.target.value });
+    }
+    handleSubmitPost(evt) {
+        evt.preventDefault();
 
+        const user = {
+            id: this.state.id,
+            category: this.state.category
+        };
+
+        axios.post(`http://localhost:3000/load_data`, { user })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
     render() {
         let data = {
             date: new Date(),
@@ -401,6 +426,17 @@ class Manager extends Component {
                             <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
                             <p style={this.sideText}>Dashboard</p>
                         </div>
+                    </div>
+                    <div>
+                        <form onSubmit={this.handleSubmitPost}>
+                            <label>
+                                ID:
+                                <input type="number" name="name" onChange={this.handleIDChange} />
+                                Category
+                                <input type="txt" name="name" onChange={this.handleCategoryChange} />
+                            </label>
+                            <button type="submit">Add</button>
+                        </form>
                     </div>
                     <div style={this.infoData}>
                         <div className="card" style={this.charts2}>
