@@ -3,6 +3,7 @@ import Load from './Load'
 import {MdAdd} from 'react-icons/md'
 import {  CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import axios from 'axios';
 class Tourist extends Component {
     hasUnmounted = false;
     _isMounted = false;
@@ -34,7 +35,7 @@ class Tourist extends Component {
         top : "50%",
         left:"25%",
         transform: "translate(-25%, -50%)",
-};
+    };
     listcolor= {
 
         backgroundColor:"#faf8f6"
@@ -67,7 +68,7 @@ class Tourist extends Component {
         padding: 10,
         textAlign: "center",
         borderRadius: 100/ 4,
-}
+    }
 
     constructor(props) {
         super(props);
@@ -77,16 +78,41 @@ class Tourist extends Component {
             Longitude:0,
             GPS:0,
             searchString: "",
+           id:0,
+            category:""
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
         this.handleChange = this.handleChange.bind(this);
+        this.handleIDChange = this.handleIDChange.bind(this);
+        this.handlecatchange = this.handlecatchange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
     reset = () => {
         this.setState(this.baseState)
-    }
 
+    }
+    handleIDChange = event => {
+        this.setState({ id: event.target.value });
+    }
+    handlecatchange = event => {
+        this.setState({ category: event.target.value });
+    }
+    handleSubmit(evt) {
+        evt.preventDefault();
+
+        const user = {
+            id: this.state.id,
+            category: this.state.category
+        };
+
+        axios.post(`http://localhost:3000/load_data`, { user })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
     add({event = null, id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null}){
         console.log(event,id,txt,ld,img,loc,cate)
         this.setState(prevState => ({
@@ -105,7 +131,7 @@ class Tourist extends Component {
     }
     nextID() {
         this.uniqueId = this.state.loads.length
-        ? this.state.loads.length -1
+            ? this.state.loads.length -1
             : 0
         return ++this.uniqueId
     }
@@ -127,13 +153,12 @@ class Tourist extends Component {
                 fetch(url)
                     .then(res => res.json())
                     .then(data => data.map(item => {
-                            if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
-                                (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
-                                counter = counter+1;
-                                this.add(
-                                    {id: item.id, txt: item.name, ld: item.load, img: item.image,cate: item.category})}}))
+                        if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
+                            (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
+                            counter = counter+1;
+                            this.add(
+                                {id: item.id, txt: item.name, ld: item.load, img: item.image,cate: item.category})}}))
                     .catch(err => console.error(err));
-
                 setInterval(async () => {
                     innercount = 0
                     let loadtemp = this.state.loads
@@ -175,28 +200,28 @@ class Tourist extends Component {
                             <li className="list-group-item"  style={this.listcolor}>
                                 <p className="font-weight-bold"  style={this.listText}>Current Load:</p>
                                 <div style={this.loadBar}>
-                                <CircularProgressbar value={name.load.currCount}
-                                                     maxValue={name.load.maxCount}
-                                                     text={`${currLoadCap*100}%`}
-                                                     styles={{
-                                                         path: {
-                                                             transformOrigin: "center center",
-                                                             strokeLinecap: "butt",
-                                                             stroke: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
-                                                         },
-                                                         trail: {
-                                                             strokeWidth: 7
-                                                         },
-                                                         text: {
-                                                             fontSize: 22,
-                                                             fontWeight: 500,
+                                    <CircularProgressbar value={name.load.currCount}
+                                                         maxValue={name.load.maxCount}
+                                                         text={`${currLoadCap*100}%`}
+                                                         styles={{
+                                                             path: {
+                                                                 transformOrigin: "center center",
+                                                                 strokeLinecap: "butt",
+                                                                 stroke: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                             },
+                                                             trail: {
+                                                                 strokeWidth: 7
+                                                             },
+                                                             text: {
+                                                                 fontSize: 22,
+                                                                 fontWeight: 500,
 
-                                                             animation: "fadein 2s",
-                                                             fill: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
-                                                         }
-                                                     }}
+                                                                 animation: "fadein 2s",
+                                                                 fill: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                             }
+                                                         }}
 
-                                />
+                                    />
                                 </div>
                             </li>
                             <li className="list-group-item" style={this.listcolor}>
@@ -242,8 +267,7 @@ class Tourist extends Component {
             searchString: this.refs.search.value
         })
     }
-    greet()
-    {
+    greet() {
         const currentHour = new Date().getHours();
 
         const greetingMessage =
@@ -256,6 +280,7 @@ class Tourist extends Component {
                         'Welcome'
         return greetingMessage
     }
+
     render(){
         console.log("call")
         if(this.state.GPS === 0)
@@ -276,6 +301,17 @@ class Tourist extends Component {
             }
             return (
                 <div className='Tourist'>
+                    <div>
+                        <form onSubmit={this.handleSubmit}>
+                            <label>
+                                ID:
+                                <input type="number" name="name" onChange={this.handleIDChange} />
+                                Category
+                                <input type="txt" name="name" onChange={this.handlecatchange} />
+                            </label>
+                            <button type="submit">Add</button>
+                        </form>
+                    </div>
                     <img style={this.headerPicture} src={require('../images/monitourLogoSmall.png')} />
                     <p style={this.greetext}>{this.greet()}</p>
                     <input
@@ -287,7 +323,7 @@ class Tourist extends Component {
                         placeholder="Search"
                     />
 
-                        {_loads.map(this.eachLoad)}
+                    {_loads.map(this.eachLoad)}
 
 
 

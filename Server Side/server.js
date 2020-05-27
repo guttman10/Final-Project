@@ -1,4 +1,5 @@
 // npm modules
+const bodyParser = require('body-parser')
 const express   = require('express')
 const morgan    = require('morgan')
 const app = express();
@@ -7,6 +8,8 @@ const controller    = require('./controller')
 const asyncWrapper  = require('./async.wrapper')
 const port = process.env.PORT || 3000;
 //establish app()
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.set('port',port);
 app.use('/', express.static('./public')); // for API
 app.use(
@@ -20,7 +23,7 @@ app.use(
 //routes
 app.get('/load_data', asyncWrapper(controller.getAllLoads));
 app.get('/prediction', asyncWrapper(controller.getPrediction));
-
+app.post('/load_data', asyncWrapper(controller.add))
 //run the server
     app.listen(port, () => {
     console.log("App is running on port " + port);
