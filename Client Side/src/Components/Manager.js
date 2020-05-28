@@ -104,7 +104,7 @@ class Manager extends Component {
         display:"flex",
         flexDirection: "row",
         marginTop:28,
-        width:413,
+        width:405,
         margin:"0 auto",
         right:"3%",
         transform: "translateX(-3%)",
@@ -157,6 +157,17 @@ class Manager extends Component {
     }
     selectedSideBar = {
         backgroundColor:"#404c79"
+    }
+    formsin = {
+        left:200,
+        display:"flex",
+        flexDirection: "column",
+        marginTop:28,
+        width:"70%",
+        backgroundColor:"#faf8f6"
+    }
+    selectFormsIn = {
+        margin:10
     }
 
     constructor(props) {
@@ -437,20 +448,7 @@ class Manager extends Component {
                             <p style={this.sideText}>Dashboard</p>
                         </div>
                     </div>
-                    <div>
-                        <form onSubmit={this.handleSubmitPost}>
-                            <label>
-                                Name:
-                                <select value={this.state.value} onChange={this.handleChangeSelect}>
-                                    <option disabled selected value> -- select an option -- </option>
-                                    {optionTemplate}
-                                </select>
-                                Category
-                                <input type="txt" name="name" onChange={this.handleCategoryChange} />
-                            </label>
-                            <button type="submit">Add</button>
-                        </form>
-                    </div>
+
                     <div style={this.infoData}>
                         <div className="card" style={this.charts2}>
                             <div className="card">
@@ -466,7 +464,21 @@ class Manager extends Component {
                                 </div>
                             </div>
                         </div>
-
+                        <div className="card" style={this.formsin}>
+                            <form onSubmit={this.handleSubmitPost}>
+                                <p>Change Attractions Category</p>
+                                <label>
+                                    Attraction name:
+                                    <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect}>
+                                        <option disabled selected value> -- select an option -- </option>
+                                        {optionTemplate}
+                                    </select>
+                                    Category:
+                                    <input style={ this.selectFormsIn} type="txt" name="name" onChange={this.handleCategoryChange} />
+                                </label>
+                                <button type="submit">Change</button>
+                            </form>
+                        </div>
                         <div className="card" style={this.charts}>
                             <div className="card-body" style={this.gaugeStyle}>
                                 <ReactSpeedometer
