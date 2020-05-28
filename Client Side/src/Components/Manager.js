@@ -170,7 +170,8 @@ class Manager extends Component {
             error: '',
             logged:false,
             id:0,
-            category:""
+            category:"",
+            lname:"",
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -180,6 +181,7 @@ class Manager extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.dismissError = this.dismissError.bind(this);
         this.handleIDChange = this.handleIDChange.bind(this);
+        this.handleChangeSelect = this.handleChangeSelect.bind(this)
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleSubmitPost = this.handleSubmitPost.bind(this)
     }
@@ -377,6 +379,10 @@ class Manager extends Component {
     handleIDChange = event => {
         this.setState({ id: event.target.value });
     }
+    handleChangeSelect = event => {
+        this.setState(({lname: event.target.value}))
+        console.log(this.state.lname)
+    }
     handleCategoryChange = event => {
         this.setState({ category: event.target.value });
     }
@@ -384,7 +390,7 @@ class Manager extends Component {
         evt.preventDefault();
 
         const user = {
-            id: this.state.id,
+            name: this.state.lname,
             category: this.state.category
         };
 
@@ -394,6 +400,7 @@ class Manager extends Component {
                 console.log(res.data);
             })
     }
+
     render() {
         let data = {
             date: new Date(),
@@ -408,6 +415,9 @@ class Manager extends Component {
             }
         };
         if (this.state.logged) {
+            let optionTemplate = this.state.loads.map(v => (
+                <option value={v.name}>{v.name}</option>
+            ));
             return (
                 <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
@@ -430,8 +440,11 @@ class Manager extends Component {
                     <div>
                         <form onSubmit={this.handleSubmitPost}>
                             <label>
-                                ID:
-                                <input type="number" name="name" onChange={this.handleIDChange} />
+                                Name:
+                                <select value={this.state.value} onChange={this.handleChangeSelect}>
+                                    <option disabled selected value> -- select an option -- </option>
+                                    {optionTemplate}
+                                </select>
                                 Category
                                 <input type="txt" name="name" onChange={this.handleCategoryChange} />
                             </label>

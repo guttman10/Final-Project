@@ -25,13 +25,13 @@ module.exports={
             res.status(404).send('not found')
     },
     async add(req, res, next) {
-       console.log(req.body.user.id)
+       console.log(req.body.user.name)
         console.log(req.body.user.category)
         console.log("hello")
         //let Load = new load({$set:req.body})
        // Load.save()
         load.findOneAndUpdate(
-            {id: req.body.user.id},
+            {name: req.body.user.name},
             {category: req.body.user.category},
             {upsert: true},
             function (err, doc) {
