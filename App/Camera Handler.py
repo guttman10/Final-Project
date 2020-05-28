@@ -20,7 +20,6 @@ x = mycol.find_one()
 name = "idk"  # need to get it from server
 dataset = getDataFromCsv(name)
 
-
 def getBusyStatus(diff, maxCount, count):
     val = 0
     if maxCount != 0:
@@ -70,6 +69,16 @@ def Start(dataToSet):
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
+def get_data():
+    query = {"user": "admin" ,'name': {'$exists': 1}}
+    projection = {'_id': 0, 'name': 1}
+    data = list(mycol.find(query, projection))
+    name_list = []
+    for name in data:
+        for key, value in name.items():
+            name_list.append(value)
+    print(name_list)
+
 
 def send_data(name, sendData):
     while True:
@@ -85,6 +94,7 @@ def send_data(name, sendData):
 
 if __name__ == "__main__":
     data = {"maxCount": 0, "currCount": 0, "meanCount": 0}
+    get_data()
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()
