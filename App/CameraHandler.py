@@ -11,7 +11,6 @@ import datetime
 # pip install opencv-python
 # pip install pymongo[srv]
 # pip install scikit-image
-
 myclient = pymongo.MongoClient('mongodb+srv://admin:admin@monitour-t8pfj.mongodb.net/load_data')
 mydb = myclient["load_data"]
 mycol = mydb["data"]
@@ -19,6 +18,7 @@ mycol = mydb["data"]
 x = mycol.find_one()
 name = "idk"  # need to get it from server
 dataset = getDataFromCsv(name)
+
 
 def getBusyStatus(diff, maxCount, count):
     val = 0
@@ -28,7 +28,7 @@ def getBusyStatus(diff, maxCount, count):
 
 
 def Start(dataToSet):
-    data["suggestion"] = predict(dataset)[0]
+    dataset["suggestion"] = predict(dataset)[0]
     now = datetime.datetime.now()
     time_ = now.hour
     cameraPort = 0
@@ -64,26 +64,27 @@ def Start(dataToSet):
                 i += 1
             dataset[getWeekday(now.day)][i + 1] = dataToSet["maxCount"]
             time_ = now.hour
-            data["suggestion"] = predict(dataset)[0]
+            dataset["suggestion"] = predict(dataset)[0]
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-def get_data():
-    query = {"user": "admin" ,'name': {'$exists': 1}}
+
+def get_data(username):
+    query = {"user": username, 'name': {'$exists': 1}}
     projection = {'_id': 0, 'name': 1}
     data = list(mycol.find(query, projection))
     name_list = []
     for name in data:
         for key, value in name.items():
             name_list.append(value)
-    print(name_list)
+    return name_list
 
 
 def send_data(name, sendData):
     while True:
         mycol.find_one_and_update(
-            {"name": "Louvre"},
+            {"name": sendData["name"]},
             {"$set":
                  {"load": sendData}
              }, upsert=True
@@ -92,9 +93,8 @@ def send_data(name, sendData):
         time.sleep(2)
 
 
-if __name__ == "__main__":
-    data = {"maxCount": 0, "currCount": 0, "meanCount": 0}
-    get_data()
+def run(attraction):
+    data = {"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction}
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()
