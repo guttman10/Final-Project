@@ -25,19 +25,37 @@ module.exports={
             res.status(404).send('not found')
     },
     async add(req, res, next) {
-       console.log(req.body.user.name)
-        console.log(req.body.user.category)
-        console.log("hello")
         //let Load = new load({$set:req.body})
        // Load.save()
-        load.findOneAndUpdate(
-            {name: req.body.user.name},
-            {category: req.body.user.category},
-            {upsert: true},
-            function (err, doc) {
-                console.log(doc);
-            }
-        )
+        if(req.body.user.mode)
+        {
+            console.log("hey")
+        let user = {
+                user:req.body.user.user,
+                name:req.body.user.name,
+                image:req.body.user.image,
+                location:req.body.user.location,
+                category:req.body.user.category,
+                load: {
+                    maxCount:1,
+                    currCount:0,
+                    meanCount:0,
+                    suggestion: [0,0],
+                    busy:0
+                },
+            };
+       load.create(user)
+        }
+        else {
+            load.findOneAndUpdate(
+                {name: req.body.user.name},
+                {category: req.body.user.category},
+                {upsert: true},
+                function (err, doc) {
+                    console.log(doc);
+                }
+            )
+        }
 
     }
 

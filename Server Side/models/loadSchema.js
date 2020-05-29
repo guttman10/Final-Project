@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 
 const schema ={
-    _id: {type:String, index: 1},
-    name:{type:String},
+    name:{type:String ,index: 1},
     user:{type:String},
     image:{type:String},
     location:{

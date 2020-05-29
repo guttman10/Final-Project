@@ -205,6 +205,7 @@ class Manager extends Component {
         this.handleChangeSelect = this.handleChangeSelect.bind(this)
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleSubmitPost = this.handleSubmitPost.bind(this)
+        this.handleSubmitPost2 = this.handleSubmitPost2.bind(this)
     }
     reset = () => {
         this.setState(this.baseState)
@@ -385,7 +386,6 @@ class Manager extends Component {
             return this.setState({ error: 'invalid username or password' });
         return this.setState({ error: '' });
     }
-
     handleUserChange(evt) {
         this.setState({
             username: evt.target.value,
@@ -410,6 +410,7 @@ class Manager extends Component {
         evt.preventDefault();
 
         const user = {
+            mode: 0,
             name: this.state.selectName,
             category: this.state.category
         };
@@ -429,6 +430,26 @@ class Manager extends Component {
     }
     handleNewCategoryChange = event => {
         this.setState({ newCategory: event.target.value });
+    }
+    handleSubmitPost2(evt) {
+        evt.preventDefault();
+        const user = {
+            mode: 1,
+            user:"admin",
+            name: this.state.newName,
+            image: this.state.newImage,
+            category: this.state.newCategory,
+            location: {
+                latitude: 32.16,
+                longitude:34.8,
+            },
+        };
+
+        axios.post(`http://localhost:3000/load_data`, { user })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
     }
     render() {
         let data = {
@@ -561,18 +582,18 @@ class Manager extends Component {
                         <form onSubmit={this.handleSubmitPost2}>
                             <label style={this.labelblock}>
                                 Name:
-                                <input style={{marginLeft:5}} type="text" value={this.state.value} onChange={this.handleChange} />
+                                <input style={{marginLeft:5}} type="text" value={this.state.newName} onChange={this.handleNewNameChange} />
                             </label>
                             <label style={this.labelblock}>
                                 Image:
-                                <input style={{marginLeft:5}} type="text" value={this.state.value} onChange={this.handleChange} />
+                                <input style={{marginLeft:5}} type="text" value={this.state.newImage} onChange={this.handleNewImageChange} />
                             </label>
                             <label style={this.labelblock}>
                                 Category:
-                                <input style={{marginLeft:5}} type="text" value={this.state.value} onChange={this.handleChange} />
+                                <input style={{marginLeft:5}} type="text" value={this.state.newCategory} onChange={this.handleNewCategoryChange} />
                             </label>
                             <hr></hr>
-                            <input type="submit" value="Submit" />
+                            <button type="submit" value="Submit" />
                         </form>
                     </div>
                 </div>
