@@ -76,6 +76,4 @@ def writeToCsv(name, data):
         print("Done")
 
 
-generateFakeData("idk")
-d = getDataFromCsv("idk")
-predict(getDataFromCsv("idk"))
+generateFakeData("Louvre")

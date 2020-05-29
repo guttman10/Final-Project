@@ -16,8 +16,6 @@ mydb = myclient["load_data"]
 mycol = mydb["data"]
 
 x = mycol.find_one()
-name = "idk"  # need to get it from server
-dataset = getDataFromCsv(name)
 
 
 def getBusyStatus(diff, maxCount, count):
@@ -27,8 +25,8 @@ def getBusyStatus(diff, maxCount, count):
     return val
 
 
-def Start(dataToSet):
-    dataset["suggestion"] = predict(dataset)[0]
+def Start(dataToSet, dataset):
+    dataToSet["suggestion"] = predict(dataset)[0]
     now = datetime.datetime.now()
     time_ = now.hour
     cameraPort = 0
@@ -94,9 +92,10 @@ def send_data(name, sendData):
 
 
 def run(attraction):
+    dataset = getDataFromCsv(attraction)
     data = {"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction}
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()
-    atexit.register(writeToCsv, name, dataset)
-    Start(data)
+    atexit.register(writeToCsv, attraction, dataset)
+    Start(data, dataset)
