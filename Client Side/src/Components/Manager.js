@@ -519,22 +519,32 @@ class Manager extends Component {
                             <p style={this.sideText}>Edit/Add</p>
                         </div>
                     </div>
+
                     <div className="card" style={this.formsin}>
                         <form onSubmit={this.handleSubmitPost}>
                             <p>Change Attractions Category</p>
                             <label>
                                 Attraction name:
+                                <div style={{display:"inline"}}>
                                 <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
                                 </select>
+                                </div>
+                                <div style={{display:"block"}}>
                                 Category:
                                 <input style={ this.selectFormsIn} type="txt" name="name" onChange={this.handleCategoryChange} />
+                                </div>
                             </label>
+                            <hr></hr>
                             <button type="submit">Change</button>
                         </form>
-                    </div>  
+                    </div>
+                    <div className="card" style={this.formsin}>
+                      <p>Add New Attraction</p>
+                    </div>
                 </div>
+
             );
         }
         else
