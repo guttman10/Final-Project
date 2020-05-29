@@ -170,6 +170,10 @@ class Manager extends Component {
     selectFormsIn = {
         margin:10
     }
+    labelblock = {
+        display:"block",
+        marginTop:10
+    }
 
     constructor(props) {
         super(props);
@@ -185,6 +189,10 @@ class Manager extends Component {
             id:0,
             category:"",
             selectName:"",
+
+            newName:"",
+            newImage:"",
+            newCategory:"",
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -206,7 +214,7 @@ class Manager extends Component {
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
-                {id: _id !== null ? _id : this.nextID(prevState.loads),
+                {_id: _id !== null ? _id : this.nextID(prevState.loads),
                     name:txt,
                     load:ld,
                     image:img,
@@ -233,7 +241,7 @@ class Manager extends Component {
             .then(data => data.map(item => {
                     if (item.user === "admin") {
                         GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
-                        this.add({id: item._id, txt: item.name, ld: item.load, img: item.image})
+                        this.add({_id: item._id, txt: item.name, ld: item.load, img: item.image})
                         counter = counter+1
                     }
                 })).catch(err => console.error(err));
@@ -255,7 +263,7 @@ class Manager extends Component {
                 .then(res => res.json())
                 .then(data => data.map(item => {
                     if (item.manager === true) {
-                        let loadindex = loadtemp.findIndex(x => x.id == item.id);
+                        let loadindex = loadtemp.findIndex(x => x._id == item._id);
                         loadtemp[loadindex].load = item.load
                         GaugeSumTemp = GaugeSumTemp + (item.load.currCount)
                         innercount++
@@ -394,7 +402,6 @@ class Manager extends Component {
     }
     handleChangeSelect = event => {
         this.setState(({selectName: event.target.value}))
-        console.log(this.state.selectName)
     }
     handleCategoryChange = event => {
         this.setState({ category: event.target.value });
@@ -414,6 +421,15 @@ class Manager extends Component {
             })
     }
 
+    handleNewNameChange = event => {
+        this.setState({ newName: event.target.value });
+    }
+    handleNewImageChange = event => {
+        this.setState({ newImage: event.target.value });
+    }
+    handleNewCategoryChange = event => {
+        this.setState({ newCategory: event.target.value });
+    }
     render() {
         let data = {
             date: new Date(),
@@ -542,6 +558,22 @@ class Manager extends Component {
                     </div>
                     <div className="card" style={this.formsin}>
                       <p>Add New Attraction</p>
+                        <form onSubmit={this.handleSubmitPost2}>
+                            <label style={this.labelblock}>
+                                Name:
+                                <input style={{marginLeft:5}} type="text" value={this.state.value} onChange={this.handleChange} />
+                            </label>
+                            <label style={this.labelblock}>
+                                Image:
+                                <input style={{marginLeft:5}} type="text" value={this.state.value} onChange={this.handleChange} />
+                            </label>
+                            <label style={this.labelblock}>
+                                Category:
+                                <input style={{marginLeft:5}} type="text" value={this.state.value} onChange={this.handleChange} />
+                            </label>
+                            <hr></hr>
+                            <input type="submit" value="Submit" />
+                        </form>
                     </div>
                 </div>
 

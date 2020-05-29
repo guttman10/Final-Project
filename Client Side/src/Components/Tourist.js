@@ -88,32 +88,12 @@ class Tourist extends Component {
         this.setState(this.baseState)
 
     }
-    handleIDChange = event => {
-        this.setState({ id: event.target.value });
-    }
-    handleCategoryChange = event => {
-        this.setState({ category: event.target.value });
-    }
-    handleSubmitPost(evt) {
-        evt.preventDefault();
-
-        const user = {
-            id: this.state.id,
-            category: this.state.category
-        };
-
-        axios.post(`http://localhost:3000/load_data`, { user })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
-    }
     add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null}){
         console.log(event,_id,txt,ld,img,loc,cate)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
-                {id: _id !== null ? _id : this.nextID(prevState.loads),
+                {_id: _id !== null ? _id : this.nextID(prevState.loads),
                     name:txt,
                     load:ld,
                     image:img,
@@ -151,7 +131,7 @@ class Tourist extends Component {
                             (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                             counter = counter+1;
                             this.add(
-                                {id: item._id, txt: item.name, ld: item.load, img: item.image,cate: item.category})}}))
+                                {_id: item._id, txt: item.name, ld: item.load, img: item.image,cate: item.category})}}))
                     .catch(err => console.error(err));
                 setInterval(async () => {
                     innercount = 0
@@ -162,8 +142,10 @@ class Tourist extends Component {
                             if (this._isMounted) {
                                 if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                                     (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
-                                    let loadindex = loadtemp.findIndex(x => x.id == item.id);
+                                    let loadindex = loadtemp.findIndex(x => x._id == item._id);
+                                    console.log(loadindex)
                                     loadtemp[loadindex].load = item.load
+                                    loadtemp[loadindex].category = item.category
                                     innercount++
                                     if (this._isMounted) {
                                         if (innercount === counter) {
