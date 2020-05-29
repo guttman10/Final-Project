@@ -525,11 +525,11 @@ class Manager extends Component {
                             <img style={this.sidePicture} src={require('../images/weblogo.png')}/>
                         </div>
 
-                        <div style={this.selectedSideBar} onClick={() => this.setState({mainPage: true})} >
+                        <div  onClick={() => this.setState({mainPage: true})} >
                             <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
                             <p style={this.sideText}>Dashboard</p>
                         </div>
-                        <div onClick={() => this.setState({mainPage: false})}>
+                        <div style={this.selectedSideBar} onClick={() => this.setState({mainPage: false})}>
                             <img style={this.sidePicture} src={require('../images/add.png')}/>
                             <p style={this.sideText}>Edit/Add</p>
                         </div>
