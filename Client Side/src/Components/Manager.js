@@ -68,11 +68,12 @@ class Manager extends Component {
 
     }
     infoText = {
-        fontSize: 20,
+        display:"block",
+        fontSize: 25,
         fontWeight:"bold",
         color:"#d48636",
-        display:"inline-block",
         whiteSpace: "pre-wrap",
+
     }
     infoWarp = {
         flex: "1 1 auto",
@@ -81,10 +82,10 @@ class Manager extends Component {
 
     }
     infoImage = {
-        margin: "-10px 50px 0 0",
+        display:"block",
+        margin: "0px 00px 0 0",
         width: "100px",
-        objectFit: "contain",
-    alignSelf: "flex-start",
+
 
     }
     loadPic = {
@@ -104,7 +105,7 @@ class Manager extends Component {
         display:"flex",
         flexDirection: "row",
         marginTop:28,
-        width:405,
+        width:280,
         margin:"0 auto",
         right:"3%",
         transform: "translateX(-3%)",
@@ -184,7 +185,7 @@ class Manager extends Component {
             username: '',
             password: '',
             error: '',
-            logged:true,
+            logged:false,
             mainPage:true,
             id:0,
             category:"",
@@ -277,7 +278,7 @@ class Manager extends Component {
                                 this.setState({
                                     loads: loadtemp,
                                     gaugeSum: gaudgeshow
-                                })}}}})).catch(err => console.error(err));}, 3000);
+                                })}}}})).catch(err => console.error(err));}, 5000);
     }
     componentWillUnmount() {
         this._isMounted = false;
@@ -595,7 +596,7 @@ class Manager extends Component {
                                 <input style={{marginLeft:5}} type="text" value={this.state.newCategory} onChange={this.handleNewCategoryChange} />
                             </label>
                             <hr></hr>
-                            <button type="submit" value="Submit" />
+                            <button type="submit" value="Submit">Add</button>
                         </form>
                     </div>
                 </div>
