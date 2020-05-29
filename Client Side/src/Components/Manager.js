@@ -128,7 +128,7 @@ class Manager extends Component {
         position:"relative",
         //transform: "translateX(-5%)",
         top:0,
-        left:"3%",
+        left:"8%",
     }
     sideBar = {
        position:"absolute",
@@ -143,16 +143,17 @@ class Manager extends Component {
     }
     sidePicture= {
         position:"relative",
+        display:"block",
         //transform: "translateX(-5%)",
         marginTop:30,
-        textAlign:"center",
-        AlignItems: "center",
-        JustifyContent: "center",
-        left:12
+        marginLeft:"auto",
+        marginRight:"auto",
+        width:"50%"
     }
    sideText = {
         fontSize: "18",
         fontWeight:"bold",
+       textAlign:"center",
         color:"#ffffff",
     }
     selectedSideBar = {
@@ -179,10 +180,10 @@ class Manager extends Component {
             username: '',
             password: '',
             error: '',
-            logged:false,
+            logged:true,
             id:0,
             category:"",
-            lname:"",
+            selectName:"",
         }
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
@@ -391,8 +392,8 @@ class Manager extends Component {
         this.setState({ id: event.target.value });
     }
     handleChangeSelect = event => {
-        this.setState(({lname: event.target.value}))
-        console.log(this.state.lname)
+        this.setState(({selectName: event.target.value}))
+        console.log(this.state.selectName)
     }
     handleCategoryChange = event => {
         this.setState({ category: event.target.value });
@@ -401,7 +402,7 @@ class Manager extends Component {
         evt.preventDefault();
 
         const user = {
-            name: this.state.lname,
+            name: this.state.selectName,
             category: this.state.category
         };
 
@@ -436,16 +437,14 @@ class Manager extends Component {
                         <div>
                             <img style={this.sidePicture} src={require('../images/weblogo.png')}/>
                         </div>
-                        <hr
-                            style={{
-                                color: "black",
-                                backgroundColor: "white",
-                                height: 5
-                            }}
-                        />
+
                         <div style={this.selectedSideBar}>
                             <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
                             <p style={this.sideText}>Dashboard</p>
+                        </div>
+                        <div>
+                            <img style={this.sidePicture} src={require('../images/add.png')}/>
+                            <p style={this.sideText}>Edit/Add</p>
                         </div>
                     </div>
 
