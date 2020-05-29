@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const schema ={
     id: {type:Number, index: 1},
     name:{type:String},
+    user:{type:String},
     image:{type:String},
     location:{
         latitude: {type:Number},

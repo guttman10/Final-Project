@@ -229,7 +229,7 @@ class Manager extends Component {
         fetch(url)
             .then(res => res.json())
             .then(data => data.map(item => {
-                    if (item.manager === true) {
+                    if (item.user === "admin") {
                         GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
                         this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})
                         counter = counter+1
