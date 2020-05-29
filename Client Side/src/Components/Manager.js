@@ -428,9 +428,6 @@ class Manager extends Component {
             }
         };
         if (this.state.logged && this.state.mainPage) {
-            let optionTemplate = this.state.loads.map(v => (
-                <option value={v.name}>{v.name}</option>
-            ));
             return (
                 <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
@@ -463,21 +460,6 @@ class Manager extends Component {
                                     <p style={this.infoText}>0</p>
                                 </div>
                             </div>
-                        </div>
-                        <div className="card" style={this.formsin}>
-                            <form onSubmit={this.handleSubmitPost}>
-                                <p>Change Attractions Category</p>
-                                <label>
-                                    Attraction name:
-                                    <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect}>
-                                        <option disabled selected value> -- select an option -- </option>
-                                        {optionTemplate}
-                                    </select>
-                                    Category:
-                                    <input style={ this.selectFormsIn} type="txt" name="name" onChange={this.handleCategoryChange} />
-                                </label>
-                                <button type="submit">Change</button>
-                            </form>
                         </div>
                         <div className="card" style={this.charts}>
                             <div className="card-body" style={this.gaugeStyle}>
@@ -517,6 +499,9 @@ class Manager extends Component {
         }
         else if (this.state.logged && !(this.state.mainPage))
         {
+            let optionTemplate = this.state.loads.map(v => (
+                <option value={v.name}>{v.name}</option>
+            ));
             return(
                 <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
@@ -534,6 +519,21 @@ class Manager extends Component {
                             <p style={this.sideText}>Edit/Add</p>
                         </div>
                     </div>
+                    <div className="card" style={this.formsin}>
+                        <form onSubmit={this.handleSubmitPost}>
+                            <p>Change Attractions Category</p>
+                            <label>
+                                Attraction name:
+                                <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect}>
+                                    <option disabled selected value> -- select an option -- </option>
+                                    {optionTemplate}
+                                </select>
+                                Category:
+                                <input style={ this.selectFormsIn} type="txt" name="name" onChange={this.handleCategoryChange} />
+                            </label>
+                            <button type="submit">Change</button>
+                        </form>
+                    </div>  
                 </div>
             );
         }
