@@ -263,19 +263,21 @@ class Manager extends Component {
             fetch(url)
                 .then(res => res.json())
                 .then(data => data.map(item => {
-                    if (item.manager === true) {
+                    if (item.user === "admin") {
                         let loadindex = loadtemp.findIndex(x => x._id == item._id);
                         loadtemp[loadindex].load = item.load
                         GaugeSumTemp = GaugeSumTemp + (item.load.currCount)
                         innercount++
                         if (this._isMounted) {
+                            console.log(innercount)
+                            console.log(innercount)
                             if (innercount === counter) {
                                 let gaudgeshow = GaugeSumTemp
                                 GaugeSumTemp = 0
                                 this.setState({
                                     loads: loadtemp,
                                     gaugeSum: gaudgeshow
-                                })}}}})).catch(err => console.error(err));}, 5000);
+                                })}}}})).catch(err => console.error(err));}, 3000);
     }
     componentWillUnmount() {
         this._isMounted = false;
