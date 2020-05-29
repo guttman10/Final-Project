@@ -11215,7 +11215,7 @@ body.scrollable {
     top: 0;
     left: 0;
     font-size: 1rem;
-    color: #757575;
+    color: #ffffff;
     cursor: text;
     -webkit-transition: color .2s ease-out, -webkit-transform .2s ease-out;
     transition: color .2s ease-out, -webkit-transform .2s ease-out;
