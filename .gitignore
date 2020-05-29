@@ -5,4 +5,4 @@
 /Server Side/node_modules
 venv
 .idea
-.csv
+*.csv

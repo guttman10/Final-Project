@@ -622,9 +622,9 @@ class Manager extends Component {
                                     }
                                     <p className="h5 text-center mb-4" style={{color:"#ffffff"}}>Welcome</p>
                                     <div className="white-text">
-                                        <MDBInput   label="Type your username" icon="user" group type="text" validate error="wrong"
+                                        <MDBInput style={{color:"white"}}  label="Type your username" icon="user" group type="text" validate error="wrong"
                                                   input = "ttt"success="right" data-test="username" value={this.state.username} onChange={this.handleUserChange}/>
-                                        <MDBInput label="Type your password" icon="lock" group type="password" validate data-test="password"  value={this.state.password} onChange={this.handlePassChange}/>
+                                        <MDBInput style={{color:"white"}} label="Type your password" icon="lock" group type="password" validate data-test="password"  value={this.state.password} onChange={this.handlePassChange}/>
                                     </div>
                                     <div className="text-center">
                                         <MDBBtn class="btn peach-gradient" type="submit">Login</MDBBtn>
