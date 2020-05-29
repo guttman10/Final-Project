@@ -108,18 +108,17 @@ class Tourist extends Component {
                 console.log(res.data);
             })
     }
-    add({event = null, id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null}){
-        console.log(event,id,txt,ld,img,loc,cate)
+    add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null}){
+        console.log(event,_id,txt,ld,img,loc,cate)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
-                {id: id !== null ? id : this.nextID(prevState.loads),
+                {id: _id !== null ? _id : this.nextID(prevState.loads),
                     name:txt,
                     load:ld,
                     image:img,
                     location:loc,
                     category:cate,
-
                 }
             ]
         }))
@@ -152,7 +151,7 @@ class Tourist extends Component {
                             (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                             counter = counter+1;
                             this.add(
-                                {id: item.id, txt: item.name, ld: item.load, img: item.image,cate: item.category})}}))
+                                {id: item._id, txt: item.name, ld: item.load, img: item.image,cate: item.category})}}))
                     .catch(err => console.error(err));
                 setInterval(async () => {
                     innercount = 0

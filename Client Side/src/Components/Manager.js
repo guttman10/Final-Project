@@ -202,11 +202,11 @@ class Manager extends Component {
         this.setState(this.baseState)
     }
 
-    add({event = null, id = null, txt = 'default title', ld = 'default load', img = null}){
+    add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null}){
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
-                {id: id !== null ? id : this.nextID(prevState.loads),
+                {id: _id !== null ? _id : this.nextID(prevState.loads),
                     name:txt,
                     load:ld,
                     image:img,
@@ -233,7 +233,7 @@ class Manager extends Component {
             .then(data => data.map(item => {
                     if (item.user === "admin") {
                         GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
-                        this.add({id: item.id, txt: item.name, ld: item.load, img: item.image})
+                        this.add({id: item._id, txt: item.name, ld: item.load, img: item.image})
                         counter = counter+1
                     }
                 })).catch(err => console.error(err));
