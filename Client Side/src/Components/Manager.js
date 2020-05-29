@@ -181,6 +181,7 @@ class Manager extends Component {
             password: '',
             error: '',
             logged:true,
+            mainPage:true,
             id:0,
             category:"",
             selectName:"",
@@ -426,7 +427,7 @@ class Manager extends Component {
                 show: true
             }
         };
-        if (this.state.logged) {
+        if (this.state.logged && this.state.mainPage) {
             let optionTemplate = this.state.loads.map(v => (
                 <option value={v.name}>{v.name}</option>
             ));
@@ -438,11 +439,11 @@ class Manager extends Component {
                             <img style={this.sidePicture} src={require('../images/weblogo.png')}/>
                         </div>
 
-                        <div style={this.selectedSideBar}>
+                        <div style={this.selectedSideBar} onClick={() => this.setState({mainPage: true})} >
                             <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
                             <p style={this.sideText}>Dashboard</p>
                         </div>
-                        <div>
+                        <div onClick={() => this.setState({mainPage: false})}>
                             <img style={this.sidePicture} src={require('../images/add.png')}/>
                             <p style={this.sideText}>Edit/Add</p>
                         </div>
@@ -513,6 +514,28 @@ class Manager extends Component {
                 </div>
 
             )
+        }
+        else if (this.state.logged && !(this.state.mainPage))
+        {
+            return(
+                <div className='Manager' style={this.Manager}>
+                    <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
+                    <div style={this.sideBar}>
+                        <div>
+                            <img style={this.sidePicture} src={require('../images/weblogo.png')}/>
+                        </div>
+
+                        <div style={this.selectedSideBar} onClick={() => this.setState({mainPage: true})} >
+                            <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
+                            <p style={this.sideText}>Dashboard</p>
+                        </div>
+                        <div onClick={() => this.setState({mainPage: false})}>
+                            <img style={this.sidePicture} src={require('../images/add.png')}/>
+                            <p style={this.sideText}>Edit/Add</p>
+                        </div>
+                    </div>
+                </div>
+            );
         }
         else
         {
