@@ -88,7 +88,7 @@ def send_data(name, sendData):
              }, upsert=True
         )
         print("the data sent to server is: ", sendData)
-        time.sleep(2)
+        time.sleep(4)
 
 
 def run(attraction):

@@ -128,7 +128,7 @@ class Manager extends Component {
     headerPicture= {
         position:"relative",
         //transform: "translateX(-5%)",
-        top:0,
+        top:8,
         left:"8%",
     }
     sideBar = {
@@ -143,22 +143,31 @@ class Manager extends Component {
         backgroundColor:"#2c3652"
     }
     sidePicture= {
-        position:"relative",
-        display:"block",
-        //transform: "translateX(-5%)",
-        marginTop:30,
-        marginLeft:"auto",
-        marginRight:"auto",
-        width:"50%"
+        position:"absolute",
+        top:0,
+        bottom:0,
+        left:0,
+        right:0,
+        margin:"auto",
     }
    sideText = {
+        position:"relative",
         fontSize: "18",
         fontWeight:"bold",
        textAlign:"center",
+       top:"78%",
         color:"#ffffff",
     }
     selectedSideBar = {
+        position:"relative",
+        width:"100%",
+        height:"15%",
         backgroundColor:"#404c79"
+    }
+    unselectedSideBar = {
+        position:"relative",
+        width:"100%",
+        height:"15%",
     }
     formsin = {
         left:200,
@@ -185,7 +194,7 @@ class Manager extends Component {
             username: '',
             password: '',
             error: '',
-            logged:false,
+            logged:true,
             mainPage:true,
             id:0,
             category:"",
@@ -472,7 +481,7 @@ class Manager extends Component {
                 <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
                     <div style={this.sideBar}>
-                        <div>
+                        <div style={this.unselectedSideBar}>
                             <img style={this.sidePicture} src={require('../images/weblogo.png')}/>
                         </div>
 
@@ -480,7 +489,7 @@ class Manager extends Component {
                             <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
                             <p style={this.sideText}>Dashboard</p>
                         </div>
-                        <div onClick={() => this.setState({mainPage: false})}>
+                        <div style={this.unselectedSideBar} onClick={() => this.setState({mainPage: false})}>
                             <img style={this.sidePicture} src={require('../images/add.png')}/>
                             <p style={this.sideText}>Edit/Add</p>
                         </div>
@@ -546,11 +555,11 @@ class Manager extends Component {
                 <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
                     <div style={this.sideBar}>
-                        <div>
+                        <div style={this.unselectedSideBar}>
                             <img style={this.sidePicture} src={require('../images/weblogo.png')}/>
                         </div>
 
-                        <div  onClick={() => this.setState({mainPage: true})} >
+                        <div style={this.unselectedSideBar} onClick={() => this.setState({mainPage: true})} >
                             <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
                             <p style={this.sideText}>Dashboard</p>
                         </div>
