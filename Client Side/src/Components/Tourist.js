@@ -148,6 +148,7 @@ class Tourist extends Component {
                                     console.log(loadindex)
                                     loadtemp[loadindex].load = item.load
                                     loadtemp[loadindex].category = item.category
+                                    loadtemp[loadindex].subAtt = item.subAtt
                                     innercount++
                                     if (this._isMounted) {
                                         if (innercount === counter) {
@@ -159,10 +160,10 @@ class Tourist extends Component {
     }
     eachLoad(name, i) {
         let currLoadCap;
-        let innercurrLoadCap
         if((name.load.currCount === 0 && name.load.maxCount === 0) ||
             (name.load.currCount === 1 && name.load.maxCount === 0 ))
             currLoadCap = 0;
+
         else
         {
             currLoadCap = name.load.currCount/name.load.maxCount
@@ -171,6 +172,11 @@ class Tourist extends Component {
         if(name._id === this.state.expend)
         {
             const buffer = []
+            let innercurrLoadCap
+            let sumcurrload = 0;
+            let summaxload = 0;
+            let sumloadcap = 0;
+            let sumpreditload = 0;
             let subAttCount = name.subAtt.length
             for(let i = 0 ; i< subAttCount ; i++)
             {
@@ -178,10 +184,14 @@ class Tourist extends Component {
                     (name.subAtt[i].load.currCount === 1 && name.subAtt[i].load.maxCount === 0 ))
                     innercurrLoadCap = 0;
                 else
-                {
-                    innercurrLoadCap = name.subAtt[i].load.currCount/name.subAtt[i].load.maxCount
-                    innercurrLoadCap = innercurrLoadCap.toFixed(2)}
+                    innercurrLoadCap = (name.subAtt[i].load.currCount/name.subAtt[i].load.maxCount).toFixed(2)
+
+
                 let innerpredictload = parseInt(name.subAtt[i].load.suggestion[1],10)
+                sumpreditload += innerpredictload
+
+                sumcurrload += name.subAtt[i].load.currCount
+                summaxload += name.subAtt[i].load.maxCount
                 buffer.push(
                     <div>
                     <h4 className="card-title" style={this.titleStyle}>{name.subAtt[i].name}</h4>
@@ -192,7 +202,7 @@ class Tourist extends Component {
                         <div style={this.loadBar}>
                             <CircularProgressbar value={name.subAtt[i].load.currCount}
                                                  maxValue={name.subAtt[i].load.maxCount}
-                                                 text={`${currLoadCap * 100}%`}
+                                                 text={`${innercurrLoadCap * 100}%`}
                                                  styles={{
                                                      path: {
                                                          transformOrigin: "center center",
@@ -249,6 +259,8 @@ class Tourist extends Component {
                 )
             }
 
+            sumloadcap = (sumcurrload/summaxload).toFixed(2)
+            console.log(sumpreditload)
             return <div key={`container ${i}`} className="card" style={this.listStyle}>
                 <div className="card-body">
                     <Load key={`load${i}`} index={i}>
@@ -261,14 +273,14 @@ class Tourist extends Component {
                             <li className="list-group-item" style={this.listcolor}>
                                 <p className="font-weight-bold" style={this.listText}>Current Load:</p>
                                 <div style={this.loadBar}>
-                                    <CircularProgressbar value={name.load.currCount}
-                                                         maxValue={name.load.maxCount}
-                                                         text={`${currLoadCap * 100}%`}
+                                    <CircularProgressbar value={sumcurrload}
+                                                         maxValue={summaxload}
+                                                         text={`${sumloadcap * 100}%`}
                                                          styles={{
                                                              path: {
                                                                  transformOrigin: "center center",
                                                                  strokeLinecap: "butt",
-                                                                 stroke: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                                 stroke: sumloadcap >= 0.7 ? "#bd2327" : "#2293dd"
                                                              },
                                                              trail: {
                                                                  strokeWidth: 7
@@ -278,7 +290,7 @@ class Tourist extends Component {
                                                                  fontWeight: 500,
 
                                                                  animation: "fadein 2s",
-                                                                 fill: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                                 fill: sumloadcap  >= 0.7 ? "#bd2327" : "#2293dd"
                                                              }
                                                          }}
 
@@ -289,14 +301,14 @@ class Tourist extends Component {
                                 <p className="font-weight-bold" style={this.listText}>Predicted Load
                                     {"\n"}At {name.load.suggestion[0]}:00:</p>
                                 <div style={this.loadBar}>
-                                    <CircularProgressbar value={predictload}
+                                    <CircularProgressbar value={sumpreditload}
                                                          maxValue={100}
-                                                         text={`${predictload}%`}
+                                                         text={`${sumpreditload}%`}
                                                          styles={{
                                                              path: {
                                                                  transformOrigin: "center center",
                                                                  strokeLinecap: "butt",
-                                                                 stroke: predictload >= 70 ? "#bd2327" : "#2293dd"
+                                                                 stroke: sumpreditload >= 70 ? "#bd2327" : "#2293dd"
                                                              },
                                                              trail: {
                                                                  strokeWidth: 7
@@ -306,7 +318,7 @@ class Tourist extends Component {
                                                                  fontWeight: 500,
 
                                                                  animation: "fadein 2s",
-                                                                 fill: predictload >= 70 ? "#bd2327" : "#2293dd"
+                                                                 fill: sumpreditload >= 70 ? "#bd2327" : "#2293dd"
                                                              }
                                                          }}
 
