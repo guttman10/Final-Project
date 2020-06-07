@@ -15,7 +15,7 @@ const schema ={
         suggestion:{type:Array},
         busy:{type:Number}
     },
-    manager:{type:Boolean},
+    subAtt:{type:Array},
     category:{type:String},
 }
 const load_schema = new mongoose.Schema(schema)

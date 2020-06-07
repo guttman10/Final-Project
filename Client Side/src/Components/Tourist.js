@@ -89,7 +89,7 @@ class Tourist extends Component {
         this.setState(this.baseState)
 
     }
-    add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null}){
+    add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null, subatt = null}){
         console.log(event,_id,txt,ld,img,loc,cate)
         this.setState(prevState => ({
             loads: [
@@ -99,6 +99,7 @@ class Tourist extends Component {
                     load:ld,
                     image:img,
                     location:loc,
+                    subAtt: subatt,
                     category:cate,
                 }
             ]
@@ -132,7 +133,7 @@ class Tourist extends Component {
                             (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                             counter = counter+1;
                             this.add(
-                                {_id: item._id, txt: item.name, ld: item.load, img: item.image,cate: item.category})}}))
+                                {_id: item._id, txt: item.name, ld: item.load, img: item.image,cate: item.category, subatt: item.subAtt})}}))
                     .catch(err => console.error(err));
                 setInterval(async () => {
                     innercount = 0
@@ -169,7 +170,7 @@ class Tourist extends Component {
         if(name._id === this.state.expend)
         {
             return(
-                <div>works</div>
+                <div>{name.subAtt.length}</div>
             )
         }
         else {
