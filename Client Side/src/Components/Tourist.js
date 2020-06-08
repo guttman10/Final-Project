@@ -4,6 +4,8 @@ import {MdAdd} from 'react-icons/md'
 import {  CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import axios from 'axios';
+import moment from "moment"
+import 'moment/locale/en-il'
 class Tourist extends Component {
     hasUnmounted = false;
     _isMounted = false;
@@ -159,25 +161,21 @@ class Tourist extends Component {
         this._isMounted = false;
     }
     eachLoad(name, i) {
-        let currLoadCap;
-        if((name.load.currCount === 0 && name.load.maxCount === 0) ||
-            (name.load.currCount === 1 && name.load.maxCount === 0 ))
-            currLoadCap = 0;
-
-        else
-        {
-            currLoadCap = name.load.currCount/name.load.maxCount
-            currLoadCap = currLoadCap.toFixed(2)}
-        let predictload = parseInt(name.load.suggestion[1],10)
+        moment.locale("en-il");
+        let innercurrLoadCap = 0;
+        let sumcurrload = 0;
+        let summaxload = 0;
+        let sumloadcap = 0;
+        let sumpreditload = 0;
+        let subAttCount = name.subAtt.length
         if(name._id === this.state.expend)
         {
+             innercurrLoadCap = 0;
+             sumcurrload = 0;
+             summaxload = 0;
+             sumloadcap = 0;
+             sumpreditload = 0;
             const buffer = []
-            let innercurrLoadCap
-            let sumcurrload = 0;
-            let summaxload = 0;
-            let sumloadcap = 0;
-            let sumpreditload = 0;
-            let subAttCount = name.subAtt.length
             for(let i = 0 ; i< subAttCount ; i++)
             {
                 if((name.subAtt[i].load.currCount === 0 && name.subAtt[i].load.maxCount === 0) ||
@@ -299,7 +297,7 @@ class Tourist extends Component {
                             </li>
                             <li className="list-group-item" style={this.listcolor}>
                                 <p className="font-weight-bold" style={this.listText}>Predicted Load
-                                    {"\n"}At {name.load.suggestion[0]}:00:</p>
+                                    {"\n"}At {moment().format('LT')}:</p>
                                 <div style={this.loadBar}>
                                     <CircularProgressbar value={sumpreditload}
                                                          maxValue={100}
@@ -332,6 +330,26 @@ class Tourist extends Component {
             </div>
         }
         else {
+            innercurrLoadCap = 0;
+            sumcurrload = 0;
+            summaxload = 0;
+            sumloadcap = 0;
+            sumpreditload = 0;
+            for(let i = 0 ; i< subAttCount ; i++) {
+                if((name.subAtt[i].load.currCount === 0 && name.subAtt[i].load.maxCount === 0) ||
+                    (name.subAtt[i].load.currCount === 1 && name.subAtt[i].load.maxCount === 0 ))
+                    innercurrLoadCap = 0;
+                else
+                    innercurrLoadCap = (name.subAtt[i].load.currCount/name.subAtt[i].load.maxCount).toFixed(2)
+
+
+                let innerpredictload = parseInt(name.subAtt[i].load.suggestion[1],10)
+                sumpreditload += innerpredictload
+
+                sumcurrload += name.subAtt[i].load.currCount
+                summaxload += name.subAtt[i].load.maxCount
+            }
+            sumloadcap = (sumcurrload/summaxload).toFixed(2)
             return (
                 <div key={`container ${i}`} className="card" style={this.listStyle}>
                     <div class="card-body">
@@ -345,14 +363,14 @@ class Tourist extends Component {
                                 <li className="list-group-item" style={this.listcolor}>
                                     <p className="font-weight-bold" style={this.listText}>Current Load:</p>
                                     <div style={this.loadBar}>
-                                        <CircularProgressbar value={name.load.currCount}
-                                                             maxValue={name.load.maxCount}
-                                                             text={`${currLoadCap * 100}%`}
+                                        <CircularProgressbar value={sumcurrload}
+                                                             maxValue={summaxload}
+                                                             text={`${sumloadcap * 100}%`}
                                                              styles={{
                                                                  path: {
                                                                      transformOrigin: "center center",
                                                                      strokeLinecap: "butt",
-                                                                     stroke: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                                     stroke: sumloadcap >= 0.7 ? "#bd2327" : "#2293dd"
                                                                  },
                                                                  trail: {
                                                                      strokeWidth: 7
@@ -362,7 +380,7 @@ class Tourist extends Component {
                                                                      fontWeight: 500,
 
                                                                      animation: "fadein 2s",
-                                                                     fill: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                                     fill: sumloadcap >= 0.7 ? "#bd2327" : "#2293dd"
                                                                  }
                                                              }}
 
@@ -371,16 +389,16 @@ class Tourist extends Component {
                                 </li>
                                 <li className="list-group-item" style={this.listcolor}>
                                     <p className="font-weight-bold" style={this.listText}>Predicted Load
-                                        {"\n"}At {name.load.suggestion[0]}:00:</p>
+                                        {"\n"}At {moment().format('LT')}:</p>
                                     <div style={this.loadBar}>
-                                        <CircularProgressbar value={predictload}
+                                        <CircularProgressbar value={sumpreditload}
                                                              maxValue={100}
-                                                             text={`${predictload}%`}
+                                                             text={`${sumpreditload}%`}
                                                              styles={{
                                                                  path: {
                                                                      transformOrigin: "center center",
                                                                      strokeLinecap: "butt",
-                                                                     stroke: predictload >= 70 ? "#bd2327" : "#2293dd"
+                                                                     stroke: sumpreditload >= 70 ? "#bd2327" : "#2293dd"
                                                                  },
                                                                  trail: {
                                                                      strokeWidth: 7
@@ -390,7 +408,7 @@ class Tourist extends Component {
                                                                      fontWeight: 500,
 
                                                                      animation: "fadein 2s",
-                                                                     fill: predictload >= 70 ? "#bd2327" : "#2293dd"
+                                                                     fill: sumpreditload >= 70 ? "#bd2327" : "#2293dd"
                                                                  }
                                                              }}
 
