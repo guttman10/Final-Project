@@ -323,7 +323,17 @@ class Tourist extends Component {
                                     />
                                 </div>
                             </li>
-                            <li>{buffer}</li>
+                            <li className="list-group-item" style={this.listcolor}>
+                                <h4 className="card-title" style={{
+                                    fontSize: "calc(19px + 1vw)",
+                                    textAlign:"center",
+                                    padding:0,
+                                    margin:0,
+                                    color:"#8c8a88",
+                                    //transform: "translateY(-60%)",
+                                }}>Inner Attractions</h4>
+                            </li>
+                            <li  className="list-group list-group-flush "style={{marginTop:"8%"}}>{buffer}</li>
                 </ul>
                     </Load>
                 </div>
