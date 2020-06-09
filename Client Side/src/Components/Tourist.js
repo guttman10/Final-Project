@@ -71,6 +71,16 @@ class Tourist extends Component {
         textAlign: "center",
         borderRadius: 100/ 4,
     }
+    buttonStyle= {
+        position:"relative",
+        textAlign:"center",
+        fontSize: "calc(9px + 1vw)",
+        top:"50%",
+        left:"50%",
+        transform: "translate(-50%, -50%)",
+        marginTop:"13%",
+        textTransform: "none"
+    }
 
     constructor(props) {
         super(props);
@@ -266,7 +276,7 @@ class Tourist extends Component {
                         <img style={this.loadPic} className="card-img-top" src={name.image}/>
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item" style={this.listcolor}>
-                                <button onClick={() => this.setState({expend: 0})}>minimize</button>
+                                <button style={this.buttonStyle} type="button" class="btn btn-light" onClick={() => this.setState({expend: 0})}>Minimize</button>
                             </li>
                             <li className="list-group-item" style={this.listcolor}>
                                 <p className="font-weight-bold" style={this.listText}>Current Load:</p>
@@ -368,7 +378,7 @@ class Tourist extends Component {
                             <img style={this.loadPic} class="card-img-top" src={name.image}/>
                             <ul className="list-group list-group-flush">
                                 <li className="list-group-item" style={this.listcolor}>
-                                    <button onClick={() => this.setState({expend: name._id})}>expand</button>
+                                    <button style={this.buttonStyle} type="button" class="btn btn-light" onClick={() => this.setState({expend: name._id})}>Expand</button>
                                 </li>
                                 <li className="list-group-item" style={this.listcolor}>
                                     <p className="font-weight-bold" style={this.listText}>Current Load:</p>
