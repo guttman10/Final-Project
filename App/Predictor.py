@@ -50,6 +50,7 @@ def getDataFromCsv(fname):
     for day in weekDays:
         data[day] = []
     key = ""
+    generateFakeData(fname)
     with open(fname + '.csv', 'r', newline='') as csvfile:
         for line in csv.reader(csvfile):
             words = line[0].split()

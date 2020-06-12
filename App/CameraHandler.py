@@ -71,8 +71,7 @@ def Start(dataToSet, dataset):
 def get_data(username):
     query = {"user": username}
     projection = {'_id': 0, 'name': 1, 'subAtt.name': 1}
-    data = list(mycol.find(query, projection))
-    name_list = []
+    name_dict = {}
     keys = []
     values = []
     for data in mycol.find(query):
@@ -82,13 +81,13 @@ def get_data(username):
         values += [data["subAtt"]]
 
     name_list = dict(zip(keys, zip(values)))
-    print(keys)
-    print(values)
-    print(name_list["Louvre"])
-    testy = name_list["Louvre"]
-    testy = [x for x in testy for x in x]
-    print(testy[0]["name"])
-    return name_list
+    for names in name_list:
+        name_dict[names] = []
+        for items in name_list[names]:
+            for x in items:
+                name_dict[names].append(x["name"])
+
+    return name_dict
 
 
 def send_data(name, sendData):
@@ -111,3 +110,6 @@ def run(attraction):
     tServer.start()
     atexit.register(writeToCsv, attraction, dataset)
     Start(data, dataset)
+
+
+get_data("admin")
