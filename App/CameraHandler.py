@@ -69,13 +69,24 @@ def Start(dataToSet, dataset):
 
 
 def get_data(username):
-    query = {"user": username, 'name': {'$exists': 1}}
-    projection = {'_id': 0, 'name': 1}
+    query = {"user": username}
+    projection = {'_id': 0, 'name': 1, 'subAtt.name': 1}
     data = list(mycol.find(query, projection))
     name_list = []
-    for name in data:
-        for key, value in name.items():
-            name_list.append(value)
+    keys = []
+    values = []
+    for data in mycol.find(query):
+        keys += [data["name"]]
+
+    for data in mycol.find(query, {'subAtt.name': 1}):
+        values += [data["subAtt"]]
+
+    name_list = dict(zip(keys, zip(values)))
+    #print(keys)
+    #print(values)
+    #print(name_list["Louvre"])
+    #testy = name_list["Louvre"]
+    #print(testy[0][0]["name"])
     return name_list
 
 
@@ -88,7 +99,7 @@ def send_data(name, sendData):
              }, upsert=True
         )
         print("the data sent to server is: ", sendData)
-        time.sleep(4)
+        time.sleep(2)
 
 
 def run(attraction):
