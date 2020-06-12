@@ -82,11 +82,12 @@ def get_data(username):
         values += [data["subAtt"]]
 
     name_list = dict(zip(keys, zip(values)))
-    #print(keys)
-    #print(values)
-    #print(name_list["Louvre"])
-    #testy = name_list["Louvre"]
-    #print(testy[0][0]["name"])
+    print(keys)
+    print(values)
+    print(name_list["Louvre"])
+    testy = name_list["Louvre"]
+    testy = [x for x in testy for x in x]
+    print(testy[0]["name"])
     return name_list
 
 
