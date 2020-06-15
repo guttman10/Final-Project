@@ -96,6 +96,7 @@ def send_data(name, sendData):
                    "meanCount": sendData["meanCount"], "suggestion": sendData["suggestion"], "busy": sendData["busy"]}
         mycol.find_one_and_update(
             {"name": sendData["name"]},
+
             {"$set":
                  {"load": newData}
              }, upsert=True
@@ -104,9 +105,9 @@ def send_data(name, sendData):
         time.sleep(4)
 
 
-def run(attraction, subAtt):
+def run(attraction, subAtt, username):
     dataset = getDataFromCsv(subAtt)
-    data = {"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction, "suggestion": 0, "busy":0}
+    data = {"user" : username,"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction, "subTemp": subAtt, "suggestion": 0, "busy":0}
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()

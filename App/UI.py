@@ -39,6 +39,7 @@ def back():
 
 
 def onClick():
+    global choise_name3
     if state[0] == 1:
         name = entry1.get()
         attrac_dict[0] = get_data(name)
@@ -53,6 +54,7 @@ def onClick():
             optionMenu.append(tk.OptionMenu(root, choise, *choises))
             canvas1.create_window(200, 130, window=optionMenu[0])
             state[0] = 2
+            choise_name3 = name
         else:
             temp_string.set("Unknown User")
     elif state[0] == 2:
@@ -73,7 +75,7 @@ def onClick():
         root.destroy()
         choise_name1 = choise.get()
         choise_name2 = choise2.get()
-        run(choise_name1, choise_name2)
+        run(choise_name1, choise_name2, choise_name3)
         return
 
 
