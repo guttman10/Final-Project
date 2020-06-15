@@ -250,11 +250,13 @@ class Manager extends Component {
             .then(res => res.json())
             .then(data => data.map(item => {
                     if (item.user === "admin") {
-
-                        //GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
+                        for(let i = 0 ; i< item.subAtt.length ; i++)
+                        {
+                            GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
+                        }
+                        console.log(GaugeSumTemp)
                         this.add({_id: item._id, txt: item.name, subatt: item.subAtt})
                         subAttCounter = subAttCounter + item.subAtt.length
-                        counter = counter+1
                     }
                 })).catch(err => console.error(err));
 
@@ -262,13 +264,14 @@ class Manager extends Component {
             showchart = true;
             if (this._isMounted) {this.setState({
                 gaugeSum: GaugeSumTemp,
-                counter: counter,
+                counter: this.state.loads.length,
                 subAttCounter: subAttCounter
 
             })}
         }, 1000);
         /*
                 setInterval( async () => {
+                    counter = this.state.loads.length
                     innercount = 0
                     let loadtemp = this.state.loads
                     GaugeSumTemp = 0;
@@ -277,12 +280,10 @@ class Manager extends Component {
                         .then(data => data.map(item => {
                             if (item.user === "admin") {
                                 let loadindex = loadtemp.findIndex(x => x._id == item._id);
-                                loadtemp[loadindex].load = item.load
+                                loadtemp[loadindex].subAtt = item.subAtt
                                 GaugeSumTemp = GaugeSumTemp + (item.load.currCount)
                                 innercount++
                                 if (this._isMounted) {
-                                    console.log(innercount)
-                                    console.log(innercount)
                                     if (innercount === counter) {
                                         let gaudgeshow = GaugeSumTemp
                                         GaugeSumTemp = 0
