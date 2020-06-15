@@ -89,8 +89,30 @@ def get_data(username):
 
     return name_dict
 
+def get_subAtt(username, attraction, subAttraction):
+    query = {"user": username, "name": attraction}
+    projection = {'_id': 0, 'name': 1, 'subAtt': 1}
+    name_dict = {}
+    keys = []
+    values = []
+    for data in mycol.find(query):
+        keys += [data["name"]]
 
+    for data in mycol.find(query, {'_id': 0,'subAtt': 1}):
+        values += [data["subAtt"]]
+
+    name_list = dict(zip(keys, zip(values)))
+    for names in name_list:
+        name_dict[names] = []
+        for items in name_list[names]:
+            for x in items:
+                name_dict[names].append(x["name"])
+    print(data)
+
+    return name_dict
 def send_data(name, sendData):
+    subAtt = get_subAtt(sendData["user"],sendData["name"],sendData["subAtt"])
+    print(subAtt)
     while True:
         newData = {"maxCount": sendData["maxCount"], "currCount": sendData["currCount"],
                    "meanCount": sendData["meanCount"], "suggestion": sendData["suggestion"], "busy": sendData["busy"]}
@@ -107,7 +129,7 @@ def send_data(name, sendData):
 
 def run(attraction, subAtt, username):
     dataset = getDataFromCsv(subAtt)
-    data = {"user" : username,"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction, "subTemp": subAtt, "suggestion": 0, "busy":0}
+    data = {"user" : username,"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction, "subAtt": subAtt, "suggestion": 0, "busy":0}
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()
