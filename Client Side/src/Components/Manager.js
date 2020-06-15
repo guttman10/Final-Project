@@ -266,9 +266,8 @@ class Manager extends Component {
 
             })}
         }, 1000);
-        /*
+
                 setInterval( async () => {
-                    counter = this.state.loads.length
                     innercount = 0
                     let loadtemp = this.state.loads
                     GaugeSumTemp = 0;
@@ -278,17 +277,19 @@ class Manager extends Component {
                             if (item.user === "admin") {
                                 let loadindex = loadtemp.findIndex(x => x._id == item._id);
                                 loadtemp[loadindex].subAtt = item.subAtt
-                                GaugeSumTemp = GaugeSumTemp + (item.load.currCount)
+                                for(let i = 0 ; i< item.subAtt.length ; i++)
+                                    GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
                                 innercount++
                                 if (this._isMounted) {
-                                    if (innercount === counter) {
+                                    if (innercount === this.state.loads.length) {
                                         let gaudgeshow = GaugeSumTemp
                                         GaugeSumTemp = 0
                                         this.setState({
-                                            loads: loadtemp,
-                                            gaugeSum: gaudgeshow
+                                            gaugeSum: gaudgeshow,
+                                            counter: this.state.loads.length,
+                                            subAttCounter: subAttCounter
                                         })}}}})).catch(err => console.error(err));}, 5000);
-                                        */
+
     }
     componentWillUnmount() {
         this._isMounted = false;
