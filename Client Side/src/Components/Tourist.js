@@ -143,7 +143,6 @@ class Tourist extends Component {
                     .then(data => data.map(item => {
                         if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                             (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
-                            counter = counter+1;
                             this.add(
                                 {_id: item._id, txt: item.name, ld: item.load, img: item.image,cate: item.category, subatt: item.subAtt})}}))
                     .catch(err => console.error(err));
@@ -163,7 +162,7 @@ class Tourist extends Component {
                                     loadtemp[loadindex].subAtt = item.subAtt
                                     innercount++
                                     if (this._isMounted) {
-                                        if (innercount === counter) {
+                                        if (innercount === this.state.loads.length) {
                                             this.setState({
                                                 loads: loadtemp
                                             })}};}}})).catch(err => console.error(err));}, 5000);})}}

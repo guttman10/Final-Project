@@ -243,7 +243,6 @@ class Manager extends Component {
         //const url = 'https://moninode.herokuapp.com/load_data'; for real use
         const url = 'http://localhost:3000/load_data';
         let GaugeSumTemp = 0
-        let counter = 0
         let subAttCounter = 0
         let innercount = 0
         fetch(url)
@@ -251,10 +250,8 @@ class Manager extends Component {
             .then(data => data.map(item => {
                     if (item.user === "admin") {
                         for(let i = 0 ; i< item.subAtt.length ; i++)
-                        {
                             GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
-                        }
-                        console.log(GaugeSumTemp)
+
                         this.add({_id: item._id, txt: item.name, subatt: item.subAtt})
                         subAttCounter = subAttCounter + item.subAtt.length
                     }
