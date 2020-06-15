@@ -191,6 +191,7 @@ class Manager extends Component {
             loads: [],
             gaugeSum:0,
             counter:0,
+            subAttCounter:0,
             username: '',
             password: '',
             error: '',
@@ -199,13 +200,11 @@ class Manager extends Component {
             id:0,
             category:"",
             selectName:"",
-
             newName:"",
             newImage:"",
             newCategory:"",
         }
         this.baseState = this.state
-        this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
         this.handlePassChange = this.handlePassChange.bind(this);
         this.handleUserChange = this.handleUserChange.bind(this);
@@ -221,15 +220,14 @@ class Manager extends Component {
         this.setState(this.baseState)
     }
 
-    add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null}){
+    add({event = null, _id = null, txt = 'default title', subatt = null}){
+        console.log(event,_id,txt)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
                 {_id: _id !== null ? _id : this.nextID(prevState.loads),
                     name:txt,
-                    load:ld,
-                    image:img,
-
+                    subAtt: subatt,
                 }
             ]
         }))
@@ -246,13 +244,16 @@ class Manager extends Component {
         const url = 'http://localhost:3000/load_data';
         let GaugeSumTemp = 0
         let counter = 0
+        let subAttCounter = 0
         let innercount = 0
         fetch(url)
             .then(res => res.json())
             .then(data => data.map(item => {
                     if (item.user === "admin") {
-                        GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
-                        this.add({_id: item._id, txt: item.name, ld: item.load, img: item.image})
+
+                        //GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
+                        this.add({_id: item._id, txt: item.name, subatt: item.subAtt})
+                        subAttCounter = subAttCounter + item.subAtt.length
                         counter = counter+1
                     }
                 })).catch(err => console.error(err));
@@ -261,120 +262,39 @@ class Manager extends Component {
             showchart = true;
             if (this._isMounted) {this.setState({
                 gaugeSum: GaugeSumTemp,
-                counter: counter
+                counter: counter,
+                subAttCounter: subAttCounter
 
             })}
         }, 1000);
-
-        setInterval( async () => {
-            innercount = 0
-            let loadtemp = this.state.loads
-            GaugeSumTemp = 0;
-            fetch(url)
-                .then(res => res.json())
-                .then(data => data.map(item => {
-                    if (item.user === "admin") {
-                        let loadindex = loadtemp.findIndex(x => x._id == item._id);
-                        loadtemp[loadindex].load = item.load
-                        GaugeSumTemp = GaugeSumTemp + (item.load.currCount)
-                        innercount++
-                        if (this._isMounted) {
-                            console.log(innercount)
-                            console.log(innercount)
-                            if (innercount === counter) {
-                                let gaudgeshow = GaugeSumTemp
-                                GaugeSumTemp = 0
-                                this.setState({
-                                    loads: loadtemp,
-                                    gaugeSum: gaudgeshow
-                                })}}}})).catch(err => console.error(err));}, 5000);
+        /*
+                setInterval( async () => {
+                    innercount = 0
+                    let loadtemp = this.state.loads
+                    GaugeSumTemp = 0;
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => data.map(item => {
+                            if (item.user === "admin") {
+                                let loadindex = loadtemp.findIndex(x => x._id == item._id);
+                                loadtemp[loadindex].load = item.load
+                                GaugeSumTemp = GaugeSumTemp + (item.load.currCount)
+                                innercount++
+                                if (this._isMounted) {
+                                    console.log(innercount)
+                                    console.log(innercount)
+                                    if (innercount === counter) {
+                                        let gaudgeshow = GaugeSumTemp
+                                        GaugeSumTemp = 0
+                                        this.setState({
+                                            loads: loadtemp,
+                                            gaugeSum: gaudgeshow
+                                        })}}}})).catch(err => console.error(err));}, 5000);
+                                        */
     }
     componentWillUnmount() {
         this._isMounted = false;
         showchart = false;
-    }
-    eachLoad(name, i) {
-        let currLoadCap;
-        if((name.load.currCount === 0 && name.load.maxCount === 0) ||
-            (name.load.currCount === 1 && name.load.maxCount === 0 ))
-            currLoadCap = 0;
-        else
-        {
-            currLoadCap = name.load.currCount/name.load.maxCount
-            currLoadCap = currLoadCap.toFixed(2)}
-        let predictload = parseInt(name.load.suggestion[1],10)
-        return (
-            <div key={`container ${i}`} className="card" style={this.listStyle}>
-                <div class="card-body">
-                    <Load key={`load${i}`} index={i}>
-                        <h4 class="card-title" style={this.titleStyle}>{name.name} </h4>
-                        <img style={this.loadPic} class="card-img-top" src={name.image}/>
-                        <ul className="list-group list-group-flush">
-                            <li className="list-group-item" style={this.listcolor} ></li>
-                            <li className="list-group-item" style={this.listcolor}>
-                                <p className="font-weight-bold" style={this.listText}>Current Load:</p>
-                                <div style={this.loadBar}>
-                                    <CircularProgressbar value={name.load.currCount}
-                                                         maxValue={name.load.maxCount}
-                                                         text={`${currLoadCap*100}%`}
-                                                         styles={{
-                                                             path: {
-                                                                 transformOrigin: "center center",
-                                                                 strokeLinecap: "butt",
-                                                                 stroke: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
-                                                             },
-                                                             trail: {
-                                                                 strokeWidth: 7
-                                                             },
-                                                             text: {
-                                                                 fontSize: 22,
-                                                                 fontWeight: 500,
-
-                                                                 animation: "fadein 2s",
-                                                                 fill: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
-                                                             }
-                                                         }}
-
-                                    />
-                                </div>
-                            </li>
-                            <li className="list-group-item"style={this.listcolor} >
-                                <p className="font-weight-bold" style={this.listText}>Predicted Load
-                                    {"\n"}At {name.load.suggestion[0]}:00:</p>
-                                <div style={this.loadBar}>
-                                    <CircularProgressbar value={predictload}
-                                                         maxValue={100}
-                                                         text={`${predictload}%`}
-                                                         styles={{
-                                                             path: {
-                                                                 transformOrigin: "center center",
-                                                                 strokeLinecap: "butt",
-                                                                 stroke: predictload >= 70 ? "#bd2327" : "#2293dd"
-                                                             },
-                                                             trail: {
-                                                                 strokeWidth: 7
-                                                             },
-                                                             text: {
-                                                                 fontSize: 22,
-                                                                 fontWeight: 500,
-
-                                                                 animation: "fadein 2s",
-                                                                 fill: predictload >= 70 ? "#bd2327" : "#2293dd"
-                                                             }
-                                                         }}
-
-                                    />
-                                </div>
-                            </li>
-                            <li className="list-group-item" style={this.listcolor}/>
-
-                        </ul>
-                    </Load>
-                </div>
-            </div>
-
-
-        )
     }
     dismissError() {
         this.setState({ error: '' });
@@ -505,8 +425,8 @@ class Manager extends Component {
                             </div>
                             <div className="card">
                                 <div className="card-body" style={this.infoWarp}>
-                                    <img style={this.infoImage} src={require('../images/warning2.png')}/>
-                                    <p style={this.infoText}>0</p>
+                                    <img style={this.infoImage} src={require('../images/attracionsfinish.png')}/>
+                                    <p style={this.infoText}>{this.state.subAttCounter}</p>
                                 </div>
                             </div>
                         </div>
