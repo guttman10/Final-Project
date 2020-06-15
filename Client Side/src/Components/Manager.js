@@ -276,17 +276,23 @@ class Manager extends Component {
                         .then(data => data.map(item => {
                             if (item.user === "admin") {
                                 let loadindex = loadtemp.findIndex(x => x._id == item._id);
+                                if(loadindex == -1) // means a new site has been added
+                                {
+                                    loadtemp.push({_id: item._id, name: item.name, subAtt: item.subAtt})
+                                    loadindex = loadtemp.findIndex(x => x._id == item._id);
+                                    subAttCounter = subAttCounter + item.subAtt.length
+                                }
                                 loadtemp[loadindex].subAtt = item.subAtt
                                 for(let i = 0 ; i< item.subAtt.length ; i++)
                                     GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
                                 innercount++
                                 if (this._isMounted) {
-                                    if (innercount === this.state.loads.length) {
+                                    if (innercount === loadtemp.length) {
                                         let gaudgeshow = GaugeSumTemp
                                         GaugeSumTemp = 0
                                         this.setState({
                                             gaugeSum: gaudgeshow,
-                                            counter: this.state.loads.length,
+                                            counter: loadtemp.length,
                                             subAttCounter: subAttCounter
                                         })}}}})).catch(err => console.error(err));}, 5000);
 

@@ -144,7 +144,7 @@ class Tourist extends Component {
                         if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                             (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                             this.add(
-                                {_id: item._id, txt: item.name, ld: item.load, img: item.image,cate: item.category, subatt: item.subAtt})}}))
+                                {_id: item._id, txt: item.name, img: item.image,cate: item.category, subatt: item.subAtt})}}))
                     .catch(err => console.error(err));
                 setInterval(async () => {
                     innercount = 0
@@ -156,13 +156,16 @@ class Tourist extends Component {
                                 if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                                     (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                                     let loadindex = loadtemp.findIndex(x => x._id == item._id);
-                                    console.log(loadindex)
-                                    loadtemp[loadindex].load = item.load
+                                    if(loadindex == -1) // means a new site has been added
+                                    {
+                                        loadtemp.push({_id: item._id, txt: item.name, image: item.image,category: item.category, subAtt: item.subAtt})
+                                        loadindex = loadtemp.findIndex(x => x._id == item._id);
+                                    }
                                     loadtemp[loadindex].category = item.category
                                     loadtemp[loadindex].subAtt = item.subAtt
                                     innercount++
                                     if (this._isMounted) {
-                                        if (innercount === this.state.loads.length) {
+                                        if (innercount === loadtemp.length) {
                                             this.setState({
                                                 loads: loadtemp
                                             })}};}}})).catch(err => console.error(err));}, 5000);})}}
