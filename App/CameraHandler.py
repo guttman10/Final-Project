@@ -92,19 +92,21 @@ def get_data(username):
 
 def send_data(name, sendData):
     while True:
+        newData = {"maxCount": sendData["maxCount"], "currCount": sendData["currCount"],
+                   "meanCount": sendData["meanCount"], "suggestion": sendData["suggestion"], "busy": sendData["busy"]}
         mycol.find_one_and_update(
             {"name": sendData["name"]},
             {"$set":
-                 {"load": sendData}
+                 {"load": newData}
              }, upsert=True
         )
         print("the data sent to server is: ", sendData)
-        time.sleep(2)
+        time.sleep(4)
 
 
-def run(attraction):
-    dataset = getDataFromCsv(attraction)
-    data = {"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction}
+def run(attraction, subAtt):
+    dataset = getDataFromCsv(subAtt)
+    data = {"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction, "suggestion": 0, "busy":0}
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()

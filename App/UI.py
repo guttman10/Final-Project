@@ -71,8 +71,9 @@ def onClick():
         button1.destroy()
         canvas1.destroy()
         root.destroy()
-        choise_name = choise2.get()
-        run(choise_name)
+        choise_name1 = choise.get()
+        choise_name2 = choise2.get()
+        run(choise_name1, choise_name2)
         return
 
 
