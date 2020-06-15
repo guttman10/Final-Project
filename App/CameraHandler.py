@@ -95,25 +95,28 @@ def get_subAtt(username, attraction, subAttraction):
     values = []
     for data in mycol.find(query,  projection):
         values += [data["subAtt"]]
-
-
-    print(values)
-
     return data
+
 def send_data(name, sendData):
     subAtt = get_subAtt(sendData["user"],sendData["name"],sendData["subAtt"])
-    print(subAtt["subAtt"][0]["name"])
     while True:
+
         newData = {"maxCount": sendData["maxCount"], "currCount": sendData["currCount"],
                    "meanCount": sendData["meanCount"], "suggestion": sendData["suggestion"], "busy": sendData["busy"]}
+        i = 0
+        while i < len(subAtt["subAtt"]):
+            if subAtt["subAtt"][i]["name"].strip() == sendData["subAtt"].strip():
+                subAtt["subAtt"][i]["load"] = newData
+                break
+            i += 1
         mycol.find_one_and_update(
             {"name": sendData["name"]},
 
             {"$set":
-                 {"load": newData}
+                 subAtt
              }, upsert=True
         )
-        print("the data sent to server is: ", sendData)
+        print("the data sent to server is: ", subAtt)
         time.sleep(4)
 
 
