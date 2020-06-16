@@ -25,7 +25,18 @@ module.exports={
             res.status(404).send('not found')
     },
     async add(req, res, next) {
-        if(req.body.user.mode === 1)
+    if (req.body.user.mode === 0){ //updating category
+
+            load.findOneAndUpdate(
+                {name: req.body.user.name},
+                {category: req.body.user.category},
+                {upsert: true},
+                function (err, doc) {
+                    console.log(doc);
+                }
+            )
+        }
+        else if(req.body.user.mode === 1) // adding a new site
         {
             console.log("hey")
         let user = {
@@ -37,18 +48,7 @@ module.exports={
             };
        load.create(user)
         }
-        else if (req.body.user.mode === 0){
-
-            load.findOneAndUpdate(
-                {name: req.body.user.name},
-                {category: req.body.user.category},
-                {upsert: true},
-                function (err, doc) {
-                    console.log(doc);
-                }
-            )
-        }
-        else if (req.body.user.mode === 2){
+        else if (req.body.user.mode === 2){ // adding a new sub attraction
             console.log("new")
             let temp = req.body.user.subAtt
             temp.push({
