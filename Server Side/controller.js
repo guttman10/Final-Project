@@ -36,13 +36,13 @@ module.exports={
                 image:req.body.user.image,
                 location:req.body.user.location,
                 category:req.body.user.category,
-                load: {
+                /*load: {
                     maxCount:1,
                     currCount:0,
                     meanCount:0,
                     suggestion: [0,0],
                     busy:0
-                },
+                },*/
             };
        load.create(user)
         }

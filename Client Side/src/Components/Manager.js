@@ -189,6 +189,8 @@ class Manager extends Component {
         super(props);
         this.state = {
             loads: [],
+            Latitude:0,
+            Longitude:0,
             gaugeSum:0,
             counter:0,
             subAttCounter:0,
@@ -240,34 +242,46 @@ class Manager extends Component {
     }
     componentDidMount() {
         this._isMounted = true;
-        //const url = 'https://moninode.herokuapp.com/load_data'; for real use
-        const url = 'http://localhost:3000/load_data';
-        let GaugeSumTemp = 0
-        let subAttCounter = 0
-        let innercount = 0
-        fetch(url)
-            .then(res => res.json())
-            .then(data => data.map(item => {
-                    if (item.user === "admin") {
-                        for(let i = 0 ; i< item.subAtt.length ; i++)
-                            GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
+        if (window.navigator.geolocation)
+        {
+            navigator.geolocation.getCurrentPosition(async location => {
+                if (this._isMounted) {
+                    this.setState({
+                        Latitude: location.coords.latitude,
+                        Longitude: location.coords.longitude,
+                    })
+                }
 
-                        this.add({_id: item._id, txt: item.name, subatt: item.subAtt})
-                        subAttCounter = subAttCounter + item.subAtt.length
+                //const url = 'https://moninode.herokuapp.com/load_data'; for real use
+                const url = 'http://localhost:3000/load_data';
+                let GaugeSumTemp = 0
+                let subAttCounter = 0
+                let innercount = 0
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => data.map(item => {
+                        if (item.user === "admin") {
+                            for (let i = 0; i < item.subAtt.length; i++)
+                                GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
+
+                            this.add({_id: item._id, txt: item.name, subatt: item.subAtt})
+                            subAttCounter = subAttCounter + item.subAtt.length
+                        }
+                    })).catch(err => console.error(err));
+
+                setTimeout(() => {
+                    showchart = true;
+                    if (this._isMounted) {
+                        this.setState({
+                            gaugeSum: GaugeSumTemp,
+                            counter: this.state.loads.length,
+                            subAttCounter: subAttCounter
+
+                        })
                     }
-                })).catch(err => console.error(err));
+                }, 2000);
 
-        setTimeout( () => {
-            showchart = true;
-            if (this._isMounted) {this.setState({
-                gaugeSum: GaugeSumTemp,
-                counter: this.state.loads.length,
-                subAttCounter: subAttCounter
-
-            })}
-        }, 1000);
-
-                setInterval( async () => {
+                setInterval(async () => {
                     innercount = 0
                     let loadtemp = this.state.loads
                     GaugeSumTemp = 0;
@@ -276,14 +290,14 @@ class Manager extends Component {
                         .then(data => data.map(item => {
                             if (item.user === "admin") {
                                 let loadindex = loadtemp.findIndex(x => x._id == item._id);
-                                if(loadindex == -1) // means a new site has been added
+                                if (loadindex == -1) // means a new site has been added
                                 {
                                     loadtemp.push({_id: item._id, name: item.name, subAtt: item.subAtt})
                                     loadindex = loadtemp.findIndex(x => x._id == item._id);
                                     subAttCounter = subAttCounter + item.subAtt.length
                                 }
                                 loadtemp[loadindex].subAtt = item.subAtt
-                                for(let i = 0 ; i< item.subAtt.length ; i++)
+                                for (let i = 0; i < item.subAtt.length; i++)
                                     GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
                                 innercount++
                                 if (this._isMounted) {
@@ -294,9 +308,11 @@ class Manager extends Component {
                                             gaugeSum: gaudgeshow,
                                             counter: loadtemp.length,
                                             subAttCounter: subAttCounter
-                                        })}}}})).catch(err => console.error(err));}, 5000);
-
-    }
+                                        })
+                                    }
+                                }
+                            }
+                        })).catch(err => console.error(err));}, 5000);})}}
     componentWillUnmount() {
         this._isMounted = false;
         showchart = false;
@@ -377,8 +393,8 @@ class Manager extends Component {
             image: this.state.newImage,
             category: this.state.newCategory,
             location: {
-                latitude: 32.16,
-                longitude:34.8,
+                latitude: this.state.latitude,
+                longitude:this.state.longitude,
             },
         };
 
