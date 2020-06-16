@@ -25,7 +25,7 @@ module.exports={
             res.status(404).send('not found')
     },
     async add(req, res, next) {
-    if (req.body.user.mode === 0){ //updating category
+       if (req.body.user.mode === 0){ //updating category
 
             load.findOneAndUpdate(
                 {name: req.body.user.name},
