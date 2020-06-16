@@ -206,6 +206,9 @@ class Manager extends Component {
             newName:"",
             newImage:"",
             newCategory:"",
+            newName3:"",
+            newImage3:"",
+            selectName3:"",
         }
         this.baseState = this.state
         this.nextID = this.nextID.bind(this)
@@ -215,10 +218,9 @@ class Manager extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.dismissError = this.dismissError.bind(this);
         this.handleIDChange = this.handleIDChange.bind(this);
-        this.handleChangeSelect = this.handleChangeSelect.bind(this)
-        this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleSubmitPost = this.handleSubmitPost.bind(this)
         this.handleSubmitPost2 = this.handleSubmitPost2.bind(this)
+        this.handleSubmitPost3 = this.handleSubmitPost3.bind(this)
     }
     reset = () => {
         this.setState(this.baseState)
@@ -368,6 +370,9 @@ class Manager extends Component {
     handleChangeSelect = event => {
         this.setState(({selectName: event.target.value}))
     }
+    handleChangeSelect3 = event => {
+        this.setState(({selectName3: event.target.value}))
+    }
     handleCategoryChange = event => {
         this.setState({ category: event.target.value });
     }
@@ -390,8 +395,14 @@ class Manager extends Component {
     handleNewNameChange = event => {
         this.setState({ newName: event.target.value });
     }
+    handleNewNameChange3 = event => {
+        this.setState({ newName3: event.target.value });
+    }
     handleNewImageChange = event => {
         this.setState({ newImage: event.target.value });
+    }
+    handleNewImageChange3 = event => {
+        this.setState({ newImage3: event.target.value });
     }
     handleNewCategoryChange = event => {
         this.setState({ newCategory: event.target.value });
@@ -409,6 +420,26 @@ class Manager extends Component {
                 longitude:this.state.Longitude,
             },
             subAtt: [],
+        };
+
+        axios.post(`http://localhost:3000/load_data`, { user })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
+    handleSubmitPost3(evt) {
+        evt.preventDefault();
+        let name = this.state.selectName3
+        let loadtemp = this.state.loads
+        let loadindex = loadtemp.findIndex(x => x.name == name );
+        console.log(loadindex)
+        const user = {
+            mode: 2,
+            attName: this.state.selectName3,
+            name: this.state.newName3,
+            image: this.state.newImage3,
+            subAtt: loadtemp[loadindex].subAtt
         };
 
         axios.post(`http://localhost:3000/load_data`, { user })
@@ -573,22 +604,18 @@ class Manager extends Component {
                         <form onSubmit={this.handleSubmitPost3}>
                             <label style={this.labelblock}>
                                 Attraction Name:
-                                <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect}>
+                                <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect3}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
                                 </select>
                             </label>
                             <label style={this.labelblock}>
                                 Name:
-                                <input style={{marginLeft:5}} type="text" value={this.state.newName} onChange={this.handleNewNameChange} />
+                                <input style={{marginLeft:5}} type="text" value={this.state.newName3} onChange={this.handleNewNameChange3} />
                             </label>
                             <label style={this.labelblock}>
                                 Image:
-                                <input style={{marginLeft:5}} type="text" value={this.state.newImage} onChange={this.handleNewImageChange} />
-                            </label>
-                            <label style={this.labelblock}>
-                                Category:
-                                <input style={{marginLeft:5}} type="text" value={this.state.newCategory} onChange={this.handleNewCategoryChange} />
+                                <input style={{marginLeft:5}} type="text" value={this.state.newImage3} onChange={this.handleNewImageChange3} />
                             </label>
                             <hr></hr>
                             <button type="submit" value="Submit">Add</button>
