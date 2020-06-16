@@ -191,6 +191,7 @@ class Manager extends Component {
             loads: [],
             Latitude:0,
             Longitude:0,
+            GPS: 0,
             gaugeSum:0,
             counter:0,
             subAttCounter:0,
@@ -318,6 +319,7 @@ class Manager extends Component {
                     this.setState({
                         Latitude: location.coords.latitude,
                         Longitude: location.coords.longitude,
+                        GPS: 1,
                     })
                 }
                this.dataFetch()
@@ -426,7 +428,13 @@ class Manager extends Component {
                 show: true
             }
         };
-        if (this.state.logged && this.state.mainPage) {
+        if(this.state.GPS === 0)
+        {
+            return(
+                <div>Please Enable Your Gps Position</div>
+            )
+        }
+        else if (this.state.logged && this.state.mainPage) {
             return (
                 <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
