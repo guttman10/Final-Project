@@ -208,6 +208,7 @@ class Manager extends Component {
         }
         this.baseState = this.state
         this.nextID = this.nextID.bind(this)
+        this.dataFetch = this.dataFetch.bind(this)
         this.handlePassChange = this.handlePassChange.bind(this);
         this.handleUserChange = this.handleUserChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -240,6 +241,74 @@ class Manager extends Component {
             : 0
         return ++this.uniqueId
     }
+   dataFetch() {
+        if(this.state.logged == false) {
+            window.setTimeout(this.dataFetch, 1000); /* this checks the flag every 100 milliseconds*/
+        } else {
+            //const url = 'https://moninode.herokuapp.com/load_data'; for real use
+            const url = 'http://localhost:3000/load_data';
+            let GaugeSumTemp = 0
+            let subAttCounter = 0
+            let innercount = 0
+            fetch(url)
+                .then(res => res.json())
+                .then(data => data.map(item => {
+                    if (item.user === this.state.usernameM) {
+                        for (let i = 0; i < item.subAtt.length; i++)
+                            GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
+
+                        this.add({_id: item._id, txt: item.name, subatt: item.subAtt})
+                        subAttCounter = subAttCounter + item.subAtt.length
+                    }
+                })).catch(err => console.error(err));
+
+            setTimeout(() => {
+                showchart = true;
+                if (this._isMounted) {
+                    this.setState({
+                        gaugeSum: GaugeSumTemp,
+                        counter: this.state.loads.length,
+                        subAttCounter: subAttCounter
+
+                    })
+                }
+            }, 2000);
+
+            setInterval(async () => {
+                innercount = 0
+                let loadtemp = this.state.loads
+                GaugeSumTemp = 0;
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => data.map(item => {
+                        if (item.user === "admin") {
+                            let loadindex = loadtemp.findIndex(x => x._id == item._id);
+                            if (loadindex == -1) // means a new site has been added
+                            {
+                                loadtemp.push({_id: item._id, name: item.name, subAtt: item.subAtt})
+                                loadindex = loadtemp.findIndex(x => x._id == item._id);
+                                subAttCounter = subAttCounter + item.subAtt.length
+                            }
+                            loadtemp[loadindex].subAtt = item.subAtt
+                            for (let i = 0; i < item.subAtt.length; i++)
+                                GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
+                            innercount++
+                            if (this._isMounted) {
+                                if (innercount === loadtemp.length) {
+                                    let gaudgeshow = GaugeSumTemp
+                                    GaugeSumTemp = 0
+                                    this.setState({
+                                        gaugeSum: gaudgeshow,
+                                        counter: loadtemp.length,
+                                        subAttCounter: subAttCounter
+                                    })
+                                }
+                            }
+                        }
+                    })).catch(err => console.error(err));}, 5000);
+
+        }
+    }
     componentDidMount() {
         this._isMounted = true;
         if (window.navigator.geolocation)
@@ -251,68 +320,8 @@ class Manager extends Component {
                         Longitude: location.coords.longitude,
                     })
                 }
-
-                //const url = 'https://moninode.herokuapp.com/load_data'; for real use
-                const url = 'http://localhost:3000/load_data';
-                let GaugeSumTemp = 0
-                let subAttCounter = 0
-                let innercount = 0
-                fetch(url)
-                    .then(res => res.json())
-                    .then(data => data.map(item => {
-                        if (item.user === this.state.usernameM) {
-                            for (let i = 0; i < item.subAtt.length; i++)
-                                GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
-
-                            this.add({_id: item._id, txt: item.name, subatt: item.subAtt})
-                            subAttCounter = subAttCounter + item.subAtt.length
-                        }
-                    })).catch(err => console.error(err));
-
-                setTimeout(() => {
-                    showchart = true;
-                    if (this._isMounted) {
-                        this.setState({
-                            gaugeSum: GaugeSumTemp,
-                            counter: this.state.loads.length,
-                            subAttCounter: subAttCounter
-
-                        })
-                    }
-                }, 1000);
-
-                setInterval(async () => {
-                    innercount = 0
-                    let loadtemp = this.state.loads
-                    GaugeSumTemp = 0;
-                    fetch(url)
-                        .then(res => res.json())
-                        .then(data => data.map(item => {
-                            if (item.user === this.state.usernameM) {
-                                let loadindex = loadtemp.findIndex(x => x._id == item._id);
-                                if (loadindex == -1) // means a new site has been added
-                                {
-                                    loadtemp.push({_id: item._id, name: item.name, subAtt: item.subAtt})
-                                    loadindex = loadtemp.findIndex(x => x._id == item._id);
-                                    subAttCounter = subAttCounter + item.subAtt.length
-                                }
-                                loadtemp[loadindex].subAtt = item.subAtt
-                                for (let i = 0; i < item.subAtt.length; i++)
-                                    GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
-                                innercount++
-                                if (this._isMounted) {
-                                    if (innercount === loadtemp.length) {
-                                        let gaudgeshow = GaugeSumTemp
-                                        GaugeSumTemp = 0
-                                        this.setState({
-                                            gaugeSum: gaudgeshow,
-                                            counter: loadtemp.length,
-                                            subAttCounter: subAttCounter
-                                        })
-                                    }
-                                }
-                            }
-                        })).catch(err => console.error(err));}, 5000);})}}
+               this.dataFetch()
+                })}}
     componentWillUnmount() {
         this._isMounted = false;
         showchart = false;
@@ -332,10 +341,10 @@ class Manager extends Component {
             return this.setState({ error: 'Password is required' });
         }
 
-        if((this.state.usernameM === "admin" && this.state.password === "admin") || (this.state.usernameM === "moshe" && this.state.password === "1234")) {
+        if(this.state.usernameM === "admin" && this.state.password === "admin" || this.state.usernameM === "moshe" && this.state.password === "1234") {
             this.setState({logged: true})
         }
-        else
+       else
             return this.setState({ error: 'invalid username or password' });
         return this.setState({ error: '' });
     }
@@ -388,13 +397,13 @@ class Manager extends Component {
         evt.preventDefault();
         const user = {
             mode: 1,
-            user:this.state.usernameM,
+            user:"admin",
             name: this.state.newName,
             image: this.state.newImage,
             category: this.state.newCategory,
             location: {
-                latitude: this.state.latitude,
-                longitude:this.state.longitude,
+                latitude: this.state.Latitude,
+                longitude:this.state.Longitude,
             },
         };
 
