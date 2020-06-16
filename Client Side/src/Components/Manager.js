@@ -277,18 +277,19 @@ class Manager extends Component {
 
             setInterval(async () => {
                 innercount = 0
+                subAttCounter = 0
                 let loadtemp = this.state.loads
                 GaugeSumTemp = 0;
                 fetch(url)
                     .then(res => res.json())
                     .then(data => data.map(item => {
-                        if (item.user === "admin") {
+                        if (item.user === this.state.usernameM) {
+                            subAttCounter = subAttCounter + item.subAtt.length
                             let loadindex = loadtemp.findIndex(x => x._id == item._id);
                             if (loadindex == -1) // means a new site has been added
                             {
                                 loadtemp.push({_id: item._id, name: item.name, subAtt: item.subAtt})
                                 loadindex = loadtemp.findIndex(x => x._id == item._id);
-                                subAttCounter = subAttCounter + item.subAtt.length
                             }
                             loadtemp[loadindex].subAtt = item.subAtt
                             for (let i = 0; i < item.subAtt.length; i++)
