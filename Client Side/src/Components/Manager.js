@@ -407,6 +407,7 @@ class Manager extends Component {
                 latitude: this.state.Latitude,
                 longitude:this.state.Longitude,
             },
+            subAtt: [],
         };
 
         axios.post(`http://localhost:3000/load_data`, { user })
@@ -550,6 +551,32 @@ class Manager extends Component {
                     <div className="card" style={this.formsin}>
                       <p>Add New Attraction</p>
                         <form onSubmit={this.handleSubmitPost2}>
+                            <label style={this.labelblock}>
+                                Name:
+                                <input style={{marginLeft:5}} type="text" value={this.state.newName} onChange={this.handleNewNameChange} />
+                            </label>
+                            <label style={this.labelblock}>
+                                Image:
+                                <input style={{marginLeft:5}} type="text" value={this.state.newImage} onChange={this.handleNewImageChange} />
+                            </label>
+                            <label style={this.labelblock}>
+                                Category:
+                                <input style={{marginLeft:5}} type="text" value={this.state.newCategory} onChange={this.handleNewCategoryChange} />
+                            </label>
+                            <hr></hr>
+                            <button type="submit" value="Submit">Add</button>
+                        </form>
+                    </div>
+                    <div className="card" style={this.formsin}>
+                        <p>Add New Sub Attraction</p>
+                        <form onSubmit={this.handleSubmitPost3}>
+                            <label style={this.labelblock}>
+                                Attraction Name:
+                                <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect}>
+                                    <option disabled selected value> -- select an option -- </option>
+                                    {optionTemplate}
+                                </select>
+                            </label>
                             <label style={this.labelblock}>
                                 Name:
                                 <input style={{marginLeft:5}} type="text" value={this.state.newName} onChange={this.handleNewNameChange} />

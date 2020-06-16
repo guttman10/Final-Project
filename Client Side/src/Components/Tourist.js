@@ -158,7 +158,7 @@ class Tourist extends Component {
                                     let loadindex = loadtemp.findIndex(x => x._id == item._id);
                                     if(loadindex == -1) // means a new site has been added
                                     {
-                                        loadtemp.push({_id: item._id, txt: item.name, image: item.image,category: item.category, subAtt: item.subAtt})
+                                        loadtemp.push({_id: item._id, name: item.name, image: item.image,category: item.category, subAtt: item.subAtt})
                                         loadindex = loadtemp.findIndex(x => x._id == item._id);
                                     }
                                     loadtemp[loadindex].category = item.category
@@ -268,7 +268,11 @@ class Tourist extends Component {
                     </div>
                 )
             }
-
+            if(sumcurrload == 0) {
+                sumloadcap = 0
+                summaxload = 1
+            }
+            else
             sumloadcap = (sumcurrload/summaxload).toFixed(2)
             console.log(sumpreditload)
             return <div key={`container ${i}`} className="card" style={this.listStyle}>
@@ -371,7 +375,12 @@ class Tourist extends Component {
                 sumcurrload += name.subAtt[i].load.currCount
                 summaxload += name.subAtt[i].load.maxCount
             }
-            sumloadcap = (sumcurrload/summaxload).toFixed(2)
+            if(sumcurrload == 0) {
+                sumloadcap = 0
+                summaxload = 1
+            }
+            else
+                sumloadcap = (sumcurrload/summaxload).toFixed(2)
             return (
                 <div key={`container ${i}`} className="card" style={this.listStyle}>
                     <div class="card-body">
