@@ -194,10 +194,10 @@ class Manager extends Component {
             gaugeSum:0,
             counter:0,
             subAttCounter:0,
-            username: '',
+            usernameM: '',
             password: '',
             error: '',
-            logged:true,
+            logged:false,
             mainPage:true,
             id:0,
             category:"",
@@ -260,7 +260,7 @@ class Manager extends Component {
                 fetch(url)
                     .then(res => res.json())
                     .then(data => data.map(item => {
-                        if (item.user === "admin") {
+                        if (item.user === this.state.usernameM) {
                             for (let i = 0; i < item.subAtt.length; i++)
                                 GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
 
@@ -279,7 +279,7 @@ class Manager extends Component {
 
                         })
                     }
-                }, 2000);
+                }, 1000);
 
                 setInterval(async () => {
                     innercount = 0
@@ -288,7 +288,7 @@ class Manager extends Component {
                     fetch(url)
                         .then(res => res.json())
                         .then(data => data.map(item => {
-                            if (item.user === "admin") {
+                            if (item.user === this.state.usernameM) {
                                 let loadindex = loadtemp.findIndex(x => x._id == item._id);
                                 if (loadindex == -1) // means a new site has been added
                                 {
@@ -324,7 +324,7 @@ class Manager extends Component {
     handleSubmit(evt) {
         evt.preventDefault();
 
-        if (!this.state.username) {
+        if (!this.state.usernameM) {
             return this.setState({ error: 'Username is required' });
         }
 
@@ -332,7 +332,7 @@ class Manager extends Component {
             return this.setState({ error: 'Password is required' });
         }
 
-        if(this.state.username === "admin" && this.state.password === "admin") {
+        if((this.state.usernameM === "admin" && this.state.password === "admin") || (this.state.usernameM === "moshe" && this.state.password === "1234")) {
             this.setState({logged: true})
         }
         else
@@ -341,7 +341,7 @@ class Manager extends Component {
     }
     handleUserChange(evt) {
         this.setState({
-            username: evt.target.value,
+            usernameM: evt.target.value,
         });
     };
 
@@ -388,7 +388,7 @@ class Manager extends Component {
         evt.preventDefault();
         const user = {
             mode: 1,
-            user:"admin",
+            user:this.state.usernameM,
             name: this.state.newName,
             image: this.state.newImage,
             category: this.state.newCategory,
@@ -573,7 +573,7 @@ class Manager extends Component {
                                     <p className="h5 text-center mb-4" style={{color:"#ffffff"}}>Welcome</p>
                                     <div className="white-text">
                                         <MDBInput style={{color:"white"}}  label="Type your username" icon="user" group type="text" validate error="wrong"
-                                                  input = "ttt"success="right" data-test="username" value={this.state.username} onChange={this.handleUserChange}/>
+                                                  input = "ttt"success="right" data-test="username" value={this.state.usernameM} onChange={this.handleUserChange}/>
                                         <MDBInput style={{color:"white"}} label="Type your password" icon="lock" group type="password" validate data-test="password"  value={this.state.password} onChange={this.handlePassChange}/>
                                     </div>
                                     <div className="text-center">
