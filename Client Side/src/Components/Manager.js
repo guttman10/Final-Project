@@ -9,6 +9,9 @@ import 'react-circular-progressbar/dist/styles.css';
 import '../mdb/css/mdb.css'
 import axios from "axios";
 let showchart = false;
+
+//const url = 'https://moninode.herokuapp.com/load_data'; for real use
+const url = 'http://localhost:3000/load_data';
 class Manager extends Component {
     _isMounted = false;
     loginBack = {
@@ -248,8 +251,6 @@ class Manager extends Component {
         if(this.state.logged == false) {
             window.setTimeout(this.dataFetch, 1000); /* this checks the flag every 100 milliseconds*/
         } else {
-            //const url = 'https://moninode.herokuapp.com/load_data'; for real use
-            const url = 'http://localhost:3000/load_data';
             let GaugeSumTemp = 0
             let subAttCounter = 0
             let innercount = 0
@@ -385,7 +386,7 @@ class Manager extends Component {
             category: this.state.category
         };
 
-        axios.post(`http://localhost:3000/load_data`, { user })
+        axios.post(url, { user })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -422,7 +423,7 @@ class Manager extends Component {
             subAtt: [],
         };
 
-        axios.post(`http://localhost:3000/load_data`, { user })
+        axios.post(url, { user })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -442,7 +443,7 @@ class Manager extends Component {
             subAtt: loadtemp[loadindex].subAtt
         };
 
-        axios.post(`http://localhost:3000/load_data`, { user })
+        axios.post(url, { user })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
