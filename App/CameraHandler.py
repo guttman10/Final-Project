@@ -58,9 +58,8 @@ def Start(dataToSet, dataset):
 
         now = datetime.datetime.now()
         if now.hour != time_:
-            if time_ == 23:
-                while dataset[getWeekday(now.day)][i] != time:
-                    i += 1
+            while dataset[getWeekday(now.day)][i] != time:
+                i += 1
             dataset[getWeekday(now.day)][i + 1] = dataToSet["maxCount"]
             time_ = now.hour
             dataset["suggestion"] = predict(dataset)[0]
