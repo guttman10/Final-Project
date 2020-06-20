@@ -9,8 +9,9 @@ import 'react-circular-progressbar/dist/styles.css';
 import '../mdb/css/mdb.css'
 import axios from "axios";
 let showchart = false;
-
-//const url = 'https://moninode.herokuapp.com/load_data'; for real use
+// for release
+//const url = 'https://moninode.herokuapp.com/load_data';
+//for testing
 const url = 'http://localhost:3000/load_data';
 class Manager extends Component {
     _isMounted = false;

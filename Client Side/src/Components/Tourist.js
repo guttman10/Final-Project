@@ -136,7 +136,9 @@ class Tourist extends Component {
                         Longitude: location.coords.longitude,
                         GPS: 1})}
 
-                //const url = 'https://moninode.herokuapp.com/load_data'; for real use
+                // for release
+                //const url = 'https://moninode.herokuapp.com/load_data';
+                //for testing
                 const url = 'http://localhost:3000/load_data';
                 fetch(url)
                     .then(res => res.json())
