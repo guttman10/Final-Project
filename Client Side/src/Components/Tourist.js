@@ -491,7 +491,6 @@ class Tourist extends Component {
             let _loads = this.state.loads;
             console.log(_loads)
             let search = this.state.searchString.replace(/^.*\\/,"").replace(/\..*?$/,"").trim().toLowerCase()
-            console.log("boom")
             if (search.length > 0) {
                 _loads = _loads.filter(function(loads) {
                     return loads.category.toLowerCase().match(search);
