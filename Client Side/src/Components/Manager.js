@@ -9,6 +9,9 @@ import 'react-circular-progressbar/dist/styles.css';
 import '../mdb/css/mdb.css'
 import axios from "axios";
 let showchart = false;
+
+//const url = 'https://moninode.herokuapp.com/load_data'; for real use
+const url = 'http://localhost:3000/load_data';
 class Manager extends Component {
     _isMounted = false;
     loginBack = {
@@ -189,47 +192,51 @@ class Manager extends Component {
         super(props);
         this.state = {
             loads: [],
+            Latitude:0,
+            Longitude:0,
+            GPS: 0,
             gaugeSum:0,
             counter:0,
-            username: '',
+            subAttCounter:0,
+            usernameM: '',
             password: '',
             error: '',
-            logged:true,
+            logged:false,
             mainPage:true,
             id:0,
             category:"",
             selectName:"",
-
             newName:"",
             newImage:"",
             newCategory:"",
+            newName3:"",
+            newImage3:"",
+            selectName3:"",
         }
         this.baseState = this.state
-        this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
+        this.dataFetch = this.dataFetch.bind(this)
         this.handlePassChange = this.handlePassChange.bind(this);
         this.handleUserChange = this.handleUserChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.dismissError = this.dismissError.bind(this);
         this.handleIDChange = this.handleIDChange.bind(this);
-        this.handleChangeSelect = this.handleChangeSelect.bind(this)
-        this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleSubmitPost = this.handleSubmitPost.bind(this)
         this.handleSubmitPost2 = this.handleSubmitPost2.bind(this)
+        this.handleSubmitPost3 = this.handleSubmitPost3.bind(this)
     }
     reset = () => {
         this.setState(this.baseState)
     }
 
-    add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null}){
+    add({event = null, _id = null, txt = 'default title', subatt = null}){
+        console.log(event,_id,txt)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
                 {_id: _id !== null ? _id : this.nextID(prevState.loads),
                     name:txt,
-                    load:ld,
-                    image:img,
-
+                    subAtt: subatt,
                 }
             ]
         }))
@@ -240,141 +247,90 @@ class Manager extends Component {
             : 0
         return ++this.uniqueId
     }
-    componentDidMount() {
-        this._isMounted = true;
-        //const url = 'https://moninode.herokuapp.com/load_data'; for real use
-        const url = 'http://localhost:3000/load_data';
-        let GaugeSumTemp = 0
-        let counter = 0
-        let innercount = 0
-        fetch(url)
-            .then(res => res.json())
-            .then(data => data.map(item => {
-                    if (item.user === "admin") {
-                        GaugeSumTemp = GaugeSumTemp +  (item.load.currCount)
-                        this.add({_id: item._id, txt: item.name, ld: item.load, img: item.image})
-                        counter = counter+1
-                    }
-                })).catch(err => console.error(err));
-
-        setTimeout( () => {
-            showchart = true;
-            if (this._isMounted) {this.setState({
-                gaugeSum: GaugeSumTemp,
-                counter: counter
-
-            })}
-        }, 1000);
-
-        setInterval( async () => {
-            innercount = 0
-            let loadtemp = this.state.loads
-            GaugeSumTemp = 0;
+   dataFetch() {
+        if(this.state.logged == false) {
+            window.setTimeout(this.dataFetch, 1000); /* this checks the flag every 100 milliseconds*/
+        } else {
+            let GaugeSumTemp = 0
+            let subAttCounter = 0
+            let innercount = 0
             fetch(url)
                 .then(res => res.json())
                 .then(data => data.map(item => {
-                    if (item.user === "admin") {
-                        let loadindex = loadtemp.findIndex(x => x._id == item._id);
-                        loadtemp[loadindex].load = item.load
-                        GaugeSumTemp = GaugeSumTemp + (item.load.currCount)
-                        innercount++
-                        if (this._isMounted) {
-                            console.log(innercount)
-                            console.log(innercount)
-                            if (innercount === counter) {
-                                let gaudgeshow = GaugeSumTemp
-                                GaugeSumTemp = 0
-                                this.setState({
-                                    loads: loadtemp,
-                                    gaugeSum: gaudgeshow
-                                })}}}})).catch(err => console.error(err));}, 5000);
+                    if (item.user === this.state.usernameM) {
+                        for (let i = 0; i < item.subAtt.length; i++)
+                            GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
+
+                        this.add({_id: item._id, txt: item.name, subatt: item.subAtt})
+                        subAttCounter = subAttCounter + item.subAtt.length
+                    }
+                })).catch(err => console.error(err));
+
+            setTimeout(() => {
+                showchart = true;
+                if (this._isMounted) {
+                    this.setState({
+                        gaugeSum: GaugeSumTemp,
+                        counter: this.state.loads.length,
+                        subAttCounter: subAttCounter
+
+                    })
+                }
+            }, 2000);
+
+            setInterval(async () => {
+                innercount = 0
+                subAttCounter = 0
+                let loadtemp = this.state.loads
+                GaugeSumTemp = 0;
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => data.map(item => {
+                        if (item.user === this.state.usernameM) {
+                            subAttCounter = subAttCounter + item.subAtt.length
+                            let loadindex = loadtemp.findIndex(x => x._id == item._id);
+                            if (loadindex == -1) // means a new site has been added
+                            {
+                                loadtemp.push({_id: item._id, name: item.name, subAtt: item.subAtt})
+                                loadindex = loadtemp.findIndex(x => x._id == item._id);
+                            }
+                            loadtemp[loadindex].subAtt = item.subAtt
+                            for (let i = 0; i < item.subAtt.length; i++)
+                                GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
+                            innercount++
+                            if (this._isMounted) {
+                                if (innercount === loadtemp.length) {
+                                    let gaudgeshow = GaugeSumTemp
+                                    GaugeSumTemp = 0
+                                    this.setState({
+                                        gaugeSum: gaudgeshow,
+                                        counter: loadtemp.length,
+                                        subAttCounter: subAttCounter
+                                    })
+                                }
+                            }
+                        }
+                    })).catch(err => console.error(err));}, 5000);
+
+        }
     }
+    componentDidMount() {
+        this._isMounted = true;
+        if (window.navigator.geolocation)
+        {
+            navigator.geolocation.getCurrentPosition(async location => {
+                if (this._isMounted) {
+                    this.setState({
+                        Latitude: location.coords.latitude,
+                        Longitude: location.coords.longitude,
+                        GPS: 1,
+                    })
+                }
+               this.dataFetch()
+                })}}
     componentWillUnmount() {
         this._isMounted = false;
         showchart = false;
-    }
-    eachLoad(name, i) {
-        let currLoadCap;
-        if((name.load.currCount === 0 && name.load.maxCount === 0) ||
-            (name.load.currCount === 1 && name.load.maxCount === 0 ))
-            currLoadCap = 0;
-        else
-        {
-            currLoadCap = name.load.currCount/name.load.maxCount
-            currLoadCap = currLoadCap.toFixed(2)}
-        let predictload = parseInt(name.load.suggestion[1],10)
-        return (
-            <div key={`container ${i}`} className="card" style={this.listStyle}>
-                <div class="card-body">
-                    <Load key={`load${i}`} index={i}>
-                        <h4 class="card-title" style={this.titleStyle}>{name.name} </h4>
-                        <img style={this.loadPic} class="card-img-top" src={name.image}/>
-                        <ul className="list-group list-group-flush">
-                            <li className="list-group-item" style={this.listcolor} ></li>
-                            <li className="list-group-item" style={this.listcolor}>
-                                <p className="font-weight-bold" style={this.listText}>Current Load:</p>
-                                <div style={this.loadBar}>
-                                    <CircularProgressbar value={name.load.currCount}
-                                                         maxValue={name.load.maxCount}
-                                                         text={`${currLoadCap*100}%`}
-                                                         styles={{
-                                                             path: {
-                                                                 transformOrigin: "center center",
-                                                                 strokeLinecap: "butt",
-                                                                 stroke: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
-                                                             },
-                                                             trail: {
-                                                                 strokeWidth: 7
-                                                             },
-                                                             text: {
-                                                                 fontSize: 22,
-                                                                 fontWeight: 500,
-
-                                                                 animation: "fadein 2s",
-                                                                 fill: currLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
-                                                             }
-                                                         }}
-
-                                    />
-                                </div>
-                            </li>
-                            <li className="list-group-item"style={this.listcolor} >
-                                <p className="font-weight-bold" style={this.listText}>Predicted Load
-                                    {"\n"}At {name.load.suggestion[0]}:00:</p>
-                                <div style={this.loadBar}>
-                                    <CircularProgressbar value={predictload}
-                                                         maxValue={100}
-                                                         text={`${predictload}%`}
-                                                         styles={{
-                                                             path: {
-                                                                 transformOrigin: "center center",
-                                                                 strokeLinecap: "butt",
-                                                                 stroke: predictload >= 70 ? "#bd2327" : "#2293dd"
-                                                             },
-                                                             trail: {
-                                                                 strokeWidth: 7
-                                                             },
-                                                             text: {
-                                                                 fontSize: 22,
-                                                                 fontWeight: 500,
-
-                                                                 animation: "fadein 2s",
-                                                                 fill: predictload >= 70 ? "#bd2327" : "#2293dd"
-                                                             }
-                                                         }}
-
-                                    />
-                                </div>
-                            </li>
-                            <li className="list-group-item" style={this.listcolor}/>
-
-                        </ul>
-                    </Load>
-                </div>
-            </div>
-
-
-        )
     }
     dismissError() {
         this.setState({ error: '' });
@@ -383,7 +339,7 @@ class Manager extends Component {
     handleSubmit(evt) {
         evt.preventDefault();
 
-        if (!this.state.username) {
+        if (!this.state.usernameM) {
             return this.setState({ error: 'Username is required' });
         }
 
@@ -391,16 +347,16 @@ class Manager extends Component {
             return this.setState({ error: 'Password is required' });
         }
 
-        if(this.state.username === "admin" && this.state.password === "admin") {
+        if(this.state.usernameM === "admin" && this.state.password === "admin" || this.state.usernameM === "moshe" && this.state.password === "1234") {
             this.setState({logged: true})
         }
-        else
+       else
             return this.setState({ error: 'invalid username or password' });
         return this.setState({ error: '' });
     }
     handleUserChange(evt) {
         this.setState({
-            username: evt.target.value,
+            usernameM: evt.target.value,
         });
     };
 
@@ -415,6 +371,9 @@ class Manager extends Component {
     handleChangeSelect = event => {
         this.setState(({selectName: event.target.value}))
     }
+    handleChangeSelect3 = event => {
+        this.setState(({selectName3: event.target.value}))
+    }
     handleCategoryChange = event => {
         this.setState({ category: event.target.value });
     }
@@ -427,7 +386,7 @@ class Manager extends Component {
             category: this.state.category
         };
 
-        axios.post(`http://localhost:3000/load_data`, { user })
+        axios.post(url, { user })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -437,8 +396,14 @@ class Manager extends Component {
     handleNewNameChange = event => {
         this.setState({ newName: event.target.value });
     }
+    handleNewNameChange3 = event => {
+        this.setState({ newName3: event.target.value });
+    }
     handleNewImageChange = event => {
         this.setState({ newImage: event.target.value });
+    }
+    handleNewImageChange3 = event => {
+        this.setState({ newImage3: event.target.value });
     }
     handleNewCategoryChange = event => {
         this.setState({ newCategory: event.target.value });
@@ -452,12 +417,33 @@ class Manager extends Component {
             image: this.state.newImage,
             category: this.state.newCategory,
             location: {
-                latitude: 32.16,
-                longitude:34.8,
+                latitude: this.state.Latitude,
+                longitude:this.state.Longitude,
             },
+            subAtt: [],
         };
 
-        axios.post(`http://localhost:3000/load_data`, { user })
+        axios.post(url, { user })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
+    handleSubmitPost3(evt) {
+        evt.preventDefault();
+        let name = this.state.selectName3
+        let loadtemp = this.state.loads
+        let loadindex = loadtemp.findIndex(x => x.name == name );
+        console.log(loadindex)
+        const user = {
+            mode: 2,
+            attName: this.state.selectName3,
+            name: this.state.newName3,
+            image: this.state.newImage3,
+            subAtt: loadtemp[loadindex].subAtt
+        };
+
+        axios.post(url, { user })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -476,7 +462,13 @@ class Manager extends Component {
                 show: true
             }
         };
-        if (this.state.logged && this.state.mainPage) {
+        if(this.state.GPS === 0)
+        {
+            return(
+                <div>Please Enable Your Gps Position</div>
+            )
+        }
+        else if (this.state.logged && this.state.mainPage) {
             return (
                 <div className='Manager' style={this.Manager}>
                     <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
@@ -505,8 +497,8 @@ class Manager extends Component {
                             </div>
                             <div className="card">
                                 <div className="card-body" style={this.infoWarp}>
-                                    <img style={this.infoImage} src={require('../images/warning2.png')}/>
-                                    <p style={this.infoText}>0</p>
+                                    <img style={this.infoImage} src={require('../images/attracionsfinish.png')}/>
+                                    <p style={this.infoText}>{this.state.subAttCounter}</p>
                                 </div>
                             </div>
                         </div>
@@ -608,6 +600,28 @@ class Manager extends Component {
                             <button type="submit" value="Submit">Add</button>
                         </form>
                     </div>
+                    <div className="card" style={this.formsin}>
+                        <p>Add New Sub Attraction</p>
+                        <form onSubmit={this.handleSubmitPost3}>
+                            <label style={this.labelblock}>
+                                Attraction Name:
+                                <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect3}>
+                                    <option disabled selected value> -- select an option -- </option>
+                                    {optionTemplate}
+                                </select>
+                            </label>
+                            <label style={this.labelblock}>
+                                Name:
+                                <input style={{marginLeft:5}} type="text" value={this.state.newName3} onChange={this.handleNewNameChange3} />
+                            </label>
+                            <label style={this.labelblock}>
+                                Image:
+                                <input style={{marginLeft:5}} type="text" value={this.state.newImage3} onChange={this.handleNewImageChange3} />
+                            </label>
+                            <hr></hr>
+                            <button type="submit" value="Submit">Add</button>
+                        </form>
+                    </div>
                 </div>
 
             );
@@ -632,7 +646,7 @@ class Manager extends Component {
                                     <p className="h5 text-center mb-4" style={{color:"#ffffff"}}>Welcome</p>
                                     <div className="white-text">
                                         <MDBInput style={{color:"white"}}  label="Type your username" icon="user" group type="text" validate error="wrong"
-                                                  input = "ttt"success="right" data-test="username" value={this.state.username} onChange={this.handleUserChange}/>
+                                                  input = "ttt"success="right" data-test="username" value={this.state.usernameM} onChange={this.handleUserChange}/>
                                         <MDBInput style={{color:"white"}} label="Type your password" icon="lock" group type="password" validate data-test="password"  value={this.state.password} onChange={this.handlePassChange}/>
                                     </div>
                                     <div className="text-center">

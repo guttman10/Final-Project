@@ -8,13 +8,6 @@ const schema ={
         latitude: {type:Number},
         longitude: {type:Number},
     },
-    load:{
-        maxCount:{type:Number},
-        currCount:{type:Number},
-        meanCount:{type:Number},
-        suggestion:{type:Array},
-        busy:{type:Number}
-    },
     subAtt:{type:Array},
     category:{type:String},
 }

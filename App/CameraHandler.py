@@ -90,22 +90,40 @@ def get_data(username):
 
     return name_dict
 
+def get_subAtt(username, attraction, subAttraction):
+    query = {"user": username, "name": attraction}
+    projection = {'_id': 0,'subAtt': 1}
+    values = []
+    for data in mycol.find(query,  projection):
+        values += [data["subAtt"]]
+    return data
 
 def send_data(name, sendData):
+    subAtt = get_subAtt(sendData["user"],sendData["name"],sendData["subAtt"])
     while True:
+
+        newData = {"maxCount": sendData["maxCount"], "currCount": sendData["currCount"],
+                   "meanCount": sendData["meanCount"], "suggestion": sendData["suggestion"], "busy": sendData["busy"]}
+        i = 0
+        while i < len(subAtt["subAtt"]):
+            if subAtt["subAtt"][i]["name"].strip() == sendData["subAtt"].strip():
+                subAtt["subAtt"][i]["load"] = newData
+                break
+            i += 1
         mycol.find_one_and_update(
             {"name": sendData["name"]},
+
             {"$set":
-                 {"load": sendData}
+                 subAtt
              }, upsert=True
         )
-        print("the data sent to server is: ", sendData)
-        time.sleep(2)
+        print("the data sent to server is: ", subAtt)
+        time.sleep(4)
 
 
-def run(attraction):
-    dataset = getDataFromCsv(attraction)
-    data = {"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction}
+def run(attraction, subAtt, username):
+    dataset = getDataFromCsv(subAtt)
+    data = {"user" : username,"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction, "subAtt": subAtt, "suggestion": 0, "busy":0}
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()

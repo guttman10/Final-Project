@@ -143,9 +143,8 @@ class Tourist extends Component {
                     .then(data => data.map(item => {
                         if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                             (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
-                            counter = counter+1;
                             this.add(
-                                {_id: item._id, txt: item.name, ld: item.load, img: item.image,cate: item.category, subatt: item.subAtt})}}))
+                                {_id: item._id, txt: item.name, img: item.image,cate: item.category, subatt: item.subAtt})}}))
                     .catch(err => console.error(err));
                 setInterval(async () => {
                     innercount = 0
@@ -157,13 +156,16 @@ class Tourist extends Component {
                                 if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                                     (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                                     let loadindex = loadtemp.findIndex(x => x._id == item._id);
-                                    console.log(loadindex)
-                                    loadtemp[loadindex].load = item.load
+                                    if(loadindex == -1) // means a new site has been added
+                                    {
+                                        loadtemp.push({_id: item._id, name: item.name, image: item.image,category: item.category, subAtt: item.subAtt})
+                                        loadindex = loadtemp.findIndex(x => x._id == item._id);
+                                    }
                                     loadtemp[loadindex].category = item.category
                                     loadtemp[loadindex].subAtt = item.subAtt
                                     innercount++
                                     if (this._isMounted) {
-                                        if (innercount === counter) {
+                                        if (innercount === loadtemp.length) {
                                             this.setState({
                                                 loads: loadtemp
                                             })}};}}})).catch(err => console.error(err));}, 5000);})}}
@@ -266,9 +268,14 @@ class Tourist extends Component {
                     </div>
                 )
             }
-
-            sumloadcap = (sumcurrload/summaxload).toFixed(2)
-            console.log(sumpreditload)
+            if(sumcurrload == 0) {
+                sumloadcap = 0
+                summaxload = 1
+            }
+            else {
+                sumloadcap = Math.round((sumcurrload / summaxload)*100)
+            }
+            sumpreditload = Math.round(sumpreditload/name.subAtt.length)
             return <div key={`container ${i}`} className="card" style={this.listStyle}>
                 <div className="card-body">
                     <Load key={`load${i}`} index={i}>
@@ -283,12 +290,12 @@ class Tourist extends Component {
                                 <div style={this.loadBar}>
                                     <CircularProgressbar value={sumcurrload}
                                                          maxValue={summaxload}
-                                                         text={`${sumloadcap * 100}%`}
+                                                         text={`${sumloadcap}%`}
                                                          styles={{
                                                              path: {
                                                                  transformOrigin: "center center",
                                                                  strokeLinecap: "butt",
-                                                                 stroke: sumloadcap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                                 stroke: sumloadcap >= 70 ? "#bd2327" : "#2293dd"
                                                              },
                                                              trail: {
                                                                  strokeWidth: 7
@@ -298,7 +305,7 @@ class Tourist extends Component {
                                                                  fontWeight: 500,
 
                                                                  animation: "fadein 2s",
-                                                                 fill: sumloadcap  >= 0.7 ? "#bd2327" : "#2293dd"
+                                                                 fill: sumloadcap  >= 70 ? "#bd2327" : "#2293dd"
                                                              }
                                                          }}
 
@@ -369,7 +376,14 @@ class Tourist extends Component {
                 sumcurrload += name.subAtt[i].load.currCount
                 summaxload += name.subAtt[i].load.maxCount
             }
-            sumloadcap = (sumcurrload/summaxload).toFixed(2)
+            if(sumcurrload == 0) {
+                sumloadcap = 0
+                summaxload = 1
+            }
+            else {
+                sumloadcap = Math.round((sumcurrload / summaxload)*100)
+            }
+            sumpreditload = Math.round(sumpreditload/name.subAtt.length)
             return (
                 <div key={`container ${i}`} className="card" style={this.listStyle}>
                     <div class="card-body">
@@ -385,12 +399,12 @@ class Tourist extends Component {
                                     <div style={this.loadBar}>
                                         <CircularProgressbar value={sumcurrload}
                                                              maxValue={summaxload}
-                                                             text={`${sumloadcap * 100}%`}
+                                                             text={`${sumloadcap}%`}
                                                              styles={{
                                                                  path: {
                                                                      transformOrigin: "center center",
                                                                      strokeLinecap: "butt",
-                                                                     stroke: sumloadcap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                                     stroke: sumloadcap >= 70 ? "#bd2327" : "#2293dd"
                                                                  },
                                                                  trail: {
                                                                      strokeWidth: 7
@@ -400,7 +414,7 @@ class Tourist extends Component {
                                                                      fontWeight: 500,
 
                                                                      animation: "fadein 2s",
-                                                                     fill: sumloadcap >= 0.7 ? "#bd2327" : "#2293dd"
+                                                                     fill: sumloadcap >= 70 ? "#bd2327" : "#2293dd"
                                                                  }
                                                              }}
 

@@ -25,28 +25,8 @@ module.exports={
             res.status(404).send('not found')
     },
     async add(req, res, next) {
-        //let Load = new load({$set:req.body})
-       // Load.save()
-        if(req.body.user.mode)
-        {
-            console.log("hey")
-        let user = {
-                user:req.body.user.user,
-                name:req.body.user.name,
-                image:req.body.user.image,
-                location:req.body.user.location,
-                category:req.body.user.category,
-                load: {
-                    maxCount:1,
-                    currCount:0,
-                    meanCount:0,
-                    suggestion: [0,0],
-                    busy:0
-                },
-            };
-       load.create(user)
-        }
-        else {
+       if (req.body.user.mode === 0){ //updating category
+
             load.findOneAndUpdate(
                 {name: req.body.user.name},
                 {category: req.body.user.category},
@@ -56,7 +36,42 @@ module.exports={
                 }
             )
         }
+        else if(req.body.user.mode === 1) // adding a new site
+        {
+            console.log("hey")
+        let user = {
+                user:req.body.user.user,
+                name:req.body.user.name,
+                image:req.body.user.image,
+                location:req.body.user.location,
+                category:req.body.user.category,
+            };
+       load.create(user)
+        }
+        else if (req.body.user.mode === 2){ // adding a new sub attraction
+            console.log("new")
+            let temp = req.body.user.subAtt
+            temp.push({
+                name: req.body.user.name,
+                image: req.body.user.image,
+                load: {
+                    maxCount:1,
+                    currCount:0,
+                    meanCount:0,
+                    suggestion: [0,0],
+                    busy:0
+                }
+            })
 
+            load.findOneAndUpdate(
+                {name: req.body.user.attName},
+                {subAtt: temp},
+                {upsert: true},
+                function (err, doc) {
+                    console.log(doc);
+                }
+            )
+        }
     }
 
 }
