@@ -211,8 +211,8 @@ class Manager extends Component {
             usernameM: 'admin',
             password: '',
             error: '',
-            logged:true,
-            mainPage:false,
+            logged:false,
+            mainPage:true,
             id:0,
             category:"",
             selectName:"",
@@ -259,7 +259,7 @@ class Manager extends Component {
     }
    dataFetch() {
         if(this.state.logged == false) {
-            window.setTimeout(this.dataFetch, 1000); /* this checks the flag every 100 milliseconds*/
+            window.setTimeout(this.dataFetch, 1000); /* this checks the flag every second*/
         } else {
             let GaugeSumTemp = 0
             let subAttCounter = 0
@@ -286,7 +286,7 @@ class Manager extends Component {
 
                     })
                 }
-            }, 2000);
+            }, 200);
 
             setInterval(async () => {
                 innercount = 0
@@ -301,16 +301,23 @@ class Manager extends Component {
                             let loadindex = loadtemp.findIndex(x => x._id == item._id);
                             if (loadindex == -1) // means a new site has been added
                             {
+                                console.log("new")
                                 loadtemp.push({_id: item._id, name: item.name, subAtt: item.subAtt})
                                 loadindex = loadtemp.findIndex(x => x._id == item._id);
                             }
                             loadtemp[loadindex].subAtt = item.subAtt
-                            for (let i = 0; i < item.subAtt.length; i++)
-                                GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
                             innercount++
                             if (this._isMounted) {
                                 if (innercount === loadtemp.length) {
+                                    for(let i = 0 ; i< loadtemp.length ; i++ )
+                                    {
+                                        for(let j = 0 ; j < loadtemp[i].subAtt.length ; j++)
+                                        {
+                                                GaugeSumTemp = GaugeSumTemp + loadtemp[i].subAtt[j].load.currCount
+                                        }
+                                    }
                                     let gaudgeshow = GaugeSumTemp
+                                    console.log({gaudgeshow},loadtemp.length , subAttCounter)
                                     GaugeSumTemp = 0
                                     this.setState({
                                         gaugeSum: gaudgeshow,
