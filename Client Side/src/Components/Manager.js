@@ -162,12 +162,15 @@ class Manager extends Component {
         display:"flex",
         justifyContent:"center"
     }
-    selectFormsIn = {
-        margin:5
+    FormsInput = {
+        float:"right",
+        height:23,
+        width:240
     }
     labelblock = {
+        fontWeight:"bold",
         display:"block",
-        marginTop:5
+        marginTop:10
     }
 
     constructor(props) {
@@ -577,14 +580,14 @@ class Manager extends Component {
                             <p style={this.formsinP}>Change Attractions Category</p>
                             <label style={this.labelblock}>
                                 Attraction name:
-                                <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect}>
+                                <select style={ this.FormsInput} value={this.state.value} onChange={this.handleChangeSelect}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
                                 </select>
                                 </label>
                                 <label style={this.labelblock}>
                                 Category:
-                                <input style={ this.selectFormsIn} type="txt" name="name" onChange={this.handleCategoryChange} />
+                                <input style={ this.FormsInput} type="txt" name="name" onChange={this.handleCategoryChange} />
                                 </label>
                             <hr></hr>
                             <div style={this.formsinB}>
@@ -597,15 +600,15 @@ class Manager extends Component {
                         <form onSubmit={this.handleSubmitPost2}>
                             <label style={this.labelblock}>
                                 Name:
-                                <input style={{marginLeft:5}} type="text" value={this.state.newName} onChange={this.handleNewNameChange} />
+                                <input style={ this.FormsInput}  type="text" value={this.state.newName} onChange={this.handleNewNameChange} />
                             </label>
                             <label style={this.labelblock}>
                                 Image:
-                                <input style={{marginLeft:5}} type="url" value={this.state.newImage} onChange={this.handleNewImageChange} />
+                                <input style={ this.FormsInput}  type="url" value={this.state.newImage} onChange={this.handleNewImageChange} />
                             </label>
                             <label style={this.labelblock}>
                                 Category:
-                                <input style={{marginLeft:5}} type="text" value={this.state.newCategory} onChange={this.handleNewCategoryChange} />
+                                <input style={ this.FormsInput}  type="text" value={this.state.newCategory} onChange={this.handleNewCategoryChange} />
                             </label>
                             <hr></hr>
                             <div style={this.formsinB}>
@@ -618,18 +621,18 @@ class Manager extends Component {
                         <form onSubmit={this.handleSubmitPost3}>
                             <label style={this.labelblock}>
                                 Attraction Name:
-                                <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect3}>
+                                <select style={ this.FormsInput} value={this.state.value} onChange={this.handleChangeSelect3}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
                                 </select>
                             </label>
                             <label style={this.labelblock}>
                                 Name:
-                                <input style={{marginLeft:5}} type="text" value={this.state.newName3} onChange={this.handleNewNameChange3} />
+                                <input style={ this.FormsInput}  type="text" value={this.state.newName3} onChange={this.handleNewNameChange3} />
                             </label>
                             <label style={this.labelblock}>
                                 Image:
-                                <input style={{marginLeft:5}} type="text" value={this.state.newImage3} onChange={this.handleNewImageChange3} />
+                                <input style={ this.FormsInput}  type="text" value={this.state.newImage3} onChange={this.handleNewImageChange3} />
                             </label>
                             <hr></hr>
                             <div style={this.formsinB}>
