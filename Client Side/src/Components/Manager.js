@@ -174,19 +174,28 @@ class Manager extends Component {
         height:"15%",
     }
     formsin = {
-        left:200,
+        left:"38%",
+        fontSize: 13,
         display:"flex",
         flexDirection: "column",
-        marginTop:28,
-        width:"70%",
+        marginTop:18,
+        width:"25%",
         backgroundColor:"#faf8f6"
     }
+    formsinP = {
+        fontWeight:"bold",
+        textAlign:"center"
+    }
+    formsinB = {
+        display:"flex",
+        justifyContent:"center"
+    }
     selectFormsIn = {
-        margin:10
+        margin:5
     }
     labelblock = {
         display:"block",
-        marginTop:10
+        marginTop:5
     }
 
     constructor(props) {
@@ -199,11 +208,11 @@ class Manager extends Component {
             gaugeSum:0,
             counter:0,
             subAttCounter:0,
-            usernameM: '',
+            usernameM: 'admin',
             password: '',
             error: '',
-            logged:false,
-            mainPage:true,
+            logged:true,
+            mainPage:false,
             id:0,
             category:"",
             selectName:"",
@@ -380,18 +389,24 @@ class Manager extends Component {
     }
     handleSubmitPost(evt) {
         evt.preventDefault();
+        if(this.state.selectName == "")
+            alert("Please select attraction name")
+        else if(this.state.category == "")
+            alert("Please don't leave fields empty")
+        else {
+            const user = {
+                mode: 0,
+                name: this.state.selectName,
+                category: this.state.category
+            };
 
-        const user = {
-            mode: 0,
-            name: this.state.selectName,
-            category: this.state.category
-        };
-
-        axios.post(url, { user })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
+            axios.post(url, {user})
+                .then(res => {
+                    console.log(res);
+                    console.log(res.data);
+                })
+            alert("Category has been successfully changed")
+        }
     }
 
     handleNewNameChange = event => {
@@ -411,44 +426,57 @@ class Manager extends Component {
     }
     handleSubmitPost2(evt) {
         evt.preventDefault();
-        const user = {
-            mode: 1,
-            user:"admin",
-            name: this.state.newName,
-            image: this.state.newImage,
-            category: this.state.newCategory,
-            location: {
-                latitude: this.state.Latitude,
-                longitude:this.state.Longitude,
-            },
-            subAtt: [],
-        };
+        if(this.state.newName == "" || this.state.newImage == "" || this.state.newCategory == "")
+            alert("Please don't leave fields empty")
+        else {
+            const user = {
+                mode: 1,
+                user: "admin",
+                name: this.state.newName,
+                image: this.state.newImage,
+                category: this.state.newCategory,
+                location: {
+                    latitude: this.state.Latitude,
+                    longitude: this.state.Longitude,
+                },
+                subAtt: [],
+            };
 
-        axios.post(url, { user })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
+            axios.post(url, {user})
+                .then(res => {
+                    console.log(res);
+                    console.log(res.data);
+                })
+            alert("New attraction has been added")
+        }
     }
     handleSubmitPost3(evt) {
         evt.preventDefault();
-        let name = this.state.selectName3
-        let loadtemp = this.state.loads
-        let loadindex = loadtemp.findIndex(x => x.name == name );
-        console.log(loadindex)
-        const user = {
-            mode: 2,
-            attName: this.state.selectName3,
-            name: this.state.newName3,
-            image: this.state.newImage3,
-            subAtt: loadtemp[loadindex].subAtt
-        };
+        if(this.state.selectName3 == "")
+            alert("Please select attraction name")
+        else if(this.state.newName3 == "" || this.state.newImage3 == "")
+            alert("Please don't leave fields empty")
+        else {
+            let name = this.state.selectName3
+            let loadtemp = this.state.loads
+            let loadindex = loadtemp.findIndex(x => x.name == name);
+            console.log(loadindex)
+            const user = {
+                mode: 2,
+                attName: this.state.selectName3,
+                name: this.state.newName3,
+                image: this.state.newImage3,
+                subAtt: loadtemp[loadindex].subAtt
+            };
+            axios.post(url, {user})
+                .then(res => {
+                    console.log(res);
+                    console.log(res.data);
+                })
 
-        axios.post(url, { user })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
+
+            alert("New sub attraction has been added")
+        }
     }
     render() {
         let data = {
@@ -564,26 +592,26 @@ class Manager extends Component {
 
                     <div className="card" style={this.formsin}>
                         <form onSubmit={this.handleSubmitPost}>
-                            <p>Change Attractions Category</p>
-                            <label>
+                            <p style={this.formsinP}>Change Attractions Category</p>
+                            <label style={this.labelblock}>
                                 Attraction name:
-                                <div style={{display:"inline"}}>
                                 <select style={ this.selectFormsIn} value={this.state.value} onChange={this.handleChangeSelect}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
                                 </select>
-                                </div>
-                                <div style={{display:"block"}}>
+                                </label>
+                                <label style={this.labelblock}>
                                 Category:
                                 <input style={ this.selectFormsIn} type="txt" name="name" onChange={this.handleCategoryChange} />
-                                </div>
-                            </label>
+                                </label>
                             <hr></hr>
-                            <button type="submit">Change</button>
+                            <div style={this.formsinB}>
+                                <button type="submit">Change</button>
+                            </div>
                         </form>
                     </div>
                     <div className="card" style={this.formsin}>
-                      <p>Add New Attraction</p>
+                      <p style={this.formsinP}>Add New Attraction</p>
                         <form onSubmit={this.handleSubmitPost2}>
                             <label style={this.labelblock}>
                                 Name:
@@ -591,18 +619,20 @@ class Manager extends Component {
                             </label>
                             <label style={this.labelblock}>
                                 Image:
-                                <input style={{marginLeft:5}} type="text" value={this.state.newImage} onChange={this.handleNewImageChange} />
+                                <input style={{marginLeft:5}} type="url" value={this.state.newImage} onChange={this.handleNewImageChange} />
                             </label>
                             <label style={this.labelblock}>
                                 Category:
                                 <input style={{marginLeft:5}} type="text" value={this.state.newCategory} onChange={this.handleNewCategoryChange} />
                             </label>
                             <hr></hr>
-                            <button type="submit" value="Submit">Add</button>
+                            <div style={this.formsinB}>
+                                <button type="submit" value="Submit">Add</button>
+                            </div>
                         </form>
                     </div>
                     <div className="card" style={this.formsin}>
-                        <p>Add New Sub Attraction</p>
+                        <p style={this.formsinP}>Add New Sub Attraction</p>
                         <form onSubmit={this.handleSubmitPost3}>
                             <label style={this.labelblock}>
                                 Attraction Name:
@@ -620,7 +650,9 @@ class Manager extends Component {
                                 <input style={{marginLeft:5}} type="text" value={this.state.newImage3} onChange={this.handleNewImageChange3} />
                             </label>
                             <hr></hr>
-                            <button type="submit" value="Submit">Add</button>
+                            <div style={this.formsinB}>
+                            <button  type="submit" value="Submit">Add</button>
+                            </div>
                         </form>
                     </div>
                 </div>
