@@ -33,8 +33,13 @@ module.exports={
                 {category: req.body.user.category},
                 {upsert: true},
                 function (err, doc) {
+                    if(err)
+                    res.status(400).send({
+                        message: err
+                    })
                 }
             )
+           res.end("worked")
         }
         else if(req.body.user.mode === 1) // adding a new site
         {
@@ -46,6 +51,7 @@ module.exports={
                 category:req.body.user.category,
             };
        load.create(user)
+            res.end("worked")
         }
         else if (req.body.user.mode === 2){ // adding a new sub attraction
             let temp = req.body.user.subAtt
@@ -66,8 +72,15 @@ module.exports={
                 {subAtt: temp},
                 {upsert: true},
                 function (err, doc) {
+                    {
+                        if(err)
+                            res.status(400).send({
+                                message: err
+                            })
+                    }
                 }
             )
+           res.end("worked")
         }
     }
 

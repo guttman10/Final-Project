@@ -30,6 +30,10 @@ class Manager extends Component {
     top: 0,
     left: 0,
     };
+    Manager = {
+        height:"100%",
+
+    }
     formStyle = {
         display:"flex",
         margin:"0 auto",
@@ -38,38 +42,8 @@ class Manager extends Component {
         marginTop:28,
         width:"30%",
     }
-    listStyle  = {
-        position:"relative",
-        marginTop:30,
-        width: 34 + 'rem',
-        marginBottom: 7 + 'px',
-        left: "5%",
-        transform: "translateX(-5%)",
-        backgroundColor:"#faf8f6"
-    };
-    loadBar = {
-        position:"relative",
-        marginLeft:"auto",
-        right:0,
-        width:"20%"
-    };
-    listcolor= {
-
-        backgroundColor:"#faf8f6"
-    };
     titleStyle = {
-        fontSize: "calc(9px + 1vw)",
-    }
-    listText = {
-        position:"absolute",
-        alignItems: 'center',
-        fontSize: "calc(4px + 1vw)",
-        color:"#8c8a88",
-        whiteSpace: "pre-wrap",
-        top : "50%",
-        left:"25%",
-        transform: "translate(-25%, -50%)",
-
+        fontSize: "calc(6px + 1vw)",
     }
     infoText = {
         display:"block",
@@ -92,15 +66,12 @@ class Manager extends Component {
 
 
     }
-    loadPic = {
-        margin: "0 auto",
-        borderRadius: 100/ 9,
-    };
     charts = {
         left:200,
         display:"flex",
+        height:360,
         flexDirection: "row",
-        marginTop:28,
+        marginTop:25,
         width:"70%",
         backgroundColor:"#faf8f6"
     }
@@ -119,11 +90,12 @@ class Manager extends Component {
     chartStyle = {
         flex:1,
         textAlign:"center",
+        margin:10
     }
     gaugeStyle ={
         flex:1,
         textAlign:"center",
-        marginTop:"10%",
+        marginTop:80,
         //transform: "translate(0%, 23%)",
         //transform: "translateX(-50%)",
         //verflow:"hidden",
@@ -132,7 +104,7 @@ class Manager extends Component {
     headerPicture= {
         position:"relative",
         //transform: "translateX(-5%)",
-        top:8,
+        top:5,
         left:"8%",
     }
     sideBar = {
@@ -286,7 +258,7 @@ class Manager extends Component {
 
                     })
                 }
-            }, 200);
+            }, 2000);
 
             setInterval(async () => {
                 innercount = 0
@@ -409,10 +381,11 @@ class Manager extends Component {
 
             axios.post(url, {user})
                 .then(res => {
-                    console.log(res);
-                    console.log(res.data);
+                    if (res.data == "worked")
+                        alert("Category has been successfully changed")
+                    else
+                        alert("Couldn't edit category")
                 })
-            alert("Category has been successfully changed")
         }
     }
 
@@ -432,13 +405,14 @@ class Manager extends Component {
         this.setState({ newCategory: event.target.value });
     }
     handleSubmitPost2(evt) {
+        console.log("posted")
         evt.preventDefault();
         if(this.state.newName == "" || this.state.newImage == "" || this.state.newCategory == "")
             alert("Please don't leave fields empty")
         else {
             const user = {
                 mode: 1,
-                user: "admin",
+                user: this.state.usernameM,
                 name: this.state.newName,
                 image: this.state.newImage,
                 category: this.state.newCategory,
@@ -451,10 +425,12 @@ class Manager extends Component {
 
             axios.post(url, {user})
                 .then(res => {
-                    console.log(res);
-                    console.log(res.data);
+                    if (res.data == "worked")
+                        alert("New attraction has been added")
+                    else
+                        alert("Couldn't add a site")
+
                 })
-            alert("New attraction has been added")
         }
     }
     handleSubmitPost3(evt) {
@@ -477,12 +453,11 @@ class Manager extends Component {
             };
             axios.post(url, {user})
                 .then(res => {
-                    console.log(res);
-                    console.log(res.data);
+                    if (res.data == "worked")
+                        alert("New sub attraction has been added")
+                    else
+                        alert("Couldn't add a sub attraction")
                 })
-
-
-            alert("New sub attraction has been added")
         }
     }
     render() {
@@ -539,7 +514,7 @@ class Manager extends Component {
                             </div>
                         </div>
                         <div className="card" style={this.charts}>
-                            <div className="card-body" style={this.gaugeStyle}>
+                            <div  style={this.gaugeStyle}>
                                 <ReactSpeedometer
                                     value={this.state.gaugeSum}
                                     needleColor="steelblue"
@@ -559,7 +534,7 @@ class Manager extends Component {
 
                                 />
                             </div>
-                            {showchart ? <div className="card-body" style={this.chartStyle}>
+                            {showchart ? <div style={this.chartStyle}>
                                 <p style={this.titleStyle}>Load History</p>
                                 <RTChart
                                     chart={chart}
