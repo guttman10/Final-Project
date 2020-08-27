@@ -14,12 +14,11 @@ module.exports={
             res.status(404).send('not found')
     },
     async add(req, res, next) {
-       console.log("called")
-       if (req.body.user.mode === 0){ //updating category
+       if (req.body.sentData.mode === 0){ //updating category
 
             load.findOneAndUpdate(
-                {name: req.body.user.name},
-                {category: req.body.user.category},
+                {name: req.body.sentData.name},
+                {category: req.body.sentData.category},
                 {upsert: true},
                 function (err, doc) {
                     if(err)
@@ -30,35 +29,33 @@ module.exports={
             )
            res.end("worked")
         }
-        else if(req.body.user.mode === 1) // adding a new site
+        else if(req.body.sentData.mode === 1) // adding new site
         {
         let user = {
-                user:req.body.user.user,
-                name:req.body.user.name,
-                image:req.body.user.image,
-                location:req.body.user.location,
-                category:req.body.user.category,
+                user:req.body.sentData.user,
+                name:req.body.sentData.name,
+                image:req.body.sentData.image,
+                location:req.body.sentData.location,
+                category:req.body.sentData.category,
             };
        load.create(user)
             res.end("worked")
         }
-        else if (req.body.user.mode === 2){ // adding a new sub attraction
-            let temp = req.body.user.subAtt
-            temp.push({
-                name: req.body.user.name,
-                image: req.body.user.image,
+        else if (req.body.sentData.mode === 2){ // adding new attraction
+            let tempAttraction = req.body.sentData.subAtt
+            tempAttraction.push({
+                name: req.body.sentData.name,
+                image: req.body.sentData.image,
                 load: {
                     maxCount:1,
                     currCount:0,
-                    meanCount:0,
-                    suggestion: [0,0],
-                    busy:0
+                    suggestion: [0,0]
                 }
             })
 
             load.findOneAndUpdate(
-                {name: req.body.user.attName},
-                {subAtt: temp},
+                {name: req.body.sentData.attName},
+                {subAtt: tempAttraction},
                 {upsert: true},
                 function (err, doc) {
                     {

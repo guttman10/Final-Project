@@ -376,13 +376,13 @@ class Manager extends Component {
         else if(this.state.category == "")
             alert("Please don't leave fields empty")
         else {
-            const user = {
+            const sentData = {
                 mode: 0,
                 name: this.state.selectName,
                 category: this.state.category
             };
 
-            axios.post(url, {user})
+            axios.post(url, {sentData})
                 .then(res => {
                     if (res.data == "worked")
                         alert("Category has been successfully changed")
@@ -413,7 +413,7 @@ class Manager extends Component {
         if(this.state.newName == "" || this.state.newImage == "" || this.state.newCategory == "")
             alert("Please don't leave fields empty")
         else {
-            const user = {
+            const sentData = {
                 mode: 1,
                 user: this.state.usernameM,
                 name: this.state.newName,
@@ -426,7 +426,7 @@ class Manager extends Component {
                 subAtt: [],
             };
 
-            axios.post(url, {user})
+            axios.post(url, {sentData})
                 .then(res => {
                     if (res.data == "worked")
                         alert("New attraction has been added")
@@ -447,14 +447,14 @@ class Manager extends Component {
             let loadtemp = this.state.loads
             let loadindex = loadtemp.findIndex(x => x.name == name);
             console.log(loadindex)
-            const user = {
+            const sentData = {
                 mode: 2,
                 attName: this.state.selectName3,
                 name: this.state.newName3,
                 image: this.state.newImage3,
                 subAtt: loadtemp[loadindex].subAtt
             };
-            axios.post(url, {user})
+            axios.post(url, {sentData})
                 .then(res => {
                     if (res.data == "worked")
                         alert("New sub attraction has been added")
