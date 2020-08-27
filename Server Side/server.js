@@ -22,8 +22,7 @@ app.use(
 
 //routes
 app.get('/load_data', asyncWrapper(controller.getAllLoads));
-app.get('/prediction', asyncWrapper(controller.getPrediction));
-app.post('/load_data', asyncWrapper(controller.add))
+app.post('/load_data', asyncWrapper(controller.add));
 //run the server
     app.listen(port, () => {
     console.log("App is running on port " + port);

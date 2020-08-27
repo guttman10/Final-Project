@@ -13,17 +13,6 @@ module.exports={
         else
             res.status(404).send('not found')
     },
-    async getPrediction(req, res, next){
-
-        const csvFilePath='./file/idkreact.csv'
-        const csv= require('csvtojson')
-        csv()
-        const result=await csv().fromFile(csvFilePath)
-        if(result)
-            res.json(result)
-        else
-            res.status(404).send('not found')
-    },
     async add(req, res, next) {
        console.log("called")
        if (req.body.user.mode === 0){ //updating category
