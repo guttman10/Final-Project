@@ -8,9 +8,6 @@ import time
 import atexit
 import datetime
 
-# pip install opencv-python
-# pip install pymongo[srv]
-# pip install scikit-image
 myclient = pymongo.MongoClient('mongodb+srv://admin:admin@monitour-t8pfj.mongodb.net/load_data')
 mydb = myclient["load_data"]
 mycol = mydb["data"]
@@ -103,7 +100,7 @@ def send_data(name, sendData):
     while True:
 
         newData = {"maxCount": sendData["maxCount"], "currCount": sendData["currCount"],
-                   "meanCount": sendData["meanCount"], "suggestion": sendData["suggestion"], "busy": sendData["busy"]}
+                    "suggestion": sendData["suggestion"]}
         i = 0
         while i < len(subAtt["subAtt"]):
             if subAtt["subAtt"][i]["name"].strip() == sendData["subAtt"].strip():
@@ -117,7 +114,6 @@ def send_data(name, sendData):
                  subAtt
              }, upsert=True
         )
-        print("the data sent to server is: ", subAtt)
         time.sleep(4)
 
 

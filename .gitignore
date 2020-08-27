@@ -3,6 +3,8 @@
 /Client Side/node_modules
 /Server Side/.idea
 /Server Side/node_modules
+/build
+/Runnable Native App
 venv
 .idea
 *.csv
