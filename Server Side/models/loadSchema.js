@@ -8,7 +8,7 @@ const schema = {
     latitude: { type: Number },
     longitude: { type: Number }
   },
-  subAtt: { type: Array },
+  attractions: { type: Array },
   category: { type: String }
 }
 const loadSchema = new mongoose.Schema(schema)

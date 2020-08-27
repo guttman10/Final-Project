@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const load = require('./models/loadSchema')
+const connection = require('./db')
 mongoose.set('useFindAndModify', false)
 
 module.exports = {
@@ -23,17 +24,17 @@ module.exports = {
       )
       res.end('worked')
     } else if (req.body.sentData.mode === 1) { // adding new site
-      const user = {
+      const newData = {
         user: req.body.sentData.user,
         name: req.body.sentData.name,
         image: req.body.sentData.image,
         location: req.body.sentData.location,
         category: req.body.sentData.category
       }
-      load.create(user)
+      load.create(newData)
       res.end('worked')
     } else if (req.body.sentData.mode === 2) { // adding new attraction
-      const tempAttraction = req.body.sentData.subAtt
+      const tempAttraction = req.body.sentData.attractions
       tempAttraction.push({
         name: req.body.sentData.name,
         image: req.body.sentData.image,
@@ -46,7 +47,7 @@ module.exports = {
 
       load.findOneAndUpdate(
         { name: req.body.sentData.attName },
-        { subAtt: tempAttraction },
+        { attractions: tempAttraction },
         { upsert: true },
         function (err, doc) {
           if (err) {
