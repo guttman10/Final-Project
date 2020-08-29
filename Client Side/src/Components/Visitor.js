@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import Load from './Load'
-import {MdAdd} from 'react-icons/md'
 import {  CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import moment from "moment"
@@ -28,8 +27,6 @@ class Visitor extends Component {
         this.setState(this.baseState)
 
     }
-    //attractions = attractions
-    // attraction - attractions
     add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null,  attraction = null}){
         console.log(event,_id,txt,ld,img,loc,cate)
         this.setState(prevState => ({
@@ -84,6 +81,7 @@ class Visitor extends Component {
                         .then(res => res.json())
                         .then(data => data.map(item => {
                             if (this._isMounted) {
+                                //adding only sites which are near to the user
                                 if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                                     (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                                     let loadindex = loadtemp.findIndex(x => x._id == item._id);
@@ -104,6 +102,8 @@ class Visitor extends Component {
         this._isMounted = false;
     }
     eachLoad(name, i) {
+        //calculates the total load of a site from the all attractions
+        // and displays the load for each attraction which is related to site
         moment.locale("en-il");
         let innercurrLoadCap = 0;
         let sumcurrload = 0;
@@ -111,7 +111,7 @@ class Visitor extends Component {
         let sumloadcap = 0;
         let sumpreditload = 0;
         let attractionsCount = name.attractions.length
-        if(name._id === this.state.expend)
+        if(name._id === this.state.expend) // if specific site is expanded, shows site info and attractions
         {
              innercurrLoadCap = 0;
              sumcurrload = 0;
@@ -133,7 +133,9 @@ class Visitor extends Component {
 
                 sumcurrload += name.attractions[i].load.currCount
                 summaxload += name.attractions[i].load.maxCount
+                // pushes data of attractions load and prediction
                 buffer.push(
+                    // attractions load
                     <div>
                     <h4 className="card-title" style={visitorStyle.titleStyle}>{name.attractions[i].name}</h4>
                 <img style={visitorStyle.loadPic} className="card-img-top" src={name.attractions[i].image}/>
@@ -200,12 +202,12 @@ class Visitor extends Component {
                 )
             }
             if(sumcurrload == 0) {
+                // if there's no sites, to prevent 0/0
                 sumloadcap = 0
                 summaxload = 1
             }
-            else {
-                sumloadcap = Math.round((sumcurrload / summaxload)*100)
-            }
+            else {sumloadcap = Math.round((sumcurrload / summaxload)*100)}
+            //calculates the total load and prediction for site
             sumpreditload = Math.round(sumpreditload/name.attractions.length)
             return <div key={`container ${i}`} className="card" style={visitorStyle.listStyle}>
                 <div className="card-body">
@@ -287,8 +289,7 @@ class Visitor extends Component {
                 </div>
             </div>
         }
-        else {
-            innercurrLoadCap = 0;
+        else if(name._id != this.state.expand) { // if the site is not expanded, shows site info only
             sumcurrload = 0;
             summaxload = 0;
             sumloadcap = 0;
@@ -315,6 +316,7 @@ class Visitor extends Component {
                 sumloadcap = Math.round((sumcurrload / summaxload)*100)
             }
             sumpreditload = Math.round(sumpreditload/name.attractions.length)
+            //returns site load and prediction
             return (
                 <div key={`container ${i}`} className="card" style={visitorStyle.listStyle}>
                     <div class="card-body">
@@ -410,7 +412,7 @@ class Visitor extends Component {
 
     render(){
         console.log("call")
-        if(this.state.GPS === 0)
+        if(this.state.GPS === 0) //if GPS is not activated, site would not load
         {
             return(
                 <div>Please Enable Your Gps Position</div>
@@ -418,7 +420,6 @@ class Visitor extends Component {
         }
         else {
             let _loads = this.state.loads;
-            console.log(_loads)
             let search = this.state.searchString.replace(/[\\/:*?"<>|]/g, c=>"__i!__"+c.charCodeAt(0)+"__!i__").trim().toLowerCase()
             if (search.length > 0) {
                 _loads = _loads.filter(function(loads) {
