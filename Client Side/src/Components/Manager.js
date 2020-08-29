@@ -8,170 +8,16 @@ import ReactSpeedometer from "react-d3-speedometer"
 import 'react-circular-progressbar/dist/styles.css';
 import '../mdb/css/mdb.css'
 import axios from "axios";
+import managerStyle from "./styles/managerStyle";
+
 let showchart = false;
+
 // for release
 //const url = 'https://moninode.herokuapp.com/load_data';
 //for testing
 const url = 'http://localhost:3000/load_data';
 class Manager extends Component {
     _isMounted = false;
-    loginBack = {
-        background:"linear-gradient(rgba(250,0,0,0.5),transparent)",
-        backgroundColor:"#ffbc78", /*this your primary color*/
-        minHeight: "100%",
-        minWidth: "1024px",
-
-    /* Set up proportionate scaling */
-    width: "100%",
-    height: "auto",
-
-    /* Set up positioning */
-    position: "fixed",
-    top: 0,
-    left: 0,
-    };
-    Manager = {
-        height:"100%",
-
-    }
-    formStyle = {
-        display:"flex",
-        margin:"0 auto",
-        marginLeft:"300",
-        flexDirection: "column",
-        marginTop:28,
-        width:"30%",
-    }
-    titleStyle = {
-        fontSize: "calc(6px + 1vw)",
-    }
-    infoText = {
-        display:"block",
-        fontSize: 25,
-        fontWeight:"bold",
-        color:"#d48636",
-        whiteSpace: "pre-wrap",
-
-    }
-    infoWarp = {
-        flex: "1 1 auto",
-        textAlign: "center",
-        backgroundColor:"#faf8f6"
-
-    }
-    infoImage = {
-        display:"block",
-        margin: "0px 00px 0 0",
-        width: "100px",
-
-
-    }
-    charts = {
-        left:200,
-        display:"flex",
-        height:360,
-        flexDirection: "row",
-        marginTop:25,
-        width:"70%",
-        backgroundColor:"#faf8f6"
-    }
-    charts2 = {
-
-        display:"flex",
-        flexDirection: "row",
-        marginTop:28,
-        width:280,
-        margin:"0 auto",
-        right:"3%",
-        transform: "translateX(-3%)",
-        marginBottom:"-1%",
-        backgroundColor:"#faf8f6"
-    }
-    chartStyle = {
-        flex:1,
-        textAlign:"center",
-        margin:10
-    }
-    gaugeStyle ={
-        flex:1,
-        textAlign:"center",
-        marginTop:80,
-        //transform: "translate(0%, 23%)",
-        //transform: "translateX(-50%)",
-        //verflow:"hidden",
-        padding:0,
-    }
-    headerPicture= {
-        position:"relative",
-        //transform: "translateX(-5%)",
-        top:5,
-        left:"8%",
-    }
-    sideBar = {
-       position:"absolute",
-        display:"flex",
-        flexDirection: "column",
-        left:0,
-        top:0,
-        height:"100%",
-        overflow:"hidden",
-        width:"7%",
-        backgroundColor:"#2c3652"
-    }
-    sidePicture= {
-        position:"absolute",
-        top:0,
-        bottom:0,
-        left:0,
-        right:0,
-        margin:"auto",
-    }
-   sideText = {
-        position:"relative",
-        fontSize: "18",
-        fontWeight:"bold",
-       textAlign:"center",
-       top:"78%",
-        color:"#ffffff",
-    }
-    selectedSideBar = {
-        position:"relative",
-        width:"100%",
-        height:"15%",
-        backgroundColor:"#404c79"
-    }
-    unselectedSideBar = {
-        position:"relative",
-        width:"100%",
-        height:"15%",
-    }
-    formsin = {
-        left:"38%",
-        fontSize: 13,
-        display:"flex",
-        flexDirection: "column",
-        marginTop:18,
-        width:"25%",
-        backgroundColor:"#faf8f6"
-    }
-    formsinP = {
-        fontWeight:"bold",
-        textAlign:"center"
-    }
-    formsinB = {
-        display:"flex",
-        justifyContent:"center"
-    }
-    FormsInput = {
-        float:"right",
-        height:23,
-        width:240
-    }
-    labelblock = {
-        fontWeight:"bold",
-        display:"block",
-        marginTop:10
-    }
 
     constructor(props) {
         super(props);
@@ -483,40 +329,40 @@ class Manager extends Component {
         }
         else if (this.state.logged && this.state.mainPage) {
             return (
-                <div className='Manager' style={this.Manager}>
-                    <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
-                    <div style={this.sideBar}>
-                        <div style={this.unselectedSideBar}>
-                            <img style={this.sidePicture} src={require('../images/weblogo.png')}/>
+                <div className='Manager' style={managerStyle.Manager}>
+                    <img style={managerStyle.headerPicture} src={require('../images/monitourLogoDash.png')}/>
+                    <div style={managerStyle.sideBar}>
+                        <div style={managerStyle.unselectedSideBar}>
+                            <img style={managerStyle.sidePicture} src={require('../images/weblogo.png')}/>
                         </div>
 
-                        <div style={this.selectedSideBar} onClick={() => this.setState({mainPage: true})} >
-                            <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
-                            <p style={this.sideText}>Dashboard</p>
+                        <div style={managerStyle.selectedSideBar} onClick={() => this.setState({mainPage: true})} >
+                            <img style={managerStyle.sidePicture} src={require('../images/dashboard.png')}/>
+                            <p style={managerStyle.sideText}>Dashboard</p>
                         </div>
-                        <div style={this.unselectedSideBar} onClick={() => this.setState({mainPage: false})}>
-                            <img style={this.sidePicture} src={require('../images/add.png')}/>
-                            <p style={this.sideText}>Edit/Add</p>
+                        <div style={managerStyle.unselectedSideBar} onClick={() => this.setState({mainPage: false})}>
+                            <img style={managerStyle.sidePicture} src={require('../images/add.png')}/>
+                            <p style={managerStyle.sideText}>Edit/Add</p>
                         </div>
                     </div>
 
-                    <div style={this.infoData}>
-                        <div className="card" style={this.charts2}>
+                    <div style={managerStyle.infoData}>
+                        <div className="card" style={managerStyle.charts2}>
                             <div className="card">
-                                <div className="card-body" style={this.infoWarp}>
-                                    <img style={this.infoImage} src={require('../images/building2.png')}/>
-                                    <p style={this.infoText}>{this.state.counter}</p>
+                                <div className="card-body" style={managerStyle.infoWarp}>
+                                    <img style={managerStyle.infoImage} src={require('../images/building2.png')}/>
+                                    <p style={managerStyle.infoText}>{this.state.counter}</p>
                                 </div>
                             </div>
                             <div className="card">
-                                <div className="card-body" style={this.infoWarp}>
-                                    <img style={this.infoImage} src={require('../images/attracionsfinish.png')}/>
-                                    <p style={this.infoText}>{this.state.attractionsCounter}</p>
+                                <div className="card-body" style={managerStyle.infoWarp}>
+                                    <img style={managerStyle.infoImage} src={require('../images/attracionsfinish.png')}/>
+                                    <p style={managerStyle.infoText}>{this.state.attractionsCounter}</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="card" style={this.charts}>
-                            <div  style={this.gaugeStyle}>
+                        <div className="card" style={managerStyle.charts}>
+                            <div  style={managerStyle.gaugeStyle}>
                                 <ReactSpeedometer
                                     value={this.state.gaugeSum}
                                     needleColor="steelblue"
@@ -536,8 +382,8 @@ class Manager extends Component {
 
                                 />
                             </div>
-                            {showchart ? <div style={this.chartStyle}>
-                                <p style={this.titleStyle}>Load History</p>
+                            {showchart ? <div style={managerStyle.chartStyle}>
+                                <p style={managerStyle.titleStyle}>Load History</p>
                                 <RTChart
                                     chart={chart}
                                     fields={['Visitors']}
@@ -557,84 +403,84 @@ class Manager extends Component {
                 <option value={v.name}>{v.name}</option>
             ));
             return(
-                <div className='Manager' style={this.Manager}>
-                    <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
-                    <div style={this.sideBar}>
-                        <div style={this.unselectedSideBar}>
-                            <img style={this.sidePicture} src={require('../images/weblogo.png')}/>
+                <div className='Manager' style={managerStyle.Manager}>
+                    <img style={managerStyle.headerPicture} src={require('../images/monitourLogoDash.png')}/>
+                    <div style={managerStyle.sideBar}>
+                        <div style={managerStyle.unselectedSideBar}>
+                            <img style={managerStyle.sidePicture} src={require('../images/weblogo.png')}/>
                         </div>
 
-                        <div style={this.unselectedSideBar} onClick={() => this.setState({mainPage: true})} >
-                            <img style={this.sidePicture} src={require('../images/dashboard.png')}/>
-                            <p style={this.sideText}>Dashboard</p>
+                        <div style={managerStyle.unselectedSideBar} onClick={() => this.setState({mainPage: true})} >
+                            <img style={managerStyle.sidePicture} src={require('../images/dashboard.png')}/>
+                            <p style={managerStyle.sideText}>Dashboard</p>
                         </div>
-                        <div style={this.selectedSideBar} onClick={() => this.setState({mainPage: false})}>
-                            <img style={this.sidePicture} src={require('../images/add.png')}/>
-                            <p style={this.sideText}>Edit/Add</p>
+                        <div style={managerStyle.selectedSideBar} onClick={() => this.setState({mainPage: false})}>
+                            <img style={managerStyle.sidePicture} src={require('../images/add.png')}/>
+                            <p style={managerStyle.sideText}>Edit/Add</p>
                         </div>
                     </div>
 
-                    <div className="card" style={this.formsin}>
+                    <div className="card" style={managerStyle.formsin}>
                         <form onSubmit={this.handleSubmitPost}>
-                            <p style={this.formsinP}>Change Site Category</p>
-                            <label style={this.labelblock}>
+                            <p style={managerStyle.formsinP}>Change Site Category</p>
+                            <label style={managerStyle.labelblock}>
                                 Site name:
                                 <select style={ this.FormsInput} value={this.state.value} onChange={this.handleChangeSelect}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
                                 </select>
                                 </label>
-                                <label style={this.labelblock}>
+                                <label style={managerStyle.labelblock}>
                                 Category:
                                 <input style={ this.FormsInput} type="txt" name="name" onChange={this.handleCategoryChange} />
                                 </label>
                             <hr></hr>
-                            <div style={this.formsinB}>
+                            <div style={managerStyle.formsinB}>
                                 <button type="submit">Change</button>
                             </div>
                         </form>
                     </div>
-                    <div className="card" style={this.formsin}>
-                      <p style={this.formsinP}>Add New Site</p>
+                    <div className="card" style={managerStyle.formsin}>
+                      <p style={managerStyle.formsinP}>Add New Site</p>
                         <form onSubmit={this.handleSubmitPost2}>
-                            <label style={this.labelblock}>
+                            <label style={managerStyle.labelblock}>
                                 Name:
                                 <input style={ this.FormsInput}  type="text" value={this.state.newName} onChange={this.handleNewNameChange} />
                             </label>
-                            <label style={this.labelblock}>
+                            <label style={managerStyle.labelblock}>
                                 Image:
                                 <input style={ this.FormsInput}  type="url" value={this.state.newImage} onChange={this.handleNewImageChange} />
                             </label>
-                            <label style={this.labelblock}>
+                            <label style={managerStyle.labelblock}>
                                 Category:
                                 <input style={ this.FormsInput}  type="text" value={this.state.newCategory} onChange={this.handleNewCategoryChange} />
                             </label>
                             <hr></hr>
-                            <div style={this.formsinB}>
+                            <div style={managerStyle.formsinB}>
                                 <button type="submit" value="Submit">Add</button>
                             </div>
                         </form>
                     </div>
-                    <div className="card" style={this.formsin}>
-                        <p style={this.formsinP}>Add New Attractions</p>
+                    <div className="card" style={managerStyle.formsin}>
+                        <p style={managerStyle.formsinP}>Add New Attractions</p>
                         <form onSubmit={this.handleSubmitPost3}>
-                            <label style={this.labelblock}>
+                            <label style={managerStyle.labelblock}>
                                 Site Name:
                                 <select style={ this.FormsInput} value={this.state.value} onChange={this.handleChangeSelect3}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
                                 </select>
                             </label>
-                            <label style={this.labelblock}>
+                            <label style={managerStyle.labelblock}>
                                 Name:
                                 <input style={ this.FormsInput}  type="text" value={this.state.newName3} onChange={this.handleNewNameChange3} />
                             </label>
-                            <label style={this.labelblock}>
+                            <label style={managerStyle.labelblock}>
                                 Image:
                                 <input style={ this.FormsInput}  type="text" value={this.state.newImage3} onChange={this.handleNewImageChange3} />
                             </label>
                             <hr></hr>
-                            <div style={this.formsinB}>
+                            <div style={managerStyle.formsinB}>
                             <button  type="submit" value="Submit">Add</button>
                             </div>
                         </form>
@@ -647,12 +493,12 @@ class Manager extends Component {
         {
 
             return (
-                <div className='Manager' style={this.loginBack}>
-                    <img style={this.headerPicture} src={require('../images/monitourLogoDash.png')}/>
+                <div className='Manager' style={managerStyle.loginBack}>
+                    <img style={managerStyle.headerPicture} src={require('../images/monitourLogoDash.png')}/>
                     <MDBContainer>
                         <MDBRow>
 
-                                <form onSubmit={this.handleSubmit} style={this.formStyle}>
+                                <form onSubmit={this.handleSubmit} style={managerStyle.formStyle}>
                                     {
                                         this.state.error &&
                                         <h3 data-test="error" onClick={this.dismissError}>
