@@ -3,84 +3,11 @@ import Load from './Load'
 import {MdAdd} from 'react-icons/md'
 import {  CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import axios from 'axios';
 import moment from "moment"
 import 'moment/locale/en-il'
-class Tourist extends Component {
-    hasUnmounted = false;
+import visitorStyle from "./styles/visitorStyle";
+class Visitor extends Component {
     _isMounted = false;
-    listStyle  = {
-        display: "flex",
-        alignItems: "stretch",
-        marginTop:10,
-        width:"95%",
-        marginBottom: 7 + 'px',
-        left: "50%",
-        transform: "translateX(-50%)",
-        backgroundColor:"#faf8f6"
-    };
-    loadBar = {
-        position:"relative",
-        marginLeft:"auto",
-        right:0,
-        width:"20%"
-    };
-    titleStyle = {
-        fontSize: "calc(19px + 1vw)",
-    }
-    listText = {
-        position:"absolute",
-        alignItems: 'center',
-        fontSize: "calc(14px + 1vw)",
-        color:"#8c8a88",
-        whiteSpace: "pre-wrap",
-        top : "50%",
-        left:"25%",
-        transform: "translate(-25%, -50%)",
-    };
-    listcolor= {
-
-        backgroundColor:"#faf8f6"
-    };
-    greetext = {
-        fontSize: "calc(14px + 1vw)",
-        color:"#8c8a88",
-        marginTop:"5%",
-        marginBottom:"3%",
-        textAlign: "center",
-    }
-    loadPic = {
-        position:"relative",
-        marginTop:30,
-        marginBottom: 7 + 'px',
-        left: "50%",
-        transform: "translateX(-50%)",
-        height:"60%",
-        width:"60%",
-        borderRadius: 100/ 9,
-    };
-    headerPicture= {
-        position:"relative",
-        //transform: "translateX(-5%)",
-        top:0
-    }
-    searchStyle = {
-        margin: "0 auto",
-        display: "block",
-        padding: 10,
-        textAlign: "center",
-        borderRadius: 100/ 4,
-    }
-    buttonStyle= {
-        position:"relative",
-        textAlign:"center",
-        fontSize: "calc(9px + 1vw)",
-        top:"50%",
-        left:"50%",
-        transform: "translate(-50%, -50%)",
-        marginTop:"13%",
-        textTransform: "none"
-    }
 
     constructor(props) {
         super(props);
@@ -101,7 +28,9 @@ class Tourist extends Component {
         this.setState(this.baseState)
 
     }
-    add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null, subatt = null}){
+    //attractions = attractions
+    // attraction - attractions
+    add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null,  attraction = null}){
         console.log(event,_id,txt,ld,img,loc,cate)
         this.setState(prevState => ({
             loads: [
@@ -111,7 +40,7 @@ class Tourist extends Component {
                     load:ld,
                     image:img,
                     location:loc,
-                    subAtt: subatt,
+                    attractions: attraction,
                     category:cate,
                 }
             ]
@@ -146,7 +75,7 @@ class Tourist extends Component {
                         if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                             (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                             this.add(
-                                {_id: item._id, txt: item.name, img: item.image,cate: item.category, subatt: item.subAtt})}}))
+                                {_id: item._id, txt: item.name, img: item.image,cate: item.category, attraction: item.attractions})}}))
                     .catch(err => console.error(err));
                 setInterval(async () => {
                     innercount = 0
@@ -160,11 +89,11 @@ class Tourist extends Component {
                                     let loadindex = loadtemp.findIndex(x => x._id == item._id);
                                     if(loadindex == -1) // means a new site has been added
                                     {
-                                        loadtemp.push({_id: item._id, name: item.name, image: item.image,category: item.category, subAtt: item.subAtt})
+                                        loadtemp.push({_id: item._id, name: item.name, image: item.image,category: item.category, attractions: item.attractions})
                                         loadindex = loadtemp.findIndex(x => x._id == item._id);
                                     }
                                     loadtemp[loadindex].category = item.category
-                                    loadtemp[loadindex].subAtt = item.subAtt
+                                    loadtemp[loadindex].attractions = item.attractions
                                     innercount++
                                     if (this._isMounted) {
                                         if (innercount === loadtemp.length) {
@@ -181,7 +110,7 @@ class Tourist extends Component {
         let summaxload = 0;
         let sumloadcap = 0;
         let sumpreditload = 0;
-        let subAttCount = name.subAtt.length
+        let attractionsCount = name.attractions.length
         if(name._id === this.state.expend)
         {
              innercurrLoadCap = 0;
@@ -190,30 +119,30 @@ class Tourist extends Component {
              sumloadcap = 0;
              sumpreditload = 0;
             const buffer = []
-            for(let i = 0 ; i< subAttCount ; i++)
+            for(let i = 0 ; i< attractionsCount ; i++)
             {
-                if((name.subAtt[i].load.currCount === 0 && name.subAtt[i].load.maxCount === 0) ||
-                    (name.subAtt[i].load.currCount === 1 && name.subAtt[i].load.maxCount === 0 ))
+                if((name.attractions[i].load.currCount === 0 && name.attractions[i].load.maxCount === 0) ||
+                    (name.attractions[i].load.currCount === 1 && name.attractions[i].load.maxCount === 0 ))
                     innercurrLoadCap = 0;
                 else
-                    innercurrLoadCap = (name.subAtt[i].load.currCount/name.subAtt[i].load.maxCount).toFixed(2)
+                    innercurrLoadCap = (name.attractions[i].load.currCount/name.attractions[i].load.maxCount).toFixed(2)
 
 
-                let innerpredictload = parseInt(name.subAtt[i].load.suggestion[1],10)
+                let innerpredictload = parseInt(name.attractions[i].load.suggestion[1],10)
                 sumpreditload += innerpredictload
 
-                sumcurrload += name.subAtt[i].load.currCount
-                summaxload += name.subAtt[i].load.maxCount
+                sumcurrload += name.attractions[i].load.currCount
+                summaxload += name.attractions[i].load.maxCount
                 buffer.push(
                     <div>
-                    <h4 className="card-title" style={this.titleStyle}>{name.subAtt[i].name}</h4>
-                <img style={this.loadPic} className="card-img-top" src={name.subAtt[i].image}/>
+                    <h4 className="card-title" style={visitorStyle.titleStyle}>{name.attractions[i].name}</h4>
+                <img style={visitorStyle.loadPic} className="card-img-top" src={name.attractions[i].image}/>
                 <ul className="list-group list-group-flush">
-                    <li className="list-group-item" style={this.listcolor}>
-                        <p className="font-weight-bold" style={this.listText}>Current Load:</p>
-                        <div style={this.loadBar}>
-                            <CircularProgressbar value={name.subAtt[i].load.currCount}
-                                                 maxValue={name.subAtt[i].load.maxCount}
+                    <li className="list-group-item" style={visitorStyle.listcolor}>
+                        <p className="font-weight-bold" style={visitorStyle.listText}>Current Load:</p>
+                        <div style={visitorStyle.loadBar}>
+                            <CircularProgressbar value={name.attractions[i].load.currCount}
+                                                 maxValue={name.attractions[i].load.maxCount}
                                                  text={`${innercurrLoadCap * 100}%`}
                                                  styles={{
                                                      path: {
@@ -236,10 +165,10 @@ class Tourist extends Component {
                             />
                         </div>
                     </li>
-                    <li className="list-group-item" style={this.listcolor}>
-                        <p className="font-weight-bold" style={this.listText}>Predicted Load
-                            {"\n"}At {name.subAtt[i].load.suggestion[0]}:00:</p>
-                        <div style={this.loadBar}>
+                    <li className="list-group-item" style={visitorStyle.listcolor}>
+                        <p className="font-weight-bold" style={visitorStyle.listText}>Predicted Load
+                            {"\n"}At {name.attractions[i].load.suggestion[0]}:00:</p>
+                        <div style={visitorStyle.loadBar}>
                             <CircularProgressbar value={innerpredictload}
                                                  maxValue={100}
                                                  text={`${innerpredictload}%`}
@@ -264,7 +193,7 @@ class Tourist extends Component {
                             />
                         </div>
                     </li>
-                    <li className="list-group-item" style={this.listcolor}/>
+                    <li className="list-group-item" style={visitorStyle.listcolor}/>
 
                 </ul>
                     </div>
@@ -277,19 +206,19 @@ class Tourist extends Component {
             else {
                 sumloadcap = Math.round((sumcurrload / summaxload)*100)
             }
-            sumpreditload = Math.round(sumpreditload/name.subAtt.length)
-            return <div key={`container ${i}`} className="card" style={this.listStyle}>
+            sumpreditload = Math.round(sumpreditload/name.attractions.length)
+            return <div key={`container ${i}`} className="card" style={visitorStyle.listStyle}>
                 <div className="card-body">
                     <Load key={`load${i}`} index={i}>
-                        <h4 className="card-title" style={this.titleStyle}>{name.name}</h4>
-                        <img style={this.loadPic} className="card-img-top" src={name.image}/>
+                        <h4 className="card-title" style={visitorStyle.titleStyle}>{name.name}</h4>
+                        <img style={visitorStyle.loadPic} className="card-img-top" src={name.image}/>
                         <ul className="list-group list-group-flush">
-                            <li className="list-group-item" style={this.listcolor}>
-                                <button style={this.buttonStyle} type="button" class="btn btn-light" onClick={() => this.setState({expend: 0})}>Minimize</button>
+                            <li className="list-group-item" style={visitorStyle.listcolor}>
+                                <button style={visitorStyle.buttonStyle} type="button" class="btn btn-light" onClick={() => this.setState({expend: 0})}>Minimize</button>
                             </li>
-                            <li className="list-group-item" style={this.listcolor}>
-                                <p className="font-weight-bold" style={this.listText}>Current Load:</p>
-                                <div style={this.loadBar}>
+                            <li className="list-group-item" style={visitorStyle.listcolor}>
+                                <p className="font-weight-bold" style={visitorStyle.listText}>Current Load:</p>
+                                <div style={visitorStyle.loadBar}>
                                     <CircularProgressbar value={sumcurrload}
                                                          maxValue={summaxload}
                                                          text={`${sumloadcap}%`}
@@ -314,10 +243,10 @@ class Tourist extends Component {
                                     />
                                 </div>
                             </li>
-                            <li className="list-group-item" style={this.listcolor}>
-                                <p className="font-weight-bold" style={this.listText}>Predicted Load
+                            <li className="list-group-item" style={visitorStyle.listcolor}>
+                                <p className="font-weight-bold" style={visitorStyle.listText}>Predicted Load
                                     {"\n"}At {moment().format('LT')}:</p>
-                                <div style={this.loadBar}>
+                                <div style={visitorStyle.loadBar}>
                                     <CircularProgressbar value={sumpreditload}
                                                          maxValue={100}
                                                          text={`${sumpreditload}%`}
@@ -342,7 +271,7 @@ class Tourist extends Component {
                                     />
                                 </div>
                             </li>
-                            <li className="list-group-item" style={this.listcolor}>
+                            <li className="list-group-item" style={visitorStyle.listcolor}>
                                 <h4 className="card-title" style={{
                                     fontSize: "calc(19px + 1vw)",
                                     textAlign:"center",
@@ -364,19 +293,19 @@ class Tourist extends Component {
             summaxload = 0;
             sumloadcap = 0;
             sumpreditload = 0;
-            for(let i = 0 ; i< subAttCount ; i++) {
-                if((name.subAtt[i].load.currCount === 0 && name.subAtt[i].load.maxCount === 0) ||
-                    (name.subAtt[i].load.currCount === 1 && name.subAtt[i].load.maxCount === 0 ))
+            for(let i = 0 ; i< attractionsCount ; i++) {
+                if((name.attractions[i].load.currCount === 0 && name.attractions[i].load.maxCount === 0) ||
+                    (name.attractions[i].load.currCount === 1 && name.attractions[i].load.maxCount === 0 ))
                     innercurrLoadCap = 0;
                 else
-                    innercurrLoadCap = (name.subAtt[i].load.currCount/name.subAtt[i].load.maxCount).toFixed(2)
+                    innercurrLoadCap = (name.attractions[i].load.currCount/name.attractions[i].load.maxCount).toFixed(2)
 
 
-                let innerpredictload = parseInt(name.subAtt[i].load.suggestion[1],10)
+                let innerpredictload = parseInt(name.attractions[i].load.suggestion[1],10)
                 sumpreditload += innerpredictload
 
-                sumcurrload += name.subAtt[i].load.currCount
-                summaxload += name.subAtt[i].load.maxCount
+                sumcurrload += name.attractions[i].load.currCount
+                summaxload += name.attractions[i].load.maxCount
             }
             if(sumcurrload == 0) {
                 sumloadcap = 0
@@ -385,20 +314,20 @@ class Tourist extends Component {
             else {
                 sumloadcap = Math.round((sumcurrload / summaxload)*100)
             }
-            sumpreditload = Math.round(sumpreditload/name.subAtt.length)
+            sumpreditload = Math.round(sumpreditload/name.attractions.length)
             return (
-                <div key={`container ${i}`} className="card" style={this.listStyle}>
+                <div key={`container ${i}`} className="card" style={visitorStyle.listStyle}>
                     <div class="card-body">
                         <Load key={`load${i}`} index={i}>
-                            <h4 class="card-title" style={this.titleStyle}>{name.name}</h4>
-                            <img style={this.loadPic} class="card-img-top" src={name.image}/>
+                            <h4 class="card-title" style={visitorStyle.titleStyle}>{name.name}</h4>
+                            <img style={visitorStyle.loadPic} class="card-img-top" src={name.image}/>
                             <ul className="list-group list-group-flush">
-                                <li className="list-group-item" style={this.listcolor}>
-                                    <button style={this.buttonStyle} type="button" class="btn btn-light" onClick={() => this.setState({expend: name._id})}>Expand</button>
+                                <li className="list-group-item" style={visitorStyle.listcolor}>
+                                    <button style={visitorStyle.buttonStyle} type="button" class="btn btn-light" onClick={() => this.setState({expend: name._id})}>Expand</button>
                                 </li>
-                                <li className="list-group-item" style={this.listcolor}>
-                                    <p className="font-weight-bold" style={this.listText}>Current Load:</p>
-                                    <div style={this.loadBar}>
+                                <li className="list-group-item" style={visitorStyle.listcolor}>
+                                    <p className="font-weight-bold" style={visitorStyle.listText}>Current Load:</p>
+                                    <div style={visitorStyle.loadBar}>
                                         <CircularProgressbar value={sumcurrload}
                                                              maxValue={summaxload}
                                                              text={`${sumloadcap}%`}
@@ -423,10 +352,10 @@ class Tourist extends Component {
                                         />
                                     </div>
                                 </li>
-                                <li className="list-group-item" style={this.listcolor}>
-                                    <p className="font-weight-bold" style={this.listText}>Predicted Load
+                                <li className="list-group-item" style={visitorStyle.listcolor}>
+                                    <p className="font-weight-bold" style={visitorStyle.listText}>Predicted Load
                                         {"\n"}At {moment().format('LT')}:</p>
-                                    <div style={this.loadBar}>
+                                    <div style={visitorStyle.loadBar}>
                                         <CircularProgressbar value={sumpreditload}
                                                              maxValue={100}
                                                              text={`${sumpreditload}%`}
@@ -451,7 +380,7 @@ class Tourist extends Component {
                                         />
                                     </div>
                                 </li>
-                                <li className="list-group-item" style={this.listcolor}/>
+                                <li className="list-group-item" style={visitorStyle.listcolor}/>
 
                             </ul>
                         </Load>
@@ -498,10 +427,10 @@ class Tourist extends Component {
             }
             return (
                 <div className='Tourist'>
-                    <img style={this.headerPicture} src={require('../images/monitourLogoSmall.png')} />
-                    <p style={this.greetext}>{this.greet()}</p>
+                    <img style={visitorStyle.headerPicture} src={require('../images/monitourLogoSmall.png')} />
+                    <p style={visitorStyle.greetext}>{this.greet()}</p>
                     <input
-                        style={this.searchStyle}
+                        style={visitorStyle.searchStyle}
                         type="text"
                         value={this.state.searchString}
                         ref="search"
@@ -520,4 +449,4 @@ class Tourist extends Component {
     }
 }
 
-export default Tourist;
+export default Visitor;
