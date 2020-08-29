@@ -23,10 +23,7 @@ class Visitor extends Component {
         this.nextID = this.nextID.bind(this)
         this.handleChange = this.handleChange.bind(this);
     }
-    reset = () => {
-        this.setState(this.baseState)
-
-    }
+    reset = () => {this.setState(this.baseState)}
     add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null,  attraction = null}){
         console.log(event,_id,txt,ld,img,loc,cate)
         this.setState(prevState => ({
@@ -53,19 +50,14 @@ class Visitor extends Component {
         this._isMounted = true;
         let counter = 0
         let innercount = 0
-        if (window.navigator.geolocation)
-        {
+        if (window.navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async location => {
                 if (this._isMounted) {
                     this.setState({
                         Latitude: location.coords.latitude,
                         Longitude: location.coords.longitude,
                         GPS: 1})}
-
-                // for release
-                //const url = 'https://moninode.herokuapp.com/load_data';
-                //for testing
-                const url = 'http://localhost:3000/load_data';
+                const url = 'https://moninode.herokuapp.com/load_data';
                 fetch(url)
                     .then(res => res.json())
                     .then(data => data.map(item => {
@@ -85,8 +77,7 @@ class Visitor extends Component {
                                 if ((Math.abs(item.location.latitude - this.state.Latitude) <= 0.01) &&
                                     (Math.abs(this.state.Latitude - item.location.latitude) <= 0.01)) {
                                     let loadindex = loadtemp.findIndex(x => x._id == item._id);
-                                    if(loadindex == -1) // means a new site has been added
-                                    {
+                                    if(loadindex == -1) { // means a new site has been added
                                         loadtemp.push({_id: item._id, name: item.name, image: item.image,category: item.category, attractions: item.attractions})
                                         loadindex = loadtemp.findIndex(x => x._id == item._id);
                                     }
@@ -111,26 +102,21 @@ class Visitor extends Component {
         let sumloadcap = 0;
         let sumpreditload = 0;
         let attractionsCount = name.attractions.length
-        if(name._id === this.state.expend) // if specific site is expanded, shows site info and attractions
-        {
+        if(name._id === this.state.expend) { // if specific site is expanded, shows site info and attractions
              innercurrLoadCap = 0;
              sumcurrload = 0;
              summaxload = 0;
              sumloadcap = 0;
              sumpreditload = 0;
             const buffer = []
-            for(let i = 0 ; i< attractionsCount ; i++)
-            {
+            for(let i = 0 ; i< attractionsCount ; i++) {
                 if((name.attractions[i].load.currCount === 0 && name.attractions[i].load.maxCount === 0) ||
                     (name.attractions[i].load.currCount === 1 && name.attractions[i].load.maxCount === 0 ))
                     innercurrLoadCap = 0;
                 else
                     innercurrLoadCap = (name.attractions[i].load.currCount/name.attractions[i].load.maxCount).toFixed(2)
-
-
                 let innerpredictload = parseInt(name.attractions[i].load.suggestion[1],10)
                 sumpreditload += innerpredictload
-
                 sumcurrload += name.attractions[i].load.currCount
                 summaxload += name.attractions[i].load.maxCount
                 // pushes data of attractions load and prediction
@@ -158,12 +144,8 @@ class Visitor extends Component {
                                                      text: {
                                                          fontSize: 22,
                                                          fontWeight: 500,
-
                                                          animation: "fadein 2s",
-                                                         fill: innercurrLoadCap >= 0.7 ? "#bd2327" : "#2293dd"
-                                                     }
-                                                 }}
-
+                                                         fill: innercurrLoadCap >= 0.7 ? "#bd2327" : "#2293dd"}}}
                             />
                         </div>
                     </li>
@@ -188,19 +170,13 @@ class Visitor extends Component {
                                                          fontWeight: 500,
 
                                                          animation: "fadein 2s",
-                                                         fill: innerpredictload >= 70 ? "#bd2327" : "#2293dd"
-                                                     }
-                                                 }}
-
+                                                         fill: innerpredictload >= 70 ? "#bd2327" : "#2293dd"}}}
                             />
                         </div>
                     </li>
                     <li className="list-group-item" style={visitorStyle.listcolor}/>
-
                 </ul>
-                    </div>
-                )
-            }
+                    </div>)}
             if(sumcurrload == 0) {
                 // if there's no sites, to prevent 0/0
                 sumloadcap = 0
@@ -238,9 +214,7 @@ class Visitor extends Component {
                                                                  fontWeight: 500,
 
                                                                  animation: "fadein 2s",
-                                                                 fill: sumloadcap  >= 70 ? "#bd2327" : "#2293dd"
-                                                             }
-                                                         }}
+                                                                 fill: sumloadcap  >= 70 ? "#bd2327" : "#2293dd"}}}
 
                                     />
                                 </div>
@@ -264,11 +238,8 @@ class Visitor extends Component {
                                                              text: {
                                                                  fontSize: 22,
                                                                  fontWeight: 500,
-
                                                                  animation: "fadein 2s",
-                                                                 fill: sumpreditload >= 70 ? "#bd2327" : "#2293dd"
-                                                             }
-                                                         }}
+                                                                 fill: sumpreditload >= 70 ? "#bd2327" : "#2293dd"}}}
 
                                     />
                                 </div>
@@ -300,11 +271,8 @@ class Visitor extends Component {
                     innercurrLoadCap = 0;
                 else
                     innercurrLoadCap = (name.attractions[i].load.currCount/name.attractions[i].load.maxCount).toFixed(2)
-
-
                 let innerpredictload = parseInt(name.attractions[i].load.suggestion[1],10)
                 sumpreditload += innerpredictload
-
                 sumcurrload += name.attractions[i].load.currCount
                 summaxload += name.attractions[i].load.maxCount
             }
@@ -347,9 +315,7 @@ class Visitor extends Component {
                                                                      fontWeight: 500,
 
                                                                      animation: "fadein 2s",
-                                                                     fill: sumloadcap >= 70 ? "#bd2327" : "#2293dd"
-                                                                 }
-                                                             }}
+                                                                     fill: sumloadcap >= 70 ? "#bd2327" : "#2293dd"}}}
 
                                         />
                                     </div>
@@ -373,17 +339,13 @@ class Visitor extends Component {
                                                                  text: {
                                                                      fontSize: 22,
                                                                      fontWeight: 500,
-
                                                                      animation: "fadein 2s",
-                                                                     fill: sumpreditload >= 70 ? "#bd2327" : "#2293dd"
-                                                                 }
-                                                             }}
+                                                                     fill: sumpreditload >= 70 ? "#bd2327" : "#2293dd"}}}
 
                                         />
                                     </div>
                                 </li>
                                 <li className="list-group-item" style={visitorStyle.listcolor}/>
-
                             </ul>
                         </Load>
                     </div>
@@ -392,13 +354,9 @@ class Visitor extends Component {
         }
     }
     handleChange() {
-        this.setState({
-            searchString: this.refs.search.value
-        })
-    }
+        this.setState({searchString: this.refs.search.value})}
     greet() {
         const currentHour = new Date().getHours();
-
         const greetingMessage =
             currentHour >= 4 && currentHour < 12 ? // after 4:00AM and before 12:00PM
                 'Good morning.' :
@@ -414,18 +372,14 @@ class Visitor extends Component {
         console.log("call")
         if(this.state.GPS === 0) //if GPS is not activated, site would not load
         {
-            return(
-                <div>Please Enable Your Gps Position</div>
-            )
-        }
+            return(<div>Please Enable Your Gps Position</div>)}
         else {
             let _loads = this.state.loads;
             let search = this.state.searchString.replace(/[\\/:*?"<>|]/g, c=>"__i!__"+c.charCodeAt(0)+"__!i__").trim().toLowerCase()
             if (search.length > 0) {
                 _loads = _loads.filter(function(loads) {
                     return loads.category.toLowerCase().match(search);
-                });
-            }
+                });}
             return (
                 <div className='Tourist'>
                     <img style={visitorStyle.headerPicture} src={require('../images/monitourLogoSmall.png')} />
@@ -438,16 +392,7 @@ class Visitor extends Component {
                         onChange={this.handleChange}
                         placeholder="Search"
                     />
-
                     {_loads.map(this.eachLoad)}
-
-
-
-                </div>
-
-            )
-        }
-    }
-}
+                </div>)}}}
 
 export default Visitor;
