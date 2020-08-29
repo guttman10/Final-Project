@@ -23,7 +23,7 @@ class Manager extends Component {
             gaugeSum:0,
             counter:0,
             attractionsCounter:0,
-            usernameM: 'admin',
+            usernameM: '',
             password: '',
             error: '',
             logged:false,
@@ -155,7 +155,7 @@ class Manager extends Component {
         if (!this.state.password) {
             return this.setState({ error: 'Password is required' });
         }
-
+        // pre detarmined usernames and passwords
         if(this.state.usernameM === "admin" && this.state.password === "admin" || this.state.usernameM === "moshe" && this.state.password === "1234") {
             this.setState({logged: true})
         }
