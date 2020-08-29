@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import ImageTk, Image
-from App.CameraHandler import run, get_data
+from NativeApp.CameraHandler import run, get_data
 
 root = tk.Tk()
 temp_string = tk.StringVar()

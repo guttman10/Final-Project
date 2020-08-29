@@ -1,6 +1,6 @@
-/App/__pycache__
-/Client Side/.idea
-/Client Side/node_modules
+/NativeApp/__pycache__
+/Web App/.idea
+/Web App/node_modules
 /Server Side/.idea
 /Server Side/node_modules
 /build

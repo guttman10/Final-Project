@@ -1,8 +1,8 @@
 import cv2
 import pymongo
-from App.MotionDetector import getMotion
-from App.ImageComapre import compare
-from App.Predictor import predict, writeToCsv, getDataFromCsv, getWeekday
+from NativeApp.MotionDetector import getMotion
+from NativeApp.ImageComapre import compare
+from NativeApp.Predictor import predict, writeToCsv, getDataFromCsv, getWeekday
 import threading
 import time
 import atexit
@@ -68,15 +68,15 @@ def Start(dataToSet, dataset):
 
 def get_data(username):
     query = {"user": username}
-    projection = {'_id': 0, 'name': 1, 'subAtt.name': 1}
+    projection = {'_id': 0, 'name': 1, 'attractions.name': 1}
     name_dict = {}
     keys = []
     values = []
     for data in mycol.find(query):
         keys += [data["name"]]
 
-    for data in mycol.find(query, {'subAtt.name': 1}):
-        values += [data["subAtt"]]
+    for data in mycol.find(query, {'attractions.name': 1}):
+        values += [data["attractions"]]
 
     name_list = dict(zip(keys, zip(values)))
     for names in name_list:
@@ -87,39 +87,39 @@ def get_data(username):
 
     return name_dict
 
-def get_subAtt(username, attraction, subAttraction):
+def get_attractions(username, attraction, attractionsraction):
     query = {"user": username, "name": attraction}
-    projection = {'_id': 0,'subAtt': 1}
+    projection = {'_id': 0,'attractions': 1}
     values = []
     for data in mycol.find(query,  projection):
-        values += [data["subAtt"]]
+        values += [data["attractions"]]
     return data
 
 def send_data(name, sendData):
-    subAtt = get_subAtt(sendData["user"],sendData["name"],sendData["subAtt"])
+    attractions = get_attractions(sendData["user"],sendData["name"],sendData["attractions"])
     while True:
 
         newData = {"maxCount": sendData["maxCount"], "currCount": sendData["currCount"],
                     "suggestion": sendData["suggestion"]}
         i = 0
-        while i < len(subAtt["subAtt"]):
-            if subAtt["subAtt"][i]["name"].strip() == sendData["subAtt"].strip():
-                subAtt["subAtt"][i]["load"] = newData
+        while i < len(attractions["attractions"]):
+            if attractions["attractions"][i]["name"].strip() == sendData["attractions"].strip():
+                attractions["attractions"][i]["load"] = newData
                 break
             i += 1
         mycol.find_one_and_update(
             {"name": sendData["name"]},
 
             {"$set":
-                 subAtt
+                 attractions
              }, upsert=True
         )
         time.sleep(4)
 
 
-def run(attraction, subAtt, username):
-    dataset = getDataFromCsv(subAtt)
-    data = {"user" : username,"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction, "subAtt": subAtt, "suggestion": 0, "busy":0}
+def run(attraction, attractions, username):
+    dataset = getDataFromCsv(attractions)
+    data = {"user" : username,"maxCount": 0, "currCount": 0, "meanCount": 0, "name": attraction, "attractions": attractions, "suggestion": 0, "busy":0}
     tServer = threading.Thread(target=send_data, args=("Server Thread", data))
     tServer.daemon = True
     tServer.start()

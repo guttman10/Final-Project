@@ -55,7 +55,7 @@ class Manager extends Component {
                 ...prevState.loads,
                 {_id: _id !== null ? _id : this.nextID(prevState.loads),
                     name:txt,
-                    attrations: attraction,}]}))}
+                    attractions: attraction,}]}))}
     nextID() {
         this.uniqueId = this.state.loads.length
             ? this.state.loads.length -1
@@ -77,7 +77,7 @@ class Manager extends Component {
                     if (item.user === this.state.usernameM) {
                         for (let i = 0; i < item.attractions.length; i++)
                             GaugeSumTemp = GaugeSumTemp + item.attractions[i].load.currCount
-                        this.add({_id: item._id, txt: item.name, attractions: item.attractions})
+                        this.add({_id: item._id, txt: item.name, attraction: item.attractions})
                         attractionsCounter = attractionsCounter + item.attractions.length
                     }
                 })).catch(err => console.error(err));
