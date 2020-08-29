@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MdDelete, MdSave, MdEdit } from 'react-icons/md'
+import { MdSave } from 'react-icons/md'
 
 class Load extends Component {
   constructor (props) {

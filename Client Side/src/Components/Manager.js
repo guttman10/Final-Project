@@ -1,19 +1,15 @@
 import React, {Component} from 'react';
 import RTChart from 'react-rt-chart';
-import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBIcon } from 'mdbreact';
+import { MDBContainer, MDBRow,MDBInput, MDBBtn } from 'mdbreact';
 import './styles/c3.css';
 import ReactSpeedometer from "react-d3-speedometer"
 import 'react-circular-progressbar/dist/styles.css';
 import '../mdb/css/mdb.css'
 import axios from "axios";
 import managerStyle from "./styles/managerStyle";
-
 let showchart = false;
+const url = 'https://moninode.herokuapp.com/load_data';
 
-// for release
-//const url = 'https://moninode.herokuapp.com/load_data';
-//for testing
-const url = 'http://localhost:3000/load_data';
 class Manager extends Component {
     _isMounted = false;
 
@@ -41,7 +37,7 @@ class Manager extends Component {
             newImage3:"",
             selectName3:"",
         }
-        this.baseState = this.state
+
         this.nextID = this.nextID.bind(this)
         this.dataFetch = this.dataFetch.bind(this)
         this.handlePassLoginChange = this.handlePassLoginChange.bind(this);
@@ -52,26 +48,21 @@ class Manager extends Component {
         this.handleSiteAdditionPost = this.handleSiteAdditionPost.bind(this)
         this.handleAttractionAdditionPost = this.handleAttractionAdditionPost.bind(this)
     }
-    reset = () => {
-        this.setState(this.baseState)
-    }
+
     add({event = null, _id = null, txt = 'default title', attraction = null}){
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
                 {_id: _id !== null ? _id : this.nextID(prevState.loads),
                     name:txt,
-                    attrations: attraction,
-                }
-            ]
-        }))
-    }
+                    attrations: attraction,}]}))}
     nextID() {
         this.uniqueId = this.state.loads.length
             ? this.state.loads.length -1
             : 0
         return ++this.uniqueId
     }
+
    dataFetch() { //fetches the data from the db
         if(this.state.logged == false) {
             window.setTimeout(this.dataFetch, 1000); /* this checks the flag every second*/
@@ -86,7 +77,6 @@ class Manager extends Component {
                     if (item.user === this.state.usernameM) {
                         for (let i = 0; i < item.attractions.length; i++)
                             GaugeSumTemp = GaugeSumTemp + item.attractions[i].load.currCount
-
                         this.add({_id: item._id, txt: item.name, attractions: item.attractions})
                         attractionsCounter = attractionsCounter + item.attractions.length
                     }
@@ -99,11 +89,9 @@ class Manager extends Component {
                         gaugeSum: GaugeSumTemp,
                         counter: this.state.loads.length,
                         attractionsCounter: attractionsCounter
-
-                    })
-                }
-            }, 2000); //was done in order to let the chart load properly
+                    })}}, 2000); //was done in order to let the chart load properly
             // setting interval to fetch the data every X seconds
+
             setInterval(async () => {
                 innercount = 0
                 attractionsCounter = 0
@@ -115,8 +103,8 @@ class Manager extends Component {
                         if (item.user === this.state.usernameM) {
                             attractionsCounter = attractionsCounter + item.attractions.length
                             let loadindex = loadtemp.findIndex(x => x._id == item._id);
-                            if (loadindex == -1) // means a new site has been added
-                            {
+                            if (loadindex == -1) { // means a new site has been added
+
                                 loadtemp.push({_id: item._id, name: item.name, attractions: item.attractions})
                                 loadindex = loadtemp.findIndex(x => x._id == item._id);
                             }
@@ -124,10 +112,8 @@ class Manager extends Component {
                             innercount++
                             if (this._isMounted) {
                                 if (innercount === loadtemp.length) { //calculating the sum of loads
-                                    for(let i = 0 ; i< loadtemp.length ; i++ )
-                                    {
-                                        for(let j = 0 ; j < loadtemp[i].attractions.length ; j++)
-                                        {
+                                    for(let i = 0 ; i< loadtemp.length ; i++ ) {
+                                        for(let j = 0 ; j < loadtemp[i].attractions.length ; j++) {
                                                 GaugeSumTemp = GaugeSumTemp + loadtemp[i].attractions[j].load.currCount
                                         }
                                     }
@@ -137,26 +123,18 @@ class Manager extends Component {
                                         gaugeSum: gaudgeshow,
                                         counter: loadtemp.length,
                                         attractionsCounter: attractionsCounter
-                                    })
-                                }
-                            }
-                        }
-                    })).catch(err => console.error(err));}, 5000);
+                                    })}}}})).catch(err => console.error(err));}, 5000);}}
 
-        }
-    }
     componentDidMount() {
         this._isMounted = true;
-        if (window.navigator.geolocation)
-        {
+        if (window.navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async location => {
                 if (this._isMounted) {
                     this.setState({
                         Latitude: location.coords.latitude,
                         Longitude: location.coords.longitude,
                         GPS: 1,
-                    })
-                }
+                    })}
                this.dataFetch()
                 })}}
     componentWillUnmount() {
@@ -188,21 +166,15 @@ class Manager extends Component {
     handleUserLoginChange(evt) {
         this.setState({
             usernameM: evt.target.value,
-        });
-    };
+        });};
 
     handlePassLoginChange(evt) {
         this.setState({
             password: evt.target.value,
-        });
-    }
+        });}
     // category changes handeles
-    handleSiteSelectCategory = event => {
-        this.setState(({selectName: event.target.value}))
-    }
-    handleCategoryChange = event => {
-        this.setState({ category: event.target.value });
-    }
+    handleSiteSelectCategory = event => {this.setState(({selectName: event.target.value}))}
+    handleCategoryChange = event => {this.setState({ category: event.target.value });}
     handleCategoryAdditionPost(evt) {
         evt.preventDefault();
         if(this.state.selectName == "")
@@ -222,19 +194,11 @@ class Manager extends Component {
                         alert("Category has been successfully changed")
                     else
                         alert("Couldn't edit category")
-                })
-        }
-    }
+                })}}
     // new site addition handles
-    handleSiteNameAddition = event => {
-        this.setState({ newName: event.target.value });
-    }
-    handleImageSiteAddition = event => {
-        this.setState({ newImage: event.target.value });
-    }
-    handleCategorySiteAddition = event => {
-        this.setState({ newCategory: event.target.value });
-    }
+    handleSiteNameAddition = event => {this.setState({ newName: event.target.value });}
+    handleImageSiteAddition = event => {this.setState({ newImage: event.target.value });}
+    handleCategorySiteAddition = event => {this.setState({ newCategory: event.target.value });}
     handleSiteAdditionPost(evt) {
         evt.preventDefault();
         if(this.state.newName == "" || this.state.newImage == "" || this.state.newCategory == "")
@@ -259,20 +223,11 @@ class Manager extends Component {
                         alert("New attraction has been added")
                     else
                         alert("Couldn't add a site")
-
-                })
-        }
-    }
+                })}}
     //  new attraction addition handles
-    handleSiteSelectNAttraction = event => {
-        this.setState(({selectName3: event.target.value}))
-    }
-    handleAttractionNameN = event => {
-        this.setState({ newName3: event.target.value });
-    }
-    handleImageNAttraction = event => {
-        this.setState({ newImage3: event.target.value });
-    }
+    handleSiteSelectNAttraction = event => {this.setState(({selectName3: event.target.value}))}
+    handleAttractionNameN = event => {this.setState({ newName3: event.target.value });}
+    handleImageNAttraction = event => {this.setState({ newImage3: event.target.value });}
     handleAttractionAdditionPost(evt) {
         evt.preventDefault();
         if(this.state.selectName3 == "")
@@ -296,9 +251,7 @@ class Manager extends Component {
                         alert("New sub attraction has been added")
                     else
                         alert("Couldn't add a sub attraction")
-                })
-        }
-    }
+                })}}
     //
     render() {
         let data = {
@@ -337,7 +290,6 @@ class Manager extends Component {
                             <p style={managerStyle.sideText}>Edit/Add</p>
                         </div>
                     </div>
-
                     <div style={managerStyle.infoData}>
                         <div className="card" style={managerStyle.charts2}>
                             <div className="card">
@@ -371,7 +323,6 @@ class Manager extends Component {
                                         "#ff8c00",
                                         "#e32133",
                                     ]}
-
                                 />
                             </div>
                             {showchart ? <div style={managerStyle.chartStyle}>
@@ -384,24 +335,17 @@ class Manager extends Component {
                             </div> : <div className="card-body"/>}
                         </div>
                     </div>
-
                 </div>
-
-            )
-        }
-        else if (this.state.logged && !(this.state.mainPage)) //if we're logged in and choose the edit/add page
-        {
-            let optionTemplate = this.state.loads.map(v => (
-                <option value={v.name}>{v.name}</option>
-            ));
-            return(
+            )}
+        else if (this.state.logged && !(this.state.mainPage)) { //if we're logged in and choose the edit/add page
+            let optionTemplate = this.state.loads.map(v => (<option value={v.name}>{v.name}</option>));
+            return (
                 <div className='Manager' style={managerStyle.Manager}>
                     <img style={managerStyle.headerPicture} src={require('../images/monitourLogoDash.png')}/>
                     <div style={managerStyle.sideBar}>
                         <div style={managerStyle.unselectedSideBar}>
                             <img style={managerStyle.sidePicture} src={require('../images/weblogo.png')}/>
                         </div>
-
                         <div style={managerStyle.unselectedSideBar} onClick={() => this.setState({mainPage: true})} >
                             <img style={managerStyle.sidePicture} src={require('../images/dashboard.png')}/>
                             <p style={managerStyle.sideText}>Dashboard</p>
@@ -411,7 +355,6 @@ class Manager extends Component {
                             <p style={managerStyle.sideText}>Edit/Add</p>
                         </div>
                     </div>
-
                     <div className="card" style={managerStyle.formsin}>
                         <form onSubmit={this.handleCategoryAdditionPost}>
                             <p style={managerStyle.formsinP}>Change Site Category</p>
@@ -478,18 +421,13 @@ class Manager extends Component {
                         </form>
                     </div>
                 </div>
-
-            );
-        }
-        else //if we're not logged in
-        {
-
+            );}
+        else { //if we're not logged in
             return (
                 <div className='Manager' style={managerStyle.loginBack}>
                     <img style={managerStyle.headerPicture} src={require('../images/monitourLogoDash.png')}/>
                     <MDBContainer>
                         <MDBRow>
-
                                 <form onSubmit={this.handleLoginSubmit} style={managerStyle.formStyle}>
                                     {
                                         this.state.error &&
@@ -512,11 +450,6 @@ class Manager extends Component {
                         </MDBRow>
                     </MDBContainer>
                 </div>
-            );
-        }
-        }
-
-
-}
+            );}}}
 
 export default Manager;

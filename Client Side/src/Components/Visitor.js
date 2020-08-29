@@ -5,6 +5,8 @@ import 'react-circular-progressbar/dist/styles.css';
 import moment from "moment"
 import 'moment/locale/en-il'
 import visitorStyle from "./styles/visitorStyle";
+const url = 'https://moninode.herokuapp.com/load_data';
+
 class Visitor extends Component {
     _isMounted = false;
 
@@ -18,12 +20,14 @@ class Visitor extends Component {
             searchString: "",
             expend:"",
         }
+
         this.baseState = this.state
         this.eachLoad = this.eachLoad.bind(this)
         this.nextID = this.nextID.bind(this)
         this.handleChange = this.handleChange.bind(this);
     }
     reset = () => {this.setState(this.baseState)}
+
     add({event = null, _id = null, txt = 'default title', ld = 'default load', img = null, loc = null, cate = null,  attraction = null}){
         console.log(event,_id,txt,ld,img,loc,cate)
         this.setState(prevState => ({
@@ -40,12 +44,14 @@ class Visitor extends Component {
             ]
         }))
     }
+
     nextID() {
         this.uniqueId = this.state.loads.length
             ? this.state.loads.length -1
             : 0
         return ++this.uniqueId
     }
+
     componentDidMount() {
         this._isMounted = true;
         let counter = 0
@@ -57,7 +63,6 @@ class Visitor extends Component {
                         Latitude: location.coords.latitude,
                         Longitude: location.coords.longitude,
                         GPS: 1})}
-                const url = 'https://moninode.herokuapp.com/load_data';
                 fetch(url)
                     .then(res => res.json())
                     .then(data => data.map(item => {
@@ -89,9 +94,9 @@ class Visitor extends Component {
                                             this.setState({
                                                 loads: loadtemp
                                             })}};}}})).catch(err => console.error(err));}, 5000);})}}
-    componentWillUnmount() {
-        this._isMounted = false;
-    }
+
+    componentWillUnmount() {this._isMounted = false;}
+
     eachLoad(name, i) {
         //calculates the total load of a site from the all attractions
         // and displays the load for each attraction which is related to site
@@ -353,8 +358,10 @@ class Visitor extends Component {
             )
         }
     }
+
     handleChange() {
         this.setState({searchString: this.refs.search.value})}
+
     greet() {
         const currentHour = new Date().getHours();
         const greetingMessage =
