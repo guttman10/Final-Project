@@ -182,7 +182,7 @@ class Manager extends Component {
             GPS: 0,
             gaugeSum:0,
             counter:0,
-            subAttCounter:0,
+            attractionsCounter:0,
             usernameM: 'admin',
             password: '',
             error: '',
@@ -213,15 +213,14 @@ class Manager extends Component {
     reset = () => {
         this.setState(this.baseState)
     }
-
-    add({event = null, _id = null, txt = 'default title', subatt = null}){
+    add({event = null, _id = null, txt = 'default title', attraction = null}){
         console.log(event,_id,txt)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
                 {_id: _id !== null ? _id : this.nextID(prevState.loads),
                     name:txt,
-                    subAtt: subatt,
+                    attrations: attraction,
                 }
             ]
         }))
@@ -237,17 +236,17 @@ class Manager extends Component {
             window.setTimeout(this.dataFetch, 1000); /* this checks the flag every second*/
         } else {
             let GaugeSumTemp = 0
-            let subAttCounter = 0
+            let attractionsCounter = 0
             let innercount = 0
             fetch(url)
                 .then(res => res.json())
                 .then(data => data.map(item => {
                     if (item.user === this.state.usernameM) {
-                        for (let i = 0; i < item.subAtt.length; i++)
-                            GaugeSumTemp = GaugeSumTemp + item.subAtt[i].load.currCount
+                        for (let i = 0; i < item.attractions.length; i++)
+                            GaugeSumTemp = GaugeSumTemp + item.attractions[i].load.currCount
 
-                        this.add({_id: item._id, txt: item.name, subatt: item.subAtt})
-                        subAttCounter = subAttCounter + item.subAtt.length
+                        this.add({_id: item._id, txt: item.name, attractions: item.attractions})
+                        attractionsCounter = attractionsCounter + item.attractions.length
                     }
                 })).catch(err => console.error(err));
 
@@ -257,7 +256,7 @@ class Manager extends Component {
                     this.setState({
                         gaugeSum: GaugeSumTemp,
                         counter: this.state.loads.length,
-                        subAttCounter: subAttCounter
+                        attractionsCounter: attractionsCounter
 
                     })
                 }
@@ -265,39 +264,39 @@ class Manager extends Component {
 
             setInterval(async () => {
                 innercount = 0
-                subAttCounter = 0
+                attractionsCounter = 0
                 let loadtemp = this.state.loads
                 GaugeSumTemp = 0;
                 fetch(url)
                     .then(res => res.json())
                     .then(data => data.map(item => {
                         if (item.user === this.state.usernameM) {
-                            subAttCounter = subAttCounter + item.subAtt.length
+                            attractionsCounter = attractionsCounter + item.attractions.length
                             let loadindex = loadtemp.findIndex(x => x._id == item._id);
                             if (loadindex == -1) // means a new site has been added
                             {
                                 console.log("new")
-                                loadtemp.push({_id: item._id, name: item.name, subAtt: item.subAtt})
+                                loadtemp.push({_id: item._id, name: item.name, attractions: item.attractions})
                                 loadindex = loadtemp.findIndex(x => x._id == item._id);
                             }
-                            loadtemp[loadindex].subAtt = item.subAtt
+                            loadtemp[loadindex].attractions = item.attractions
                             innercount++
                             if (this._isMounted) {
                                 if (innercount === loadtemp.length) {
                                     for(let i = 0 ; i< loadtemp.length ; i++ )
                                     {
-                                        for(let j = 0 ; j < loadtemp[i].subAtt.length ; j++)
+                                        for(let j = 0 ; j < loadtemp[i].attractions.length ; j++)
                                         {
-                                                GaugeSumTemp = GaugeSumTemp + loadtemp[i].subAtt[j].load.currCount
+                                                GaugeSumTemp = GaugeSumTemp + loadtemp[i].attractions[j].load.currCount
                                         }
                                     }
                                     let gaudgeshow = GaugeSumTemp
-                                    console.log({gaudgeshow},loadtemp.length , subAttCounter)
+                                    console.log({gaudgeshow},loadtemp.length , attractionsCounter)
                                     GaugeSumTemp = 0
                                     this.setState({
                                         gaugeSum: gaudgeshow,
                                         counter: loadtemp.length,
-                                        subAttCounter: subAttCounter
+                                        attractionsCounter: attractionsCounter
                                     })
                                 }
                             }
@@ -372,7 +371,7 @@ class Manager extends Component {
     handleSubmitPost(evt) {
         evt.preventDefault();
         if(this.state.selectName == "")
-            alert("Please select attraction name")
+            alert("Please select site name")
         else if(this.state.category == "")
             alert("Please don't leave fields empty")
         else {
@@ -423,7 +422,7 @@ class Manager extends Component {
                     latitude: this.state.Latitude,
                     longitude: this.state.Longitude,
                 },
-                subAtt: [],
+                attractions: [],
             };
 
             axios.post(url, {sentData})
@@ -439,7 +438,7 @@ class Manager extends Component {
     handleSubmitPost3(evt) {
         evt.preventDefault();
         if(this.state.selectName3 == "")
-            alert("Please select attraction name")
+            alert("Please select site name")
         else if(this.state.newName3 == "" || this.state.newImage3 == "")
             alert("Please don't leave fields empty")
         else {
@@ -452,7 +451,7 @@ class Manager extends Component {
                 attName: this.state.selectName3,
                 name: this.state.newName3,
                 image: this.state.newImage3,
-                subAtt: loadtemp[loadindex].subAtt
+                attractions: loadtemp[loadindex].attractions
             };
             axios.post(url, {sentData})
                 .then(res => {
@@ -512,7 +511,7 @@ class Manager extends Component {
                             <div className="card">
                                 <div className="card-body" style={this.infoWarp}>
                                     <img style={this.infoImage} src={require('../images/attracionsfinish.png')}/>
-                                    <p style={this.infoText}>{this.state.subAttCounter}</p>
+                                    <p style={this.infoText}>{this.state.attractionsCounter}</p>
                                 </div>
                             </div>
                         </div>
@@ -577,9 +576,9 @@ class Manager extends Component {
 
                     <div className="card" style={this.formsin}>
                         <form onSubmit={this.handleSubmitPost}>
-                            <p style={this.formsinP}>Change Attractions Category</p>
+                            <p style={this.formsinP}>Change Site Category</p>
                             <label style={this.labelblock}>
-                                Attraction name:
+                                Site name:
                                 <select style={ this.FormsInput} value={this.state.value} onChange={this.handleChangeSelect}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
@@ -596,7 +595,7 @@ class Manager extends Component {
                         </form>
                     </div>
                     <div className="card" style={this.formsin}>
-                      <p style={this.formsinP}>Add New Attraction</p>
+                      <p style={this.formsinP}>Add New Site</p>
                         <form onSubmit={this.handleSubmitPost2}>
                             <label style={this.labelblock}>
                                 Name:
@@ -617,10 +616,10 @@ class Manager extends Component {
                         </form>
                     </div>
                     <div className="card" style={this.formsin}>
-                        <p style={this.formsinP}>Add New Sub Attraction</p>
+                        <p style={this.formsinP}>Add New Attractions</p>
                         <form onSubmit={this.handleSubmitPost3}>
                             <label style={this.labelblock}>
-                                Attraction Name:
+                                Site Name:
                                 <select style={ this.FormsInput} value={this.state.value} onChange={this.handleChangeSelect3}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
