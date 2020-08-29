@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import Load from './Load'
-import {  CircularProgressbar} from 'react-circular-progressbar';
 import RTChart from 'react-rt-chart';
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBIcon } from 'mdbreact';
-import './c3.css';
+import './styles/c3.css';
 import ReactSpeedometer from "react-d3-speedometer"
 import 'react-circular-progressbar/dist/styles.css';
 import '../mdb/css/mdb.css'
@@ -34,7 +32,6 @@ class Manager extends Component {
             error: '',
             logged:false,
             mainPage:true,
-            id:0,
             category:"",
             selectName:"",
             newName:"",
@@ -47,20 +44,18 @@ class Manager extends Component {
         this.baseState = this.state
         this.nextID = this.nextID.bind(this)
         this.dataFetch = this.dataFetch.bind(this)
-        this.handlePassChange = this.handlePassChange.bind(this);
-        this.handleUserChange = this.handleUserChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handlePassLoginChange = this.handlePassLoginChange.bind(this);
+        this.handleUserLoginChange = this.handleUserLoginChange.bind(this);
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.dismissError = this.dismissError.bind(this);
-        this.handleIDChange = this.handleIDChange.bind(this);
-        this.handleSubmitPost = this.handleSubmitPost.bind(this)
-        this.handleSubmitPost2 = this.handleSubmitPost2.bind(this)
-        this.handleSubmitPost3 = this.handleSubmitPost3.bind(this)
+        this.handleCategoryAdditionPost = this.handleCategoryAdditionPost.bind(this)
+        this.handleSiteAdditionPost = this.handleSiteAdditionPost.bind(this)
+        this.handleAttractionAdditionPost = this.handleAttractionAdditionPost.bind(this)
     }
     reset = () => {
         this.setState(this.baseState)
     }
     add({event = null, _id = null, txt = 'default title', attraction = null}){
-        console.log(event,_id,txt)
         this.setState(prevState => ({
             loads: [
                 ...prevState.loads,
@@ -77,16 +72,17 @@ class Manager extends Component {
             : 0
         return ++this.uniqueId
     }
-   dataFetch() {
+   dataFetch() { //fetches the data from the db
         if(this.state.logged == false) {
             window.setTimeout(this.dataFetch, 1000); /* this checks the flag every second*/
+            //was done in order that the other page wouldn't load unless we're logged in
         } else {
             let GaugeSumTemp = 0
             let attractionsCounter = 0
             let innercount = 0
             fetch(url)
                 .then(res => res.json())
-                .then(data => data.map(item => {
+                .then(data => data.map(item => { //loading the attractions to loads
                     if (item.user === this.state.usernameM) {
                         for (let i = 0; i < item.attractions.length; i++)
                             GaugeSumTemp = GaugeSumTemp + item.attractions[i].load.currCount
@@ -106,8 +102,8 @@ class Manager extends Component {
 
                     })
                 }
-            }, 2000);
-
+            }, 2000); //was done in order to let the chart load properly
+            // setting interval to fetch the data every X seconds
             setInterval(async () => {
                 innercount = 0
                 attractionsCounter = 0
@@ -121,14 +117,13 @@ class Manager extends Component {
                             let loadindex = loadtemp.findIndex(x => x._id == item._id);
                             if (loadindex == -1) // means a new site has been added
                             {
-                                console.log("new")
                                 loadtemp.push({_id: item._id, name: item.name, attractions: item.attractions})
                                 loadindex = loadtemp.findIndex(x => x._id == item._id);
                             }
                             loadtemp[loadindex].attractions = item.attractions
                             innercount++
                             if (this._isMounted) {
-                                if (innercount === loadtemp.length) {
+                                if (innercount === loadtemp.length) { //calculating the sum of loads
                                     for(let i = 0 ; i< loadtemp.length ; i++ )
                                     {
                                         for(let j = 0 ; j < loadtemp[i].attractions.length ; j++)
@@ -137,7 +132,6 @@ class Manager extends Component {
                                         }
                                     }
                                     let gaudgeshow = GaugeSumTemp
-                                    console.log({gaudgeshow},loadtemp.length , attractionsCounter)
                                     GaugeSumTemp = 0
                                     this.setState({
                                         gaugeSum: gaudgeshow,
@@ -172,8 +166,8 @@ class Manager extends Component {
     dismissError() {
         this.setState({ error: '' });
     }
-
-    handleSubmit(evt) {
+    // login handeles
+    handleLoginSubmit(evt) {
         evt.preventDefault();
 
         if (!this.state.usernameM) {
@@ -191,30 +185,25 @@ class Manager extends Component {
             return this.setState({ error: 'invalid username or password' });
         return this.setState({ error: '' });
     }
-    handleUserChange(evt) {
+    handleUserLoginChange(evt) {
         this.setState({
             usernameM: evt.target.value,
         });
     };
 
-    handlePassChange(evt) {
+    handlePassLoginChange(evt) {
         this.setState({
             password: evt.target.value,
         });
     }
-    handleIDChange = event => {
-        this.setState({ id: event.target.value });
-    }
-    handleChangeSelect = event => {
+    // category changes handeles
+    handleSiteSelectCategory = event => {
         this.setState(({selectName: event.target.value}))
-    }
-    handleChangeSelect3 = event => {
-        this.setState(({selectName3: event.target.value}))
     }
     handleCategoryChange = event => {
         this.setState({ category: event.target.value });
     }
-    handleSubmitPost(evt) {
+    handleCategoryAdditionPost(evt) {
         evt.preventDefault();
         if(this.state.selectName == "")
             alert("Please select site name")
@@ -236,24 +225,17 @@ class Manager extends Component {
                 })
         }
     }
-
-    handleNewNameChange = event => {
+    // new site addition handles
+    handleSiteNameAddition = event => {
         this.setState({ newName: event.target.value });
     }
-    handleNewNameChange3 = event => {
-        this.setState({ newName3: event.target.value });
-    }
-    handleNewImageChange = event => {
+    handleImageSiteAddition = event => {
         this.setState({ newImage: event.target.value });
     }
-    handleNewImageChange3 = event => {
-        this.setState({ newImage3: event.target.value });
-    }
-    handleNewCategoryChange = event => {
+    handleCategorySiteAddition = event => {
         this.setState({ newCategory: event.target.value });
     }
-    handleSubmitPost2(evt) {
-        console.log("posted")
+    handleSiteAdditionPost(evt) {
         evt.preventDefault();
         if(this.state.newName == "" || this.state.newImage == "" || this.state.newCategory == "")
             alert("Please don't leave fields empty")
@@ -281,7 +263,17 @@ class Manager extends Component {
                 })
         }
     }
-    handleSubmitPost3(evt) {
+    //  new attraction addition handles
+    handleSiteSelectNAttraction = event => {
+        this.setState(({selectName3: event.target.value}))
+    }
+    handleAttractionNameN = event => {
+        this.setState({ newName3: event.target.value });
+    }
+    handleImageNAttraction = event => {
+        this.setState({ newImage3: event.target.value });
+    }
+    handleAttractionAdditionPost(evt) {
         evt.preventDefault();
         if(this.state.selectName3 == "")
             alert("Please select site name")
@@ -291,7 +283,6 @@ class Manager extends Component {
             let name = this.state.selectName3
             let loadtemp = this.state.loads
             let loadindex = loadtemp.findIndex(x => x.name == name);
-            console.log(loadindex)
             const sentData = {
                 mode: 2,
                 attName: this.state.selectName3,
@@ -308,6 +299,7 @@ class Manager extends Component {
                 })
         }
     }
+    //
     render() {
         let data = {
             date: new Date(),
@@ -327,7 +319,7 @@ class Manager extends Component {
                 <div>Please Enable Your Gps Position</div>
             )
         }
-        else if (this.state.logged && this.state.mainPage) {
+        else if (this.state.logged && this.state.mainPage) { //if we're logged in and we choose the main page
             return (
                 <div className='Manager' style={managerStyle.Manager}>
                     <img style={managerStyle.headerPicture} src={require('../images/monitourLogoDash.png')}/>
@@ -397,7 +389,7 @@ class Manager extends Component {
 
             )
         }
-        else if (this.state.logged && !(this.state.mainPage))
+        else if (this.state.logged && !(this.state.mainPage)) //if we're logged in and choose the edit/add page
         {
             let optionTemplate = this.state.loads.map(v => (
                 <option value={v.name}>{v.name}</option>
@@ -421,11 +413,11 @@ class Manager extends Component {
                     </div>
 
                     <div className="card" style={managerStyle.formsin}>
-                        <form onSubmit={this.handleSubmitPost}>
+                        <form onSubmit={this.handleCategoryAdditionPost}>
                             <p style={managerStyle.formsinP}>Change Site Category</p>
                             <label style={managerStyle.labelblock}>
                                 Site name:
-                                <select style={ this.FormsInput} value={this.state.value} onChange={this.handleChangeSelect}>
+                                <select style={ this.FormsInput} value={this.state.value} onChange={this.handleSiteSelectCategory}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
                                 </select>
@@ -442,18 +434,18 @@ class Manager extends Component {
                     </div>
                     <div className="card" style={managerStyle.formsin}>
                       <p style={managerStyle.formsinP}>Add New Site</p>
-                        <form onSubmit={this.handleSubmitPost2}>
+                        <form onSubmit={this.handleSiteAdditionPost}>
                             <label style={managerStyle.labelblock}>
                                 Name:
-                                <input style={ this.FormsInput}  type="text" value={this.state.newName} onChange={this.handleNewNameChange} />
+                                <input style={ this.FormsInput}  type="text" value={this.state.newName} onChange={this.handleSiteNameAddition} />
                             </label>
                             <label style={managerStyle.labelblock}>
                                 Image:
-                                <input style={ this.FormsInput}  type="url" value={this.state.newImage} onChange={this.handleNewImageChange} />
+                                <input style={ this.FormsInput}  type="url" value={this.state.newImage} onChange={this.handleImageSiteAddition} />
                             </label>
                             <label style={managerStyle.labelblock}>
                                 Category:
-                                <input style={ this.FormsInput}  type="text" value={this.state.newCategory} onChange={this.handleNewCategoryChange} />
+                                <input style={ this.FormsInput}  type="text" value={this.state.newCategory} onChange={this.handleCategorySiteAddition} />
                             </label>
                             <hr></hr>
                             <div style={managerStyle.formsinB}>
@@ -463,21 +455,21 @@ class Manager extends Component {
                     </div>
                     <div className="card" style={managerStyle.formsin}>
                         <p style={managerStyle.formsinP}>Add New Attractions</p>
-                        <form onSubmit={this.handleSubmitPost3}>
+                        <form onSubmit={this.handleAttractionAdditionPost}>
                             <label style={managerStyle.labelblock}>
                                 Site Name:
-                                <select style={ this.FormsInput} value={this.state.value} onChange={this.handleChangeSelect3}>
+                                <select style={ this.FormsInput} value={this.state.value} onChange={this.handleSiteSelectNAttraction}>
                                     <option disabled selected value> -- select an option -- </option>
                                     {optionTemplate}
                                 </select>
                             </label>
                             <label style={managerStyle.labelblock}>
                                 Name:
-                                <input style={ this.FormsInput}  type="text" value={this.state.newName3} onChange={this.handleNewNameChange3} />
+                                <input style={ this.FormsInput}  type="text" value={this.state.newName3} onChange={this.handleAttractionNameN} />
                             </label>
                             <label style={managerStyle.labelblock}>
                                 Image:
-                                <input style={ this.FormsInput}  type="text" value={this.state.newImage3} onChange={this.handleNewImageChange3} />
+                                <input style={ this.FormsInput}  type="text" value={this.state.newImage3} onChange={this.handleImageNAttraction} />
                             </label>
                             <hr></hr>
                             <div style={managerStyle.formsinB}>
@@ -489,7 +481,7 @@ class Manager extends Component {
 
             );
         }
-        else
+        else //if we're not logged in
         {
 
             return (
@@ -498,7 +490,7 @@ class Manager extends Component {
                     <MDBContainer>
                         <MDBRow>
 
-                                <form onSubmit={this.handleSubmit} style={managerStyle.formStyle}>
+                                <form onSubmit={this.handleLoginSubmit} style={managerStyle.formStyle}>
                                     {
                                         this.state.error &&
                                         <h3 data-test="error" onClick={this.dismissError}>
@@ -509,8 +501,8 @@ class Manager extends Component {
                                     <p className="h5 text-center mb-4" style={{color:"#ffffff"}}>Welcome</p>
                                     <div className="white-text">
                                         <MDBInput style={{color:"white"}}  label="Type your username" icon="user" group type="text" validate error="wrong"
-                                                  input = "ttt"success="right" data-test="username" value={this.state.usernameM} onChange={this.handleUserChange}/>
-                                        <MDBInput style={{color:"white"}} label="Type your password" icon="lock" group type="password" validate data-test="password"  value={this.state.password} onChange={this.handlePassChange}/>
+                                                  input = "ttt"success="right" data-test="username" value={this.state.usernameM} onChange={this.handleUserLoginChange}/>
+                                        <MDBInput style={{color:"white"}} label="Type your password" icon="lock" group type="password" validate data-test="password"  value={this.state.password} onChange={this.handlePassLoginChange}/>
                                     </div>
                                     <div className="text-center">
                                         <MDBBtn class="btn peach-gradient" type="submit">Login</MDBBtn>

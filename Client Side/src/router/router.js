@@ -2,8 +2,6 @@ import React from 'react';
 import {Route} from 'react-router-dom'
 import Visitor from '../Components/Visitor';
 import Manager from "../Components/Manager";
-import test from '../Components/test';
-import Header from '../Header'
 
 const ReactRouter = () => {
     return (
